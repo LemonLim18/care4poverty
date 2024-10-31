@@ -63,7 +63,7 @@ const LoginPage =  () => {
             <button className="text-blue-500" onClick={() => router.push('/auth/signup')}>
               Sign Up
             </button>
-          </p>
+          </p> 
         </CardContent>
       </Card>
       {/* Toast container */}
