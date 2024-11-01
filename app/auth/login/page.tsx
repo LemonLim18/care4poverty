@@ -8,6 +8,10 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card'; // Ensure y
 import { useRouter } from 'next/navigation'; // For redirection
 import { toast, ToastContainer } from 'react-toastify'; // Optional: For notifications
 import 'react-toastify/dist/ReactToastify.css'; // Make sure to include this import for the toast styles
+import loginPng  from "../../../public/images/login.jpg";
+import logoPng from "../../../public/images/logo.png";
+import googleIcon from "../../../public/images/google.png";
+import Image from 'next/image'
 
 
 const LoginPage =  () => {
@@ -35,37 +39,88 @@ const LoginPage =  () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Card className="w-96">
-        <CardContent>
-          <CardTitle className="text-center">Login</CardTitle>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Loading...' : 'Sign In'}
+    <div className="flex bg-blue-100 h-[100vh]">
+      <div className="relative flex-[0%] md:flex-[60%]  w-full items-center justify-center bg-pink-100">
+        <Image 
+          src={loginPng} 
+          alt="Login Png" 
+          // width={500} 
+          // height={300} 
+          // objectFit=""
+          className="h-full w-full object-cover" 
+        />
+        <div className="absolute w-[400px] h-[110px] bottom-28 right-0 z-10 bg-[#0077b6]"> {/*The overlay Care4Poverty System*/}
+          <p  className="font-giorgio font-heavy italic text-4xl">
+            <span>Care</span>
+            <span className="text-white ">4</span>
+            <span>Poverty System</span>
+          </p>
+        </div>
+      </div>
+      {/* <div className="flex flex-1 item-center justify-center bg-gray-100"> */}
+        <Card className="flex flex-[100%] md:flex-[40%] w-full item-center justify-center rounded-none">
+          <CardContent className="bg-yellow-100 w-full my-14 mx-14 flex flex-col items-center">
+            <p className="bg-blue-200 text-right w-full"> 
+              <button className="text-[#535353] hover:underline hover:text-black font-roboto text-[18px]" onClick={() => router.push('/auth/signup') }>
+                Signup
+              </button>
+            </p> 
+            <div className='flex justify-center mb-4 w-full'>
+              <Image 
+                src={logoPng}
+                alt="Logo Png"
+                className="w-[17rem]"
+              />
+            </div>
+            {/* <CardTitle className="text-center">Login</CardTitle> */}
+            <form onSubmit={handleSubmit} className="space-y-4 w-full">
+              <Input
+                type="email"
+                placeholder="Username/Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="border-black rounded-none"
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="border-black rounded-none"
+              />
+              <Button type="submit" disabled={loading} className='px-5 bg-[#0077B6] hover:bg-[#00689F] font-inter'>
+                {loading ? 'Loading...' : 'Sign In'}
+              </Button>
+            </form>
+            <p className="mt-8 bg-white text-left w-full"> 
+              <button className="text-[#535353] hover:underline hover:text-gray-800 font-roboto" onClick={() => {/* Activate the forgot password function*/} }>
+                Forgot password?
+              </button>
+            </p> 
+            <p className="mt-0 bg-white text-left w-full"> 
+              <button className="text-[#535353] hover:underline hover:text-gray-800 font-roboto" onClick={() => router.push('/auth/signup')}>
+                Register new account?
+              </button>
+            </p> 
+            <div className="flex items-center justify-center my-7 w-full">
+              <hr className="w-1/3 h-0.5 bg-gray-400"/>
+              <span className="mx-4 text-gray-500 text-center font-roboto">or continue with</span>
+              <hr className="w-1/3 h-0.5 bg-gray-400"/>
+            </div>
+
+            <Button type="submit" disabled={loading} className='px-10 py-6  bg-[#0077B6] hover:bg-[#00689F] font-inter'>
+              <Image 
+                  src={googleIcon}
+                  alt="Google Logo Png"
+                  className="relative left-[-35px] h-[40px] w-[40px]"
+              />
+                Login with Google 
             </Button>
-          </form>
-          <p className="mt-4 text-center">
-            Don't have an account? 
-            <button className="text-blue-500" onClick={() => router.push('/auth/signup')}>
-              Sign Up
-            </button>
-          </p> 
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      {/* </div> */}
       {/* Toast container */}
       <ToastContainer />
     </div>

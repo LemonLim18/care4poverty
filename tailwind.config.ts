@@ -55,7 +55,22 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		fontFamily: {
+			roboto: ['Roboto', 'sans-serif'],
+			inter: ['Inter', 'sans-serif'], 
+			'giorgio': ['Giorgio Sans', 'sans-serif'],
+		},
+		fontWeight: {
+			thin: '100',
+			extralight: '200',
+			light: '300',
+			regular: '400',
+			medium: '500',
+			bold: '700',
+			heavy: '800',
+			black: '900',
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
