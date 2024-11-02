@@ -1,6 +1,7 @@
 import { supabase } from './supabaseClient';
 import { createRecord } from "./supabaseAPI";
 import { User, AuthResponse } from '@supabase/supabase-js';
+import { useState } from 'react';
 
 
 // Define an interface for the user registration data
@@ -146,4 +147,16 @@ export const checkEmailConfirmation = async (email: string) => {
     console.error(`Unexpected error for user ${email}:`, err);
     return false;
   }
+};
+
+export const handlePasswordReset = async (email: string) => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+
+    if(error) {
+        console.error("Error sending password reset email: ", error.message);
+        return { success: false, error: error.message};
+    }
+
+    console.log("Password reset email sent to:", email);
+    return { success: true, data };
 };
