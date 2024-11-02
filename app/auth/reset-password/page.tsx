@@ -49,7 +49,7 @@ export default function ResetPassword() {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <Card className="p-6 pt-1 shadow-lg w-full max-w-sm rounded-lg border border-gray-300 bg-white transition duration-300 ease-in-out transform hover:scale-105">
+      <Card className="p-6 pt-0 pb-8 shadow-lg w-full max-w-sm rounded-lg border border-gray-300 bg-white transition duration-300 ease-in-out transform hover:scale-105">
         <CardHeader>
           <CardTitle className={`text-2xl font-semibold text-center ${success ? "pb-3" : ""}`}>
             {success ? "Password Updated" : "Reset Your Password"}
