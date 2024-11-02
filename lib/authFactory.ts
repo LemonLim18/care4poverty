@@ -144,7 +144,7 @@ export const checkEmailConfirmation = async (email: string) => {
     const isEmailConfirmed = data.user.email_confirmed_at !== null;
     return isEmailConfirmed;
   } catch (err) {
-    console.error(`Unexpected error for user ${email}:`, err);
+    console.error(`Unexpected error for user ${email}:`, err); 
     return false;
   }
 };
