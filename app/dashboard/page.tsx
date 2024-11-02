@@ -19,7 +19,9 @@ function DashboardPage() {
         const fetchUser = async () => {
             const currentUser: User | null = await getUser();
             if (!currentUser) {
-                toast.error('User not found! Redirecting to login...');
+                toast.error('User not found! Redirecting to login...', {
+                    autoClose: 1350,
+                });
                 router.push('/auth/login'); // Redirect to login if no user is found
             } else {
                 setUser(currentUser);
@@ -31,8 +33,12 @@ function DashboardPage() {
 
     const handleLogout = async () => {
         await signOut();
-        toast.success('Successfully logged out!');
-        router.push('/auth/login'); // Redirect to login page after logout
+        toast.success('Successfully logged out!', {
+            autoClose: 1250, // Toast will disappear after 1500s
+        });
+        setTimeout(() => {
+            router.push('/auth/login'); // Redirect to login page after logout
+        }, 1000);
     };
 
     const handleTest = async () => {
@@ -45,7 +51,7 @@ function DashboardPage() {
             {user ? (
                 <div className="mt-4">
                     <p>Welcome, {user.email}!</p>
-                    <div className="gap-2">
+                    <div className="mt-4 flex justify-around">
                         <Button onClick={handleLogout}>Log Out</Button>
                         <Button onClick={handleTest}>Test</Button>
                     </div>

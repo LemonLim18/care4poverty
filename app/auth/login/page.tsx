@@ -46,11 +46,11 @@ const LoginPage =  () => {
       toast.error(error.message); // Show error message
     } else {
       toast.success("Successfully logged in!", {
-        autoClose: 2250, // Toast will disappear after 2500 ms
+        autoClose: 1500, // Toast will disappear after 1500 ms
       });
       setTimeout(() => {
         router.push('/dashboard'); // Redirect to the dashboard after successful registration
-      },2500)
+      }, 1800);
     }
   };
 
