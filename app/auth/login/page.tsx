@@ -1,7 +1,7 @@
 "use client"; // Add this line at the top
 
 import { useState } from 'react';
-import { signIn } from '../../../lib/authFactory'; // Adjust the import path
+import { signIn, handlePasswordReset } from '../../../lib/authFactory'; // Adjust the import path
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger, DialogContent, DialogOverlay, DialogTitle, DialogDescription } from '@radix-ui/react-dialog';
 import { Input } from '@/components/ui/input' // Make sure you have an Input component
@@ -13,7 +13,7 @@ import loginPng  from "../../../public/images/login.jpg";
 import logoPng from "../../../public/images/logo.png";
 import googleIcon from "../../../public/images/google.png";
 import Image from 'next/image'
-import { handlePasswordReset } from '../../../lib/authFactory'; // Adjust the path as needed
+import registerIcon from '../../../public/register.svg'
 
 
 const LoginPage =  () => {
@@ -69,7 +69,7 @@ const LoginPage =  () => {
         <div className="absolute flex justify-center items-center w-[410px] h-[110px] bottom-28 right-0 bg-[#0077b6] rounded-l-2xl"> {/*The overlay Care4Poverty System*/}
           <p className="font-giorgio font-bold text-[54px]">
             <span>CARE</span>
-            <span className="text-white ">4</span>
+            <span className="text-white">4</span>
             <span>POVERTY SYSTEM</span>
           </p>
         </div>
@@ -174,10 +174,14 @@ const LoginPage =  () => {
           </CardContent>
         </Card>
       {/* </div> */}
-      {/* Toast container */}
-      <ToastContainer />
+      {/* Toast container
+      <ToastContainer /> */}
     </div>
   );
 };
 
 export default LoginPage;
+
+// limmiinning@gmail.com
+
+// http://localhost:3000/auth/reset-password?access_token=8a28b5259a95f68f6b74dd62377cca0a190935c3567951b3eb07fa3a

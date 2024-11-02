@@ -150,7 +150,9 @@ export const checkEmailConfirmation = async (email: string) => {
 };
 
 export const handlePasswordReset = async (email: string) => {
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'http://localhost:3000/auth/reset-password' // Specify your redirect URL here after they click on the link in the email
+    });
 
     if(error) {
         console.error("Error sending password reset email: ", error.message);
