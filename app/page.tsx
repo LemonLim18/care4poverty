@@ -2,6 +2,10 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Navbar } from "@/components/index/navbar";
+import { Hero } from "@/components/index/hero";
+
+import HeroPng from "public/images/hero.png";
 
 export default function Home() {
   const router = useRouter();
@@ -11,16 +15,26 @@ export default function Home() {
   }
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    // <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    // This is the main "screen" for the index page 
+    <div className="min-h-screen">
+      <Navbar className="relative"/>
+      <Hero
+        imageSrc={HeroPng.src}
+        title="Welcome to Our Platform"
+        subtitle="Explore the features and start your journey with us."
+        buttonText="Get Started"
+        onButtonClick={() => console.log("Button Clicked!")}
+      />
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
+        {/* <Image
           className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
+          src="/images/logo.png"
+          alt="Care4Poverty Logo"
           width={180}
           height={38}
           priority
-        />
+        /> */}
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
             Get started by editing{" "}
