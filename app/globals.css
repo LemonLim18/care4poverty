@@ -6,6 +6,124 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* It is like importing the styling file here locally, 
+and if you want to call each style category using tailwindcss
+At the tailwind.config.ts, setup a category(inside it have the tailwind name: roboto and 
+its corresponding value: name of the local file[])  */
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-Black-Trial.otf') format('opentype');
+  font-weight: 900; /* Black */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-BlackItalic-Trial.otf') format('opentype');
+  font-weight: 900; /* Black */
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-Heavy-Trial.otf') format('opentype');
+  font-weight: 800; /* Heavy */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-HeavyItalic-Trial.otf') format('opentype');
+  font-weight: 800; /* Heavy */
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-Bold-Trial.otf') format('opentype');
+  font-weight: 700; /* Bold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-BoldItalic-Trial.otf') format('opentype');
+  font-weight: 700; /* Bold */
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-Medium-Trial.otf') format('opentype');
+  font-weight: 500; /* Medium */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-MediumItalic-Trial.otf') format('opentype');
+  font-weight: 500; /* Medium */
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-Regular-Trial.otf') format('opentype');
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-RegularItalic-Trial.otf') format('opentype');
+  font-weight: 400; /* Regular */
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-Light-Trial.otf') format('opentype');
+  font-weight: 300; /* Light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-LightItalic-Trial.otf') format('opentype');
+  font-weight: 300; /* Light */
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-Extralight-Trial.otf') format('opentype');
+  font-weight: 200; /* Extra Light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-ExtralightItalic-Trial.otf') format('opentype');
+  font-weight: 200; /* Extra Light */
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-Thin-Trial.otf') format('opentype');
+  font-weight: 100; /* Thin */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Giorgio Sans';
+  src: url('/fonts/GiorgioSans-ThinItalic-Trial.otf') format('opentype');
+  font-weight: 100; /* Thin */
+  font-style: italic;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
