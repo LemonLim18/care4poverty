@@ -3,8 +3,11 @@
 * @see https://v0.dev/t/ZPrRUV51n0W
 * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
 */
+import { useState, useEffect } from "react";
 import Link from "next/link"
 import Image from "next/image";
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation";
 
 // For entering new props from the component called
 interface NavbarProps {
@@ -14,8 +17,35 @@ interface NavbarProps {
 // React.FC<NavbarProps> uses the interface NavbarProps
 // ({className}) destructures the property from the interface type
 export const Navbar: React.FC<NavbarProps> = ({className}) => {
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const router = useRouter();
+  const handleLoginRedirect = () => {
+    router.push("/auth/login");
+  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setShowNavbar(false); // hide navbar on scroll down
+      } else {
+        setShowNavbar(true); // show navbar on scroll up
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY])
+
   return (
-    <nav className={`fixed inset-x-0 top-0 z-50 bg-white shadow dark:bg-gray-950 ${className}`}>
+    <nav
+      className={`fixed inset-x-0 top-0 z-50 bg-white shadow dark:bg-gray-950 transition-transform duration-300 ${
+        showNavbar ? "translate-y-0" : "-translate-y-full"
+      } ${className}`}
+    >
       <div className=" px-[16px] md:px-10 md:pl-8 lg:px-12 lg:pl-8"> {/*Originally add 'container' to make it space horizontally*/}
         <div className="flex h-20 items-center"> {/* originally h-14 */}
           <Link href="#" className="mr-auto flex items-center gap-2 text-lg font-semibold" prefetch={false}>
@@ -32,39 +62,52 @@ export const Navbar: React.FC<NavbarProps> = ({className}) => {
           <nav className="ml-auto flex items-center space-x-7">
             <Link
               href="#"
-              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-blue-500 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
               prefetch={false}
             >
               Home
             </Link>
             <Link
               href="#"
-              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-blue-500 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
               prefetch={false}
             >
               About
             </Link>
             <Link
               href="#"
-              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-blue-500 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
               prefetch={false}
             >
               Objective
             </Link>
             <Link
               href="#"
-              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-blue-500 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
               prefetch={false}
             >
               Get Involved
             </Link>
             <Link
               href="#"
-              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-blue-500 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              prefetch={false}
+            >
+              FAQ
+            </Link>
+            <Link
+              href="#"
+              className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
               prefetch={false}
             >
               Contact
             </Link>
+            <Button
+              className="bg-[#0077B6] hover:bg-[#026194] transition ease-in-out text-white font-bold py-6 px-6 w-auto rounded-full inline-flex items-center"
+              onClick={handleLoginRedirect}
+            >
+              Login
+            </Button>
           </nav>
         </div>
       </div>
