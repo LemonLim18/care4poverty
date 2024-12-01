@@ -3,6 +3,8 @@ import Link from "next/link"
 import Image from "next/image";
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation";
+import { Link as ScrollLink } from "react-scroll";
+
 
 // For entering new props from the component called
 interface NavbarProps {
@@ -50,6 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({className}) => {
   }, [lastScrollY, isDrawerOpen]);
 
   return (
+    <>
     <nav
       className={`fixed inset-x-0 top-0 z-50 bg-white shadow dark:bg-gray-950 transition-transform duration-300 ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
@@ -100,15 +103,25 @@ export const Navbar: React.FC<NavbarProps> = ({className}) => {
 
           {/* full navbar on larger-screen */}
           <nav className="ml-auto hidden md:flex items-center space-x-7">
-            {["Home", "About", "Objective", "Get Involved", "FAQ", "Contact"].map((item) => (
-              <Link
-                key={item}
-                href="#"
-                className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
-                prefetch={false}
-              >
-                {item}
-              </Link>
+            {[
+              { name: "Home", href: "#" },
+              { name: "About", href: "#about" },
+              { name: "Objective", href: "#objective" },
+              { name: "Get Involved", href: "#get-involved" },
+              { name: "FAQ", href: "#faq" },
+              { name: "Contact", href: "#contact" }
+            ].map(({ name, href }) => (
+              <ScrollLink
+                key={name}
+                to={href}
+                spy={true}
+                smooth={true}
+                offset={0} // Adjust this value based on your navbar height
+                duration={500}
+                className="cursor-pointer font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+                >
+                {name}
+              </ScrollLink>
             ))}
             <Button
               className="bg-[#0077B6] hover:bg-[#026194] transition ease-in-out text-white font-bold py-6 px-6 w-auto rounded-full inline-flex items-center"
@@ -120,10 +133,12 @@ export const Navbar: React.FC<NavbarProps> = ({className}) => {
         </div>
       </div>
 
-      {/* Higher-index Drawer */}
+      
+    </nav>
+    {/* Higher-index Drawer */}
       {/* full for smallest screen, half for smaller screen, hide it when larger screen (full navbar) */}
       <div
-        className={`fixed top-0 right-0 w-full sm:w-1/2 md:hidden h-[100vh] bg-white shadow-xl transition-transform duration-300 ease-in-out transform ${
+        className={`fixed z-[100] top-0 right-0 w-full sm:w-1/2 md:hidden h-[100vh] bg-white shadow-xl transition-transform duration-300 ease-in-out transform ${
           isDrawerOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -150,18 +165,28 @@ export const Navbar: React.FC<NavbarProps> = ({className}) => {
               </svg>
             </button>
             <ul className="h-full pt-2 pl-4 flex flex-col items-center sm:items-start gap-y-4">
-              {["Home", "About", "Objective", "Get Involved", "FAQ", "Contact"].map((item) => (
+              {[
+                { name: "Home", href: "#" },
+                { name: "About", href: "#about" },
+                { name: "Objective", href: "#objective" },
+                { name: "Get Involved", href: "#get-involved" },
+                { name: "FAQ", href: "#faq" },
+                { name: "Contact", href: "#contact" }
+              ].map(({ name, href }) => (
                 <li 
-                  key={item}
+                  key={name}
                 >
-                  <Link
-                    key={item}
-                    href="#"
-                    className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
-                    prefetch={false}
+                  <ScrollLink
+                    key={name}
+                    to={href}
+                    spy={true}
+                    smooth={true}
+                    offset={0} // Adjust this value based on your navbar height
+                    duration={500}
+                    className="font-giorgio font-bold text-2xl border-b-2 border-transparent transition-colors cursor-pointer hover:text-[#0077B6] hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
                   >
-                    {item}
-                  </Link>
+                    {name}
+                  </ScrollLink>
                 </li>
               ))
               }
@@ -174,7 +199,7 @@ export const Navbar: React.FC<NavbarProps> = ({className}) => {
           </Button>
         </div>
       </div>
-    </nav>
+    </>
   )
 }
 

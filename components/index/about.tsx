@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const About = () => {
   return (
-    <section className="relative flex flex-col md:flex-row items-center justify-between h-screen border-2">
+    <section id ="#about" className="relative flex flex-col md:flex-row items-center justify-between h-screen">
       {/* For small screens */}
         <div className="md:hidden flex flex-col justify-center items-center w-full mt-16">
           <h1 data-aos="fade-up" data-aos-duration="1500" className="font-giorgio font-bold text-7xl mb-4 text-center">About Us</h1>

@@ -16,7 +16,7 @@ export const Hero: React.FC<HeroProps> = ({
   onButtonClick,
 }) => {
   return (
-    <section className="relative flex items-center justify-center h-screen bg-gray-900 text-white">
+    <section id="#" className="relative flex items-center justify-center h-screen bg-gray-900 text-white">
       {/* Background Image */}
       {/* Initial: -z-10; After: z-10 */}
       <div className="absolute inset-0 z-10">

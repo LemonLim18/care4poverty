@@ -6,39 +6,39 @@ import {
 import Image from "next/image";
 import objImage1 from "../../public/images/objective1.jpg"
 import objImage2 from "../../public/images/objective2.jpg"
-import objImage3 from "../../public/images/objective3.jpg"
+import objImage3 from "../../public/images/objective3.png"
 
 const services = [
   {
     step: "01",
-    name: "Diagnostics",
+    name: "Donation  Platform",
     imageUrl:
       objImage1,
     description:
-      "State-of-the-art diagnostics to accurately identify vehicle issues.",
+      "A centralized system that connects donors, charitable organizations, and individuals in need, streamlining the donation process for maximum impact.",
   },
   {
     step: "02",
-    name: "Repairs",
+    name: "Resource Management",
     imageUrl:
         objImage2,
     description:
-      " Engine overhauls to brake replacements, we ensure high-quality work for your vehicle’s longevity.",
+      "Efficient tools for tracking, managing, and distributing resources, ensuring donations reach those who need them most.",
   },
   {
     step: "03",
-    name: "Maintenance",
+    name: "Collection & Delivery",
     imageUrl:
         objImage3,
     description:
-      " Oil changes, tire rotations, and more to enhance performance and prevent future issues.",
+      "An integrated system for seamless and timely transfer of donated items, from pickup to delivery.",
   },
 ];
 
 export const Objective = () => {
   return (
     // <section className="py-16 mx-auto sm:py-20">
-    <section className="mx-auto">
+    <section id="#objective" className="mx-auto">
       <div className="mx-auto flex justify-center object-center px-4 py-16 sm:py-24 lg:max-w-7xl">
         <div className="flex justify-center object-center flex-col gap-12 sm:gap-16">
           <h1 data-aos="fade-up" data-aos-duration="1500" className="font-giorgio font-bold text-center text-7xl">Our Objectives</h1>
@@ -67,18 +67,18 @@ export const Objective = () => {
                   {/* Back face with text */}
                   <div className="absolute inset-0 h-full w-full rounded-xl bg-black/80 px-12 text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]">
                     <div className="flex min-h-full flex-col items-center justify-center">
-                      <h2 className="text-2xl font-bold mb-4">
+                      <h2 className="text-[#0077B6] text-4xl font-heavy mb-4 font-giorgio">
                         {service.name}
                       </h2>
                       <p className="font-roboto text-lg text-pretty text-center mb-4 ">
                         {service.description}
                       </p>
-                      <a href="#" className="inline-flex">
+                      {/* <a href="#" className="inline-flex">
                         <button className="my-2 bg-[#0077B6] hover:bg-[#0077B6] text-white font-bold py-2 px-4 w-auto rounded-full inline-flex items-center">
                           <span>Schedule Service</span>
                           <WrenchScrewdriverIcon className="h-6 w-6 ml-2" />
                         </button>
-                      </a>
+                      </a> */}
                     </div>
                   </div>
                 </div>
