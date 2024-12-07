@@ -16,7 +16,7 @@ export const Hero: React.FC<HeroProps> = ({
   onButtonClick,
 }) => {
   return (
-    <section className="relative flex items-center justify-center h-screen bg-gray-900 text-white">
+    <section id="#" className="relative flex items-center justify-center h-screen bg-gray-900 text-white">
       {/* Background Image */}
       {/* Initial: -z-10; After: z-10 */}
       <div className="absolute inset-0 z-10">
@@ -31,13 +31,13 @@ export const Hero: React.FC<HeroProps> = ({
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 max-w-2xl px-4 text-center">
-        <h1 className="text-4xl sm:text-5xl font-bold mb-4">{title}</h1>
-        <p className="text-lg sm:text-xl mb-8">{subtitle}</p>
+      <div className="relative z-10 max-w-2xl px-4 text-center flex flex-col items-center justify-center">
+        <h1 className="font-roboto text-5xl lg:text-6xl font-bold mb-4 whitespace-nowrap">{title}</h1>
+        <p className="font-roboto text-lg sm:text-xl mb-8">{subtitle}</p>
         {buttonText && (
           <button
             onClick={onButtonClick}
-            className="px-8 py-3 bg-blue-500 rounded-md text-white font-semibold transition-colors hover:bg-blue-600"
+            className="px-8 py-3 bg-[#0077B6] rounded-md text-white font-semibold transition-colors hover:[#0077B6]"
           >
             {buttonText}
           </button>
