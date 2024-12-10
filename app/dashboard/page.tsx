@@ -71,7 +71,7 @@ function DashboardPage() {
                             <AvatarImage src="https://github.com/shadcn.png" />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
-                        <h2 className="font-giorgio text-2xl text-white font-bold">Dummy Data Society</h2>
+                        <h2 className="font-giorgio text-2xl text-white font-bold tracking-wide">ABC Charity Society</h2>
                     </SidebarHeader>
                     <SidebarContent>
                         <SidebarGroup className='bg-[#0077B6]'>

@@ -14,6 +14,8 @@ import logoPng from "../../../public/images/logo.png";
 import googleIcon from "../../../public/images/google.png";
 import Image from 'next/image'
 import registerIcon from '../../../public/register.svg'
+import { supabase } from '@/lib/supabaseClient';
+import { getRecordById } from "@/lib/supabaseAPI";
 
 
 const LoginPage = () => {
@@ -58,7 +60,7 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const { data, error } = await signIn(email, password);
+    const { data: loginData, error } = await signIn(email, password);
     setLoading(false);
 
     if (error) {
@@ -67,6 +69,31 @@ const LoginPage = () => {
       toast.success("Successfully logged in!", {
         autoClose: 1500, // Toast will disappear after 1500 ms
       });
+      console.log("Data:", loginData);
+      console.log("Login Data:", loginData);
+      // Supbase user id
+      const userId = loginData.session?.user.id
+      console.log("Supabase UID: ", userId);
+
+      // Retrieve user information from Supabase
+      if (userId) {
+        const { data: userData, error: fetchError } = await getRecordById('users', userId);
+        
+        if (fetchError) {
+          console.error('Error fetching user data:', fetchError.message);
+          return;
+        }
+
+        if (userData) {
+          sessionStorage.setItem('user', JSON.stringify(userData)); // Store user data
+          console.log('User data stored in session storage:', userData);
+        } else {
+          console.error("User data is undefined.");
+        }
+      } else {
+        console.error("User ID is undefined.");
+      }
+
       setTimeout(() => {
         router.push('/dashboard'); // Redirect to the dashboard after successful registration
       }, 1800);
