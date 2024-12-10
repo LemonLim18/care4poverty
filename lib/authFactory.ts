@@ -6,15 +6,23 @@ import { useState } from 'react';
 
 // Define an interface for the user registration data
 interface UserRegistrationData {
-  id?: string, // This should be replaced with the user ID from your authentication context after signup
-  email: string, // Use email from the registration data
-  fullName: string, // Change to match the column name in Supabase
-  birthDate: string, // Change to match the column name in Supabase
-  icNumber: string, // Change to match the column name in Supabase
-  telephoneNumber: string, // Change to match the column name in Supabase
-  homeAddress: string, // Change to match the column name in Supabase
-  category?: string | null, // Set to null or appropriate value if needed, as it is not part of the registration data
-  created_at?: Date, // Set to the current timestamp
+  id: string,
+  email: string,
+  fullName: string,
+  icNumber: string,
+  telephoneNumber: string,
+  role: string,
+  // Role-specific fields
+  organizationName?: string,
+  registrationNumber?: string,
+  bankAccount?: string,
+  orgAddress?: string,
+  website?: string,
+  registrationCert?: File | null,
+  homeAddress?: string,
+  incomeStatement?: File | null,
+  medicalReport?: File | null,
+  created_at?: Date,
   updated_at?: Date
 }
 
@@ -47,41 +55,52 @@ export const signUp = async (email: string, password: string): Promise<AuthRespo
 
 // Register User Function
 export const registerUser = async (data: UserRegistrationData) => {
-  // Prepare the user data to insert into the users table
-  console.log("Auth Data: ", data)
-
-  const userData = {
-    id: data.id, // This should be replaced with the user ID from your authentication context after signup
-    email: data.email, // Use email from the registration data
-    full_name: data.fullName, // Change to match the column name in Supabase
-    birth_date: data.birthDate, // Change to match the column name in Supabase
-    ic_number: data.icNumber, // Change to match the column name in Supabase
-    telephone_number: data.telephoneNumber, // Change to match the column name in Supabase
-    home_address: data.homeAddress, // Change to match the column name in Supabase
-    category: "Donator", // Set to null or appropriate value if needed, as it is not part of the registration data
-    created_at: new Date().toISOString(), // Set to the current timestamp
-    updated_at: new Date().toISOString() // Set to the current timestamp
+  // Prepare base user data
+  const baseUserData = {
+    id: data.id,
+    email: data.email,
+    full_name: data.fullName,
+    ic_number: data.icNumber,
+    telephone_number: data.telephoneNumber,
+    role: data.role,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   };
-  console.log("before api call")
-  // Insert the user data into the users table
-//   const { data: userDataResponse,  error: insertError } = await supabase
-    //   .from('users') // Replace 'users' with the actual name of your table
-    //   .insert([userData]);
 
-  const { data: userDataResponse, error: insertError } = await createRecord("users", userData);
-  console.log("after api call: ", userData)
-  // Check for insertion errors
-  if (insertError) {
-      console.log('Error posting data: ', insertError);
-      return;
-  }
+  // Add role-specific fields
+  const userData = data.role === 'charity-admin' 
+    ? {
+        ...baseUserData,
+        organization_name: data.organizationName,
+        registration_number: data.registrationNumber,
+        bank_account: data.bankAccount,
+        org_address: data.orgAddress,
+        website: data.website,
+        registration_cert: data.registrationCert,
+      }
+    : {
+        ...baseUserData,
+        home_address: data.homeAddress,
+        income_statement: data.incomeStatement,
+        medical_report: data.role === 'recipient' ? data.medicalReport : null,
+      };
 
-  // Return the inserted user data and null error
-  console.log("Data posted successfully")
-  return {
-      data: userDataResponse,
-      error: null,
-  };
+   console.log("before api call:", userData);
+   const { data: userDataResponse, error: insertError } = await createRecord("users", userData);
+
+   if (insertError) {
+     console.log('Error posting data: ', insertError);
+     return {
+       success: false,
+       message: insertError.message || 'Failed to create user record'
+     };
+   }
+
+   console.log("Data posted successfully");
+   return {
+     success: true,
+     data: userDataResponse
+   };
 };
 
 // Sign In Function
@@ -161,4 +180,20 @@ export const handlePasswordReset = async (email: string) => {
 
     console.log("Password reset email sent to:", email);
     return { success: true, data };
+};
+
+export const signInWithGoogle = async() => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: `http://localhost:3000/dashboard`,
+        },
+      });
+    
+      if (error) {
+        console.error('Google login error:', error.message);
+      } else {
+        console.log('Login successful:', data);
+      }
+      return {data, error};
 };

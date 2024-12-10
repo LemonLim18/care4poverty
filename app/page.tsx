@@ -35,8 +35,8 @@ export default function Home() {
       <Navbar />
       <Hero
         imageSrc={HeroPng.src}
-        title="Welcome to Our Platform"
-        subtitle="Explore the features and start your journey with us."
+        title="Welcome to Our Care4Poverty"
+        subtitle="Explore the features and start your charity journey with us."
         buttonText="Get Started"
         onButtonClick={() => handleLoginRedirect()}
       />
