@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from 'react-toastify';
-import { registerUser } from '@/lib/authFactory';
+import { registerUser, uploadFile } from '@/lib/authFactory';
 import  { useUserContext } from '@/app/context/UserContext'
 
 const RegisterPage = () => {
@@ -15,10 +15,7 @@ const RegisterPage = () => {
     const [selectedRole, setSelectedRole] = useState('');
     
     const {userUid, setUserUid} = useUserContext();
-
-    useEffect(()=>{
-        console.log(userUid);
-    }, [userUid]);    
+   
     // Shared information state
     const [sharedInfo, setSharedInfo] = useState({
         id: userUid,
@@ -26,10 +23,16 @@ const RegisterPage = () => {
         email: '',
         icNumber: '',
         phoneNumber: '',
-        profilePicture: null,
-        idProof: null,
+        profilePicture: null as File | null,
+        idProof: null as File | null,
         role: ''
     });
+
+    // useEffect to log sharedInfo whenever it changes
+    useEffect(() => {
+        console.log("Shared Info Updated:", sharedInfo);
+    }, [sharedInfo.idProof, sharedInfo.profilePicture]); // Dependency array includes sharedInfo
+
 
     // Role-specific state
     const [roleSpecificInfo, setRoleSpecificInfo] = useState({
@@ -62,6 +65,7 @@ const RegisterPage = () => {
             });
         }
     };
+
 
     // Render the shared information form
     const renderSharedForm = () => (

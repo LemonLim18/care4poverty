@@ -23,8 +23,37 @@ type User = {
     email?: string;
 };
 
-function DashboardPage() {
+
+type UserType = {
+    id: string;
+    created_at: string; // Use 'string' to represent timestamps in ISO format
+    updated_at: string; // Same as above
+    full_name: string;
+    ic_number: string;
+    telephone_number: string;
+    email: string;
+    role: string;
+    organization_name: string;
+    registration_number: string;
+    bank_account: string;
+    org_address: string;
+    website: string;
+    registration_cert?: string;
+    home_address: string;
+    income_statement?: string;
+    medical_report?: string;
+  };
+  
+const DashboardPage = () => {
     const [user, setUser] = useState<User | null>(null);  // Initialize user state with type User or null
+    const storedUserData = sessionStorage.getItem('user');
+    let userData: UserType | null = null;
+    if(storedUserData) {
+        userData= JSON.parse(storedUserData);
+        console.log("Session Storage: ", userData)
+    } else {
+        console.log('No user data found in session storage');
+    }
     const router = useRouter();
 
     useEffect(() => {
@@ -41,7 +70,7 @@ function DashboardPage() {
         };
 
         fetchUser();
-    }, [router]);
+    }, []);
 
     const handleLogout = async () => {
         await signOut();
@@ -53,9 +82,9 @@ function DashboardPage() {
         }, 1000);
     };
 
-    const handleTest = async () => {
-        console.log("user: ", user); 
-    }
+    // const handleTest = async () => {
+        // console.log("Show the session storage: ", user); 
+    // }
 
     return (
         <div className="h-screen flex">
@@ -71,7 +100,7 @@ function DashboardPage() {
                             <AvatarImage src="https://github.com/shadcn.png" />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
-                        <h2 className="font-giorgio text-2xl text-white font-bold tracking-wide">ABC Charity Society</h2>
+                        <h2 className="font-giorgio text-2xl text-white font-bold tracking-wide">{userData?.organization_name}</h2>
                     </SidebarHeader>
                     <SidebarContent>
                         <SidebarGroup className='bg-[#0077B6]'>

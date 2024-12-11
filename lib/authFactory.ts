@@ -10,7 +10,9 @@ interface UserRegistrationData {
   email: string,
   fullName: string,
   icNumber: string,
+  idProof: File | null,
   telephoneNumber: string,
+  profilePicture: File | null,
   role: string,
   // Role-specific fields
   organizationName?: string,
@@ -61,46 +63,143 @@ export const registerUser = async (data: UserRegistrationData) => {
     email: data.email,
     full_name: data.fullName,
     ic_number: data.icNumber,
+    id_proof: '',
+    profile_picture: '',
     telephone_number: data.telephoneNumber,
     role: data.role,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   };
 
-  // Add role-specific fields
-  const userData = data.role === 'charity-admin' 
-    ? {
-        ...baseUserData,
-        organization_name: data.organizationName,
-        registration_number: data.registrationNumber,
-        bank_account: data.bankAccount,
-        org_address: data.orgAddress,
-        website: data.website,
-        registration_cert: data.registrationCert,
+  // idProof is the pdf data type
+  if (data.idProof) {
+    const idUploadResult = await uploadFile(data.idProof);
+    if (idUploadResult.data) {
+      console.log("ID Proof: ", idUploadResult.data);
+      baseUserData.id_proof = idUploadResult.data.file_url; // Store the file URL
+    } else {
+      console.error("Failed to push the ID proof", idUploadResult.error);
+    }
+  }
+
+  // profile Picture is the png data type
+  if (data.profilePicture) {
+    const profileUploadResult = await uploadFile(data.profilePicture);
+    if (profileUploadResult.data) {
+      console.log("Profile Picture: ", profileUploadResult.data);
+      baseUserData.profile_picture = profileUploadResult.data.file_url; // Store the file URL
+    } else {
+      console.error("Failed to push the Profile Picture", profileUploadResult.error);
+    }
+  }
+
+  // Initialize role-specific fields
+  let roleSpecificData: any = {};
+
+  if (data.role === 'charity-admin') {
+    roleSpecificData = {
+      organization_name: data.organizationName,
+      organization_address: data.orgAddress,
+      registration_number: data.registrationNumber,
+      registration_cert: '', // Placeholder for the uploaded file URL
+      bank_account: data.bankAccount,
+      website: data.website,
+    };
+
+    // Upload registration certificate if provided
+    if (data.registrationCert) {
+      const certUploadResult = await uploadFile(data.registrationCert);
+      if (certUploadResult.data) {
+        console.log("Registration Certificate: ", certUploadResult.data);
+        roleSpecificData.registration_cert = certUploadResult.data.file_url; // Store the file URL
+      } else {
+        console.error("Failed to push the certification", certUploadResult.error);
       }
-    : {
-        ...baseUserData,
-        home_address: data.homeAddress,
-        income_statement: data.incomeStatement,
-        medical_report: data.role === 'recipient' ? data.medicalReport : null,
-      };
+    }
+  } else {
+    roleSpecificData = {
+      home_address: data.homeAddress,
+      income_statement: '', // Placeholder for the uploaded file URL
+      medical_report: '', // Placeholder for the uploaded file URL
+    };
 
-   console.log("before api call:", userData);
-   const { data: userDataResponse, error: insertError } = await createRecord("users", userData);
+    // Upload income statement if provided
+    if (data.incomeStatement) {
+      const incomeUploadResult = await uploadFile(data.incomeStatement);
+      if (incomeUploadResult.data) {
+        console.log("Income Upload: ", incomeUploadResult.data);
+        roleSpecificData.income_statement = incomeUploadResult.data.file_url; // Store the file URL
+      }else{
+        console.error("Failed to push the incomeStatement");
+      }
+    }
 
-   if (insertError) {
-     console.log('Error posting data: ', insertError);
-     return {
-       success: false,
-       message: insertError.message || 'Failed to create user record'
-     };
-   }
+    // Upload medical report if provided
+    if (data.role === 'recipient' && data.medicalReport) {
+      const medicalUploadResult = await uploadFile(data.medicalReport);
+      // medicalUploadResult.data here refers to the file url
+      if (medicalUploadResult.data) {
+        console.log("Medical Reload: ", medicalUploadResult.data);
+        roleSpecificData.medical_report = medicalUploadResult.data.file_url; // Store the file URL
+        console.error("Failed to push the medicalStatement");
+      }
+    }
+  }
 
-   console.log("Data posted successfully");
-   return {
-     success: true,
-     data: userDataResponse
-   };
+  // Combine base user data with role-specific data
+  const userData = {
+    ...baseUserData,
+    ...roleSpecificData,
+  };
+
+  console.log("before api call:", userData);
+  const { data: userDataResponse, error: insertError } = await createRecord("users", userData);
+
+  if (insertError) {
+    console.log('Error posting data: ', insertError);
+    return {
+      success: false,
+      message: insertError.message || 'Failed to create user record'
+    };
+  }
+
+  console.log("Data posted successfully");
+  return {
+    success: true,
+    data: userDataResponse
+  };
+};
+
+export const uploadFile = async(file: File) => {
+  const bucketName = file.type === 'application/pdf' ? 'documents' : 'photos';
+  
+  const filePath = `users/${file.name}`;
+
+  // Upload file to storage bucket
+  const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file);
+
+  if (error) {
+    console.log('Fail to upload to: ',filePath,' with ', error.message);
+    return { data: null, error }; // Return an object with null data and the error
+  }
+
+  // Get public URL of the file
+  // const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(`public/${file.name}`);
+  const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+  const fileUrl = publicUrlData.publicUrl;
+  console.log("The file url: ", fileUrl);
+
+  // Insert file metadata into the database
+  // const { data: dbData, error: dbError } = await supabase
+  //   .from('users')
+  //   .insert([{ file_name: file.name }]);
+
+  // if (dbError) {
+  //   console.log('Database insert failed:', dbError.message);
+  //   return { data: null, error: dbError }; // Return an object with null data and the database error
+  // }
+
+  return { data: { file_url: fileUrl }, error: null }; // Return the file URL
 };
 
 // Sign In Function
