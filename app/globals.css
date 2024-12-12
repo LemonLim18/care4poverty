@@ -2,15 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* Hide the scrollbar-y in the index page that causes the screen to displace right by little */
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 /* It is like importing the styling file here locally, 
 and if you want to call each style category using tailwindcss
 At the tailwind.config.ts, setup a category(inside it have the tailwind name: roboto and 
 its corresponding value: name of the local file[])  */
 
+/* GIORGIO SANS */
 @font-face {
   font-family: 'Giorgio Sans';
   src: url('/fonts/GiorgioSans-Black-Trial.otf') format('opentype');
@@ -123,6 +131,91 @@ its corresponding value: name of the local file[])  */
   font-style: italic;
 }
 
+/* ROBOTO */
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto/Roboto-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+}
+
 
 @layer base {
   :root {
@@ -151,6 +244,14 @@ its corresponding value: name of the local file[])  */
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
     --background: 240 10% 3.9%;
@@ -177,6 +278,14 @@ its corresponding value: name of the local file[])  */
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 

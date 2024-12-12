@@ -1,14 +1,28 @@
 "use client"; // Add this line at the top
 
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Don't remove this, else the styling of AOS will fail
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/index/navbar";
 import { Hero } from "@/components/index/hero";
-
+import { About } from "@/components/index/about";
+import { Objective } from "@/components/index/objective";
+import { GetInvolve } from "@/components/index/getInvolve";
+import { Faq } from "@/components/index/faq";
+import { Contact } from "@/components/index/contact";
+import { Footer } from "@/components/index/footer";
 import HeroPng from "public/images/hero.png";
 
 export default function Home() {
   const router = useRouter();
+
+  // Initialize AOS on component mount
+  useEffect(() => {
+    AOS.init({ easing: 'ease-out-back' }); // You can customize AOS options here
+    AOS.refresh(); // To refresh AOS animations (in case of dynamic content)
+  }, []);
 
   const handleLoginRedirect = () => {
     router.push("/auth/login");
@@ -18,23 +32,22 @@ export default function Home() {
     // <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
     // This is the main "screen" for the index page 
     <div className="min-h-screen">
-      <Navbar className="relative"/>
+      <Navbar />
       <Hero
         imageSrc={HeroPng.src}
-        title="Welcome to Our Platform"
-        subtitle="Explore the features and start your journey with us."
+        title="Welcome to Care4Poverty"
+        subtitle="Explore the features and start your charity journey with us."
         buttonText="Get Started"
-        onButtonClick={() => console.log("Button Clicked!")}
+        onButtonClick={() => handleLoginRedirect()}
       />
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        {/* <Image
-          className="dark:invert"
-          src="/images/logo.png"
-          alt="Care4Poverty Logo"
-          width={180}
-          height={38}
-          priority
-        /> */}
+      <About />
+      {/* <Objective /> */}
+      <Objective />
+      <GetInvolve />
+      <Faq />
+      <Contact />
+      <Footer />
+      {/* <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
             Get started by editing{" "}
@@ -124,7 +137,7 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }

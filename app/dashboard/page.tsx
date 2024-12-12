@@ -3,33 +3,47 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // For redirection
 import { getUser, signOut } from '../../lib/authFactory'; // Adjust the import path
-import { Button } from "@/components/ui/button"; // Adjust the import path
 import { toast } from 'react-toastify'; // For notifications
+import { UserType } from  "@/datatypes/types";
+import SideBarComponent from "@/components/dashboard/sideBar"; // Adjust the import path
 
 // Define a User type based on your application structure
 type User = {
     email?: string;
-};
-
-function DashboardPage() {
-    const [user, setUser] = useState<User | null>(null);  // Initialize user state with type User or null
+};  
+  
+const DashboardPage = () => {
+    const [userData, setUserData] = useState<UserType | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
-
+    
     useEffect(() => {
+        // Check if window is defined (client-side)
+        if (typeof window !== 'undefined') {
+            const storedUserData = sessionStorage.getItem('user');
+            if (storedUserData) {
+                const parsedUserData = JSON.parse(storedUserData);
+                setUserData(parsedUserData);
+                console.log("Session Storage: ", parsedUserData);
+            } else {
+                console.log('No user data found in session storage');
+            }
+        }
+
         const fetchUser = async () => {
             const currentUser: User | null = await getUser();
             if (!currentUser) {
                 toast.error('User not found! Redirecting to login...', {
                     autoClose: 1350,
                 });
-                router.push('/auth/login'); // Redirect to login if no user is found
+                router.push('/auth/login');
             } else {
                 setUser(currentUser);
             }
         };
 
         fetchUser();
-    }, [router]);
+    }, []);
 
     const handleLogout = async () => {
         await signOut();
@@ -41,24 +55,29 @@ function DashboardPage() {
         }, 1000);
     };
 
-    const handleTest = async () => {
-        console.log("user: ", user); 
-    }
+    // const handleTest = async () => {
+        // console.log("Show the session storage: ", user); 
+    // }
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            {user ? (
-                <div className="mt-4">
-                    <p>Welcome, {user.email}!</p>
-                    <div className="mt-4 flex justify-around">
-                        <Button onClick={handleLogout}>Log Out</Button>
-                        <Button onClick={handleTest}>Test</Button>
+        <div className="h-screen flex">
+            <SideBarComponent 
+                userData={userData || undefined}
+                onLogout={handleLogout}
+            />
+
+            {/* Main Content */}
+            {/* bg-blue-200 */}
+            <main className="bg-white w-full flex-1 p-8 flex flex-col items-center justify-center">
+                <h1 className="text-2xl font-bold">Welcome</h1>
+                {user ? (
+                    <div className="mt-4">
+                        <p>Welcome, {user.email}!</p>
                     </div>
-                </div>
-            ) : (
-                <p>Loading...</p>
-            )}
+                ) : (
+                    <p>Loading...</p>
+                )}
+            </main>
         </div>
     );
 }
