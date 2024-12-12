@@ -12,16 +12,16 @@ import { Separator } from "@/components/ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import eventImage1 from "@/public/images/event1.jpeg";
-import eventImage2 from "@/public/images/event2.jpg";
-import eventImage3 from "@/public/images/event3.jpeg";
-import eventImage4 from "@/public/images/event4.jpg";
-import eventImage5 from "@/public/images/event5.jpeg";
-import eventImage6 from "@/public/images/event6.jpg";
+import eventImage1 from "@/public/images/dummy/event1.jpeg";
+import eventImage2 from "@/public/images/dummy/event2.jpg";
+import eventImage3 from "@/public/images/dummy/event3.jpeg";
+import eventImage4 from "@/public/images/dummy/event4.jpg";
+import eventImage5 from "@/public/images/dummy/event5.jpeg";
+import eventImage6 from "@/public/images/dummy/event6.jpg";
 import { supabase } from "@/lib/supabaseClient";
 import Link from 'next/link';  // Add this import at the top of your file
 import { Select, SelectItem, SelectLabel, SelectGroup, SelectContent, SelectValue, SelectTrigger } from '@/components/ui/select';
-import { MapPin, BookImage, ChartColumnStacked } from "lucide-react";
+import { MapPin, BookImage, ChartPie } from "lucide-react";
 
 const EventImages = () => [
     eventImage1,
@@ -84,7 +84,7 @@ const EventPage = () => {
             />
 
             {/* Main Content */}
-            <main className="h-screen w-screen flex flex-col mmt-8 md:ml-10 ml-5 md:mr-10 mr-5">
+            <main className="h-screen w-screen flex flex-col mt-8 md:ml-10 ml-5 md:mr-10 mr-5">
                 <div className="flex items-center gap-2">
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -113,14 +113,14 @@ const EventPage = () => {
                     {Array.from({ length: 3 }).map((_, index) => (
                         <div key={index}>
                             <Card
-                                className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                className="cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
                                 onClick={() => {/* Handle card click */}}
                             >
                                 <CardContent className="flex flex-col">
                                     <Image
                                         src={EventImages()[index]} 
                                         alt={`Event ${index + 1}`} 
-                                        className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                        className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                     />
                                     <div className="m-4 flex justify-between items-center">
                                         <div>
@@ -137,7 +137,7 @@ const EventPage = () => {
                 <Separator className="mt-8"/>                
                 
                 <div className="mt-7 md:justify-center flex">
-                    <ChartColumnStacked className="text-3xl sm:text-4xl md:text-5xl mr-2" size={36}/>
+                    <ChartPie className="text-3xl sm:text-4xl md:text-5xl mr-2" size={36}/>
                     <h2 className="font-giorgio font-bold text-3xl sm:text-4xl md:text-5xl">Select a Category</h2>
                 </div>
                 
@@ -167,14 +167,14 @@ const EventPage = () => {
                         }).map((_, index) => (
                             <div key={index}>
                                 <Card
-                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                     onClick={() => {/* Handle card click */}}
                                 >
                                     <CardContent className="flex flex-col">
                                         <Image
                                             src={EventImages()[index]} 
                                             alt={`Event ${index + 1}`} 
-                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                            className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                         />
                                         <div className="m-4 flex justify-between items-center">
                                             <div>
@@ -195,14 +195,14 @@ const EventPage = () => {
                         }).map((_, index) => (
                             <div key={index}>
                                 <Card
-                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                     onClick={() => {/* Handle card click */}}
                                 >
                                     <CardContent className="flex flex-col">
                                         <Image
                                             src={EventImages()[index]} 
                                             alt={`Event ${index + 1}`} 
-                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                            className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                         />
                                         <div className="m-4 flex justify-between items-center">
                                             <div>
@@ -223,14 +223,14 @@ const EventPage = () => {
                         }).map((_, index) => (
                             <div key={index}>
                                 <Card
-                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                     onClick={() => {/* Handle card click */}}
                                 >
                                     <CardContent className="flex flex-col">
                                         <Image
                                             src={EventImages()[index]} 
                                             alt={`Event ${index + 1}`} 
-                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                            className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                         />
                                         <div className="m-4 flex justify-between items-center">
                                             <div>
@@ -251,14 +251,14 @@ const EventPage = () => {
                         }).map((_, index) => (
                             <div key={index}>
                                 <Card
-                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                     onClick={() => {/* Handle card click */}}
                                 >
                                     <CardContent className="flex flex-col">
                                         <Image
                                             src={EventImages()[index]} 
                                             alt={`Event ${index + 1}`} 
-                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                            className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                         />
                                         <div className="m-4 flex justify-between items-center">
                                             <div>
@@ -279,14 +279,14 @@ const EventPage = () => {
                         }).map((_, index) => (
                             <div key={index}>
                                 <Card
-                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                     onClick={() => {/* Handle card click */}}
                                 >
                                     <CardContent className="flex flex-col">
                                         <Image
                                             src={EventImages()[index]} 
                                             alt={`Event ${index + 1}`} 
-                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                            className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                         />
                                         <div className="m-4 flex justify-between items-center">
                                             <div>
@@ -315,14 +315,14 @@ const EventPage = () => {
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <div key={index}>
                                         <Card
-                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                             onClick={() => {/* Handle card click */}}
                                         >
                                             <CardContent className="flex flex-col">
                                                 <Image
                                                     src={EventImages()[index]} 
                                                     alt={`Event ${index + 1}`} 
-                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                    className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                                 />
                                                 <div className="m-4 flex justify-between items-center">
                                                     <div>
@@ -341,14 +341,14 @@ const EventPage = () => {
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <div key={index}>
                                         <Card
-                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                             onClick={() => {/* Handle card click */}}
                                         >
                                             <CardContent className="flex flex-col">
                                                 <Image
                                                     src={EventImages()[index]} 
                                                     alt={`Event ${index + 1}`} 
-                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                    className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                                 />
                                                 <div className="m-4 flex justify-between items-center">
                                                     <div>
@@ -367,14 +367,14 @@ const EventPage = () => {
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <div key={index}>
                                         <Card
-                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                             onClick={() => {/* Handle card click */}}
                                         >
                                             <CardContent className="flex flex-col">
                                                 <Image
                                                     src={EventImages()[index]} 
                                                     alt={`Event ${index + 1}`} 
-                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                    className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                                 />
                                                 <div className="m-4 flex justify-between items-center">
                                                     <div>
@@ -393,14 +393,14 @@ const EventPage = () => {
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <div key={index}>
                                         <Card
-                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                             onClick={() => {/* Handle card click */}}
                                         >
                                             <CardContent className="flex flex-col">
                                                 <Image
                                                     src={EventImages()[index]} 
                                                     alt={`Event ${index + 1}`} 
-                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                    className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                                 />
                                                 <div className="m-4 flex justify-between items-center">
                                                     <div>
@@ -419,14 +419,14 @@ const EventPage = () => {
                                 {Array.from({ length: 6 }).map((_, index) => (
                                     <div key={index}>
                                         <Card
-                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                             onClick={() => {/* Handle card click */}}
                                         >
                                             <CardContent className="flex flex-col">
                                                 <Image
                                                     src={EventImages()[index]} 
                                                     alt={`Event ${index + 1}`} 
-                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                    className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                                 />
                                                 <div className="m-4 flex justify-between items-center">
                                                     <div>
@@ -456,14 +456,14 @@ const EventPage = () => {
                     {Array.from({ length: 6 }).map((_, index) => (
                         <div key={index}>
                             <Card
-                                className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                className="cursor-pointer hover:bg-gray-50 transition-colors duration-200 overflow-hidden"
                                 onClick={() => {/* Handle card click */}}
                             >
                                 <CardContent className="flex flex-col">
                                     <Image
                                         src={EventImages()[index]} 
                                         alt={`Event ${index + 1}`} 
-                                        className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                        className="mb-2 h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                     />
                                     <div className="m-4 flex justify-between items-center">
                                         <div>

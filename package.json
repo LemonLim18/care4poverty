@@ -38,7 +38,8 @@
     "react-toastify": "^10.0.6",
     "shadcn-ui": "^0.2.3",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.1"
   },
   "devDependencies": {
     "@types/aos": "^3.0.7",
