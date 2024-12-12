@@ -7,14 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from 'react-toastify';
-import { registerUser, uploadFile } from '@/lib/authFactory';
+import { registerUser, uploadFile, getUser} from '@/lib/authFactory';
 import  { useUserContext } from '@/app/context/UserContext'
 
 const RegisterPage = () => {
     const router = useRouter();
     const [selectedRole, setSelectedRole] = useState('');
-    
     const {userUid, setUserUid} = useUserContext();
+    const [googleUserId, setGoogleUserId] = useState('');
    
     // Shared information state
     const [sharedInfo, setSharedInfo] = useState({
@@ -28,11 +28,18 @@ const RegisterPage = () => {
         role: ''
     });
 
-    // useEffect to log sharedInfo whenever it changes
     useEffect(() => {
-        console.log("Shared Info Updated:", sharedInfo);
-    }, [sharedInfo.idProof, sharedInfo.profilePicture]); // Dependency array includes sharedInfo
+        const fetchUserId = async () => {
+            const user = await getUser();
+            console.log("User: ", user);
+            const userId = user?.id || null;
+            setUserUid(userId);
+            setSharedInfo(prevSharedInfo => ({ ...prevSharedInfo, id: userId || '' }));
+        };
+        fetchUserId();
+    }, []);
 
+    console.log("Shared Info Updated:", sharedInfo);
 
     // Role-specific state
     const [roleSpecificInfo, setRoleSpecificInfo] = useState({

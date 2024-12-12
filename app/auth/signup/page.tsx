@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { signUp, checkEmailConfirmation } from '../../../lib/authFactory'; // Assume this function checks confirmation status
+import { signUp, checkEmailConfirmation, signInWithGoogle } from '../../../lib/authFactory'; // Assume this function checks confirmation status
 import { Button } from "@/components/ui/button"; 
 import { Input } from '@/components/ui/input'; 
 import { Dialog, DialogTrigger, DialogContent, DialogOverlay, DialogTitle, DialogDescription } from '@radix-ui/react-dialog';
@@ -38,6 +38,20 @@ const SignupPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [emailForReset, setEmailForReset] = useState('');
 
+  const handleGoogleSignUp = async () => {
+    setLoading(true);
+    const { data, error } = await signInWithGoogle();
+    setLoading(false);
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Successfully sign up with Google!", {
+        autoClose: 1500,
+      });
+    }
+  };
+
   // Add password validation function
   const validatePasswords = () => {
     if (password !== confirmPassword) {
@@ -64,9 +78,10 @@ const SignupPage = () => {
 
   const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
 
+    setLoading(true);
     const { data, error } = await signUp(email, password);
+    setLoading(false);
 
     console.log("Data:", data)
 
@@ -320,14 +335,17 @@ const SignupPage = () => {
               <hr className="w-1/3 h-0.5 bg-gray-400"/>
             </div>
 
-            <Button type="submit" disabled={loading} className='bg-[#0077B6] hover:bg-[#00689F] font-inter px-10 py-6 mt-4 mb-10'>
+            <Button onClick={handleGoogleSignUp} disabled={loading} className='bg-[#0077B6] hover:bg-[#00689F] font-inter px-10 py-6 mt-4 mb-10'>
               <Image 
                   src={googleIcon}
                   alt="Google Logo Png"
                   className="flex-shrink-0 relative left-[-35px] md:left-[-13%] [@media(min-width:980px)]:left-[-20%] [@media(min-width:1000px)]:left-[-35px]  h-[40px] w-[40px]"
               />
               {/* [@media(min-height:730px)]:my-6  */}
-              <span className="flex-1">Sign Up with Google</span> {/* Flexible text container */}
+              {/* <span className="flex-1">Sign Up with Google</span> Flexible text container */}
+              <span className="flex-1">
+                {loading ? 'Loading...' : 'Sign Up with Google'}
+              </span>
             </Button>
 
             <p className="mb-32 text-[0.9rem] text-center">

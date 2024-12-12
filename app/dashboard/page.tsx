@@ -38,6 +38,8 @@ type UserType = {
     bank_account: string;
     org_address: string;
     website: string;
+    id_proof: string;
+    profile_picture: string,
     registration_cert?: string;
     home_address: string;
     income_statement?: string;
@@ -97,7 +99,8 @@ const DashboardPage = () => {
                           className="w-36"
                         />
                         <Avatar className="h-24 w-24">
-                            <AvatarImage src="https://github.com/shadcn.png" />
+                            {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+                            <AvatarImage src={userData?.profile_picture} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <h2 className="font-giorgio text-2xl text-white font-bold tracking-wide">{userData?.organization_name}</h2>

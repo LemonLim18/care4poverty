@@ -39,9 +39,6 @@ const LoginPage = () => {
       toast.success("Successfully logged in with Google!", {
         autoClose: 1500,
       });
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1800);
     }
   }
 

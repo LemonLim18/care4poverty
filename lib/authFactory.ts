@@ -281,18 +281,60 @@ export const handlePasswordReset = async (email: string) => {
     return { success: true, data };
 };
 
-export const signInWithGoogle = async() => {
+export const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: `http://localhost:3000/dashboard`,
+            redirectTo: `http://localhost:3000/auth/checkUser`, // Redirect to a temporary endpoint to check user existence
         },
-      });
-    
-      if (error) {
+    });
+
+    if (error) {
         console.error('Google login error:', error.message);
-      } else {
-        console.log('Login successful:', data);
-      }
-      return {data, error};
+        return { data: null, error }; // Return null data and the error
+    }
+
+    console.log('Login successful:', data);
+    return { data, error: null }; // Return data and null error
+};
+
+// New function to check user existence and redirect accordingly
+export const checkUserAndRedirect = async () => {
+    const { data: { user }, error } = await supabase.auth.getUser(); // Get the currently logged-in user
+
+    if (error) {
+        console.error('Error fetching user:', error.message);
+        return; // Handle the error appropriately
+    }
+
+    if (!user) {
+        console.error('No user found after login.');
+        return; // Handle the case where no user is found
+    }
+
+    // Check if the user exists in the database
+    const { data: userData, error: fetchError } = await supabase
+        .from('users') // Replace 'users' with your actual table name
+        .select('*')
+        .eq('email', user.email) // Check for the user's email
+      .single(); // Get a single record
+
+    // Redirect based on whether the user exists
+    if (!userData) {
+        // User does not exist, redirect to registration
+        window.location.href = '/auth/register'; // Redirect to registration page
+    } else {
+        //
+        if (userData) {
+          sessionStorage.setItem('user', JSON.stringify(userData)); // Store user data
+          console.log('User data stored in session storage:', userData);
+        } else {
+          console.error("User data is undefined.");
+        }
+        // User exists, redirect to dashboard
+        setTimeout(() => {
+          console.log("Redirected to dashboard page")
+          window.location.href = '/dashboard'; // Redirect to dashboard
+        }, 1800);
+    }
 };
