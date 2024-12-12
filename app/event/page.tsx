@@ -1,19 +1,14 @@
-"use client"; // Ensure this is a client component
+"use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; // For redirection
-import { getUser, signOut } from '../../lib/authFactory'; // Adjust the import path
-import { Button } from "@/components/ui/button"; // Adjust the import path
-import { toast } from 'react-toastify'; // For notifications
+import SideBarComponent from "@/components/dashboard/sideBar"; // Adjust the import path
+import { User } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
+import { UserType } from '@/datatypes/types';
+import { getUser, signOut } from '@/lib/authFactory';
+import { toast } from 'react-toastify';
 import Image from 'next/image';
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarHeader,
-    SidebarProvider,
-} from "@/components/ui/sidebar";
+
 import {
     Carousel,
     CarouselContent,
@@ -30,8 +25,6 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Home, Settings, User, LogOut, BarChart, Package, Building, Send, ChevronRight, Bell, Calendar } from "lucide-react"; // Import icons
 import logoPng from "@/public/images/logo.png";
 import { Card, CardContent } from '@/components/ui/card';
 import eventImage1 from "@/public/images/event1.jpeg";
@@ -39,30 +32,39 @@ import eventImage2 from "@/public/images/event2.jpg";
 import eventImage3 from "@/public/images/event3.jpeg";
 import eventImage4 from "@/public/images/event4.jpg";
 import Link from 'next/link';  // Add this import at the top of your file
-// Define a User type based on your application structure
-type User = {
-    email?: string;
-};
 
-function EventPage() {
-    const [user, setUser] = useState<User | null>(null);  // Initialize user state with type User or null
+const EventPage = () => {
+    const [userData, setUserData] = useState<UserType | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
-
+    
     useEffect(() => {
+        // Check if window is defined (client-side)
+        if (typeof window !== 'undefined') {
+            const storedUserData = sessionStorage.getItem('user');
+            if (storedUserData) {
+                const parsedUserData = JSON.parse(storedUserData);
+                setUserData(parsedUserData);
+                console.log("Session Storage: ", parsedUserData);
+            } else {
+                console.log('No user data found in session storage');
+            }
+        }
+
         const fetchUser = async () => {
             const currentUser: User | null = await getUser();
             if (!currentUser) {
                 toast.error('User not found! Redirecting to login...', {
                     autoClose: 1350,
                 });
-                router.push('/auth/login'); // Redirect to login if no user is found
+                router.push('/auth/login');
             } else {
                 setUser(currentUser);
             }
         };
 
         fetchUser();
-    }, [router]);
+    }, []);
 
     const handleLogout = async () => {
         await signOut();
@@ -74,92 +76,12 @@ function EventPage() {
         }, 1000);
     };
 
-    const handleTest = async () => {
-        console.log("user: ", user); 
-    }
-
     return (
         <div className="h-screen flex">
-            <SidebarProvider>
-                <Sidebar className="w-64 border-r">
-                    <SidebarHeader className="flex flex-col items-center justify-center w-full bg-[#0077B6] p-4 pb-2">
-                        <Image
-                          src={logoPng}
-                          alt="Care4Poverty logo"
-                          className="w-36"
-                        />
-                        <Avatar className="h-24 w-24">
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                        <h2 className="font-giorgio text-2xl text-white font-bold tracking-wide">ABC Charity Society</h2>
-                    </SidebarHeader>
-                    <SidebarContent>
-                        <SidebarGroup className='bg-[#0077B6]'>
-                            <h4 className="font-roboto text-[#D2D2D2] text-xsm mx-2">Account</h4>
-                            <button className="flex items-center justify-between gap-2 w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <User size={18} />
-                                    <span className="font-roboto text-sm">Profile</span>
-                                </div>
-                                <ChevronRight size={18}/>
-                            </button>
-                            <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <Building size={18} />
-                                    <span className="font-roboto text-sm">Organization</span>
-                                </div>
-                                <ChevronRight size={18} />
-                            </button>
-                            <h4 className="font-roboto text-[#D2D2D2] text-xsm mt-5 mx-2">Home</h4>
-                            <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <BarChart size={18} />
-                                    <span className="font-roboto text-sm">Dashboard</span>
-                                </div>
-                                <ChevronRight size={18} />
-                            </button>
-                            <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <Send size={18} />
-                                    <span className="font-roboto text-sm">Request</span>
-                                </div>
-                                <ChevronRight size={18} />
-                            </button>
-                            <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <Package size={18} />
-                                    <span className="font-roboto text-sm">Resource</span>
-                                </div>
-                                <ChevronRight size={18} />
-                            </button>
-                            <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <Bell size={18} />
-                                    <span className="font-roboto text-sm">Notification</span>
-                                </div>
-                                <ChevronRight size={18} />
-                            </button>
-                            <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <Calendar size={18} />
-                                    <span className="font-roboto text-sm">Event</span>
-                                </div>
-                                <ChevronRight size={18} />
-                            </button>
-                        </SidebarGroup>
-                    </SidebarContent>
-                    <SidebarFooter className="bg-[#0077B6] p-4">
-                        <button 
-                            onClick={handleLogout}
-                            className="flex items-center gap-2 w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
-                        >
-                            <LogOut size={20} />
-                            <span className="font-roboto text-sm">Logout</span>
-                        </button>
-                    </SidebarFooter>
-                </Sidebar>
-            </SidebarProvider>
+            <SideBarComponent 
+                userData={userData || undefined}
+                onLogout={handleLogout}
+            />
 
             {/* Main Content */}
             <div className="h-screen w-screen flex flex-col mt-8 md:ml-10 sm:ml-8 md:mr-10 sm:mr-8">
@@ -350,6 +272,6 @@ function EventPage() {
             </div>
         </div>
     );
-}
+};
 
-export default EventPage;
+export default EventPage; 

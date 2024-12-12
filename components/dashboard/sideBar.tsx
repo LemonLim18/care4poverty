@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Home, Settings, User, LogOut, BarChart, Package, Building, Send, ChevronRight, Bell, Calendar } from "lucide-react"; // Import icons
 import logoPng from "@/public/images/logo.png";
 import { UserType } from  "@/datatypes/types";
-
+import { useRouter } from 'next/navigation';
 
 // type UserType = {
 //     id: string;
@@ -46,7 +46,12 @@ const SideBarComponent: React.FC<SideBarProps> = ({
     userData,
     onLogout,
 }) => {
-    
+    const router = useRouter();
+
+    const navigateToPage = (path: string) => {
+        router.push(path);
+    };
+
     return (
         <SidebarProvider>
             <Sidebar className="w-64 border-r">
@@ -66,14 +71,20 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                 <SidebarContent>
                     <SidebarGroup className='bg-[#0077B6]'>
                         <h4 className="font-roboto text-[#D2D2D2] text-xsm mx-2">Account</h4>
-                        <button className="flex items-center justify-between gap-2 w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
+                        <button 
+                            onClick={() => navigateToPage('/profile')}
+                            className="flex items-center justify-between gap-2 w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                        >
                             <div className="flex items-center gap-2">
                                 <User size={18} />
                                 <span className="font-roboto text-sm">Profile</span>
                             </div>
                             <ChevronRight size={18}/>
                         </button>
-                        <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
+                        <button 
+                            onClick={() => navigateToPage('/organization')}
+                            className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                        >
                             <div className="flex items-center gap-2">
                                 <Building size={18} />
                                 <span className="font-roboto text-sm">Organization</span>
@@ -81,35 +92,50 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                             <ChevronRight size={18} />
                         </button>
                         <h4 className="font-roboto text-[#D2D2D2] text-xsm mt-5 mx-2">Home</h4>
-                        <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
+                        <button
+                            onClick={() => navigateToPage('/dashboard')}
+                            className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                        >
                             <div className="flex items-center gap-2">
                                 <BarChart size={18} />
                                 <span className="font-roboto text-sm">Dashboard</span>
                             </div>
                             <ChevronRight size={18} />
                         </button>
-                        <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
+                        <button 
+                            onClick={() => navigateToPage('/request')}
+                            className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                        >
                             <div className="flex items-center gap-2">
                                 <Send size={18} />
                                 <span className="font-roboto text-sm">Request</span>
                             </div>
                             <ChevronRight size={18} />
                         </button>
-                        <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
+                        <button 
+                            onClick={() => navigateToPage('/resource')}
+                            className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                        >
                             <div className="flex items-center gap-2">
                                 <Package size={18} />
                                 <span className="font-roboto text-sm">Resource</span>
                             </div>
                             <ChevronRight size={18} />
                         </button>
-                        <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
+                        <button 
+                            onClick={() => navigateToPage('/notification')}
+                            className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                        >
                             <div className="flex items-center gap-2">
                                 <Bell size={18} />
                                 <span className="font-roboto text-sm">Notification</span>
                             </div>
                             <ChevronRight size={18} />
                         </button>
-                        <button className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg">
+                        <button 
+                            onClick={() => navigateToPage('/event')}
+                            className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                        >
                             <div className="flex items-center gap-2">
                                 <Calendar size={18} />
                                 <span className="font-roboto text-sm">Event</span>

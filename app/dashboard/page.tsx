@@ -3,29 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // For redirection
 import { getUser, signOut } from '../../lib/authFactory'; // Adjust the import path
-import { Button } from "@/components/ui/button"; // Adjust the import path
 import { toast } from 'react-toastify'; // For notifications
-import Image from 'next/image';
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarHeader,
-    SidebarProvider,
-} from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Home, Settings, User, LogOut, BarChart, Package, Building, Send, ChevronRight, Bell, Calendar } from "lucide-react"; // Import icons
-import logoPng from "@/public/images/logo.png";
 import { UserType } from  "@/datatypes/types";
-
 import SideBarComponent from "@/components/dashboard/sideBar"; // Adjust the import path
 
 // Define a User type based on your application structure
 type User = {
     email?: string;
-};
-
+};  
   
 const DashboardPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
@@ -82,7 +67,8 @@ const DashboardPage = () => {
             />
 
             {/* Main Content */}
-            <main className="bg-blue-200 w-full flex-1 p-8 flex flex-col items-center justify-center">
+            {/* bg-blue-200 */}
+            <main className="bg-white w-full flex-1 p-8 flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-bold">Welcome</h1>
                 {user ? (
                     <div className="mt-4">
