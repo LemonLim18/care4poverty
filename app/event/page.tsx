@@ -8,35 +8,35 @@ import { UserType } from '@/datatypes/types';
 import { getUser, signOut } from '@/lib/authFactory';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
-
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel";
 import { Separator } from "@/components/ui/separator";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import logoPng from "@/public/images/logo.png";
-import { Card, CardContent } from '@/components/ui/card';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import eventImage1 from "@/public/images/event1.jpeg";
 import eventImage2 from "@/public/images/event2.jpg";
 import eventImage3 from "@/public/images/event3.jpeg";
 import eventImage4 from "@/public/images/event4.jpg";
+import eventImage5 from "@/public/images/event5.jpeg";
+import eventImage6 from "@/public/images/event6.jpg";
+import { supabase } from "@/lib/supabaseClient";
 import Link from 'next/link';  // Add this import at the top of your file
+import { Select, SelectItem, SelectLabel, SelectGroup, SelectContent, SelectValue, SelectTrigger } from '@/components/ui/select';
+import { MapPin, BookImage, ChartColumnStacked } from "lucide-react";
+
+const EventImages = () => [
+    eventImage1,
+    eventImage2,
+    eventImage3,
+    eventImage4,
+    eventImage5,
+    eventImage6
+];
 
 const EventPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
+    const [selectedCategory, setSelectedCategory] = useState<string>("All");
     
     useEffect(() => {
         // Check if window is defined (client-side)
@@ -84,7 +84,7 @@ const EventPage = () => {
             />
 
             {/* Main Content */}
-            <div className="h-screen w-screen flex flex-col mt-8 md:ml-10 sm:ml-8 md:mr-10 sm:mr-8">
+            <main className="h-screen w-screen flex flex-col mmt-8 md:ml-10 ml-5 md:mr-10 mr-5">
                 <div className="flex items-center gap-2">
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -103,173 +103,383 @@ const EventPage = () => {
                 </div>
 
                 {/* Subtitle */}
-                <div className="mt-1">
+                <div className="mt-1 mb-2 flex">
+                    <BookImage className="text-3xl sm:text-4xl md:text-5xl mr-2" size={30}/>
                     <h2 className="font-roboto text-lg sm:text-xl md:text-2xl">Recent Events</h2>
                 </div>
 
                 {/* Recent events */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <Card 
-                        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                        onClick={() => {/* Handle card click */}}
-                    >
-                        <CardContent className="flex flex-col">
-                            <Image 
-                                src={eventImage1} 
-                                alt="Description" 
-                                className="mb-2 max-h-48 rounded-t-lg object-cover"
-                            />
-                            <div className="m-4 flex justify-between items-center">
-                                <div>
-                                    <span className="text-2xl font-semibold">Card 1</span>
-                                    <p className="text-sm">This is a short description of Card 1.</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card 
-                        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                        onClick={() => {/* Handle card click */}}
-                    >
-                        <CardContent className="flex flex-col">
-                            <Image 
-                                src={eventImage2} 
-                                alt="Description" 
-                                className="mb-2 max-h-48 rounded-t-lg object-cover"
-                            />                            
-                            <div className="m-4 flex justify-between items-center">
-                                <div>
-                                    <span className="text-2xl font-semibold">Card 2</span>
-                                    <p className="text-sm">This is a short description of Card 2.</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card 
-                        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                        onClick={() => {/* Handle card click */}}
-                    >
-                        <CardContent className="flex flex-col">
-                            <Image 
-                                src={eventImage3} 
-                                alt="Description" 
-                                className="mb-2 max-h-48 rounded-t-lg object-cover"
-                            />                            
-                            <div className="m-4 flex justify-between items-center">
-                                <div>
-                                    <span className="text-2xl font-semibold">Card 3</span>
-                                    <p className="text-sm">This is a short description of Card 3.</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card 
-                        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                        onClick={() => {/* Handle card click */}}
-                    >
-                        <CardContent className="flex flex-col">
-                            <Image 
-                                src={eventImage4} 
-                                alt="Description" 
-                                className="mb-2 max-h-48 rounded-t-lg object-cover"
-                            />                            
-                            <div className="m-4 flex justify-between items-center">
-                                <div>
-                                    <span className="text-2xl font-semibold">Card 4</span>
-                                    <p className="text-sm">This is a short description of Card 4.</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 3 }).map((_, index) => (
+                        <div key={index}>
+                            <Card
+                                className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                onClick={() => {/* Handle card click */}}
+                            >
+                                <CardContent className="flex flex-col">
+                                    <Image
+                                        src={EventImages()[index]} 
+                                        alt={`Event ${index + 1}`} 
+                                        className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                    />
+                                    <div className="m-4 flex justify-between items-center">
+                                        <div>
+                                            <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                            <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    ))}
                 </div>
 
-                {/* Subtitle */}
-                <div className="mt-1">
-                    <h2 className="font-roboto text-lg sm:text-xl md:text-2xl">Events near you</h2>
+                <Separator className="mt-8"/>                
+                
+                <div className="mt-7 md:justify-center flex">
+                    <ChartColumnStacked className="text-3xl sm:text-4xl md:text-5xl mr-2" size={36}/>
+                    <h2 className="font-giorgio font-bold text-3xl sm:text-4xl md:text-5xl">Select a Category</h2>
+                </div>
+                
+                <div className="mt-8 mb-8 block md:hidden">
+                    <div className="mb-6">
+                        <Select onValueChange={(value) => setSelectedCategory(value)}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select here" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Events</SelectLabel>
+                                    <SelectItem value="All">All</SelectItem>
+                                    <SelectItem value="Donation">Donation</SelectItem>
+                                    <SelectItem value="FunRun">Fun Run</SelectItem>
+                                    <SelectItem value="GalaEvent">Gala Event</SelectItem>
+                                    <SelectItem value="Concert">Concert</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {Array.from({ length: 6 }).filter((_, index) => {
+                            if (selectedCategory === "All") return true;
+                            return false;
+                        }).map((_, index) => (
+                            <div key={index}>
+                                <Card
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    onClick={() => {/* Handle card click */}}
+                                >
+                                    <CardContent className="flex flex-col">
+                                        <Image
+                                            src={EventImages()[index]} 
+                                            alt={`Event ${index + 1}`} 
+                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                        />
+                                        <div className="m-4 flex justify-between items-center">
+                                            <div>
+                                                <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {Array.from({ length: 6 }).filter((_, index) => {
+                            if (selectedCategory === "Donation") return true;
+                            return false;
+                        }).map((_, index) => (
+                            <div key={index}>
+                                <Card
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    onClick={() => {/* Handle card click */}}
+                                >
+                                    <CardContent className="flex flex-col">
+                                        <Image
+                                            src={EventImages()[index]} 
+                                            alt={`Event ${index + 1}`} 
+                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                        />
+                                        <div className="m-4 flex justify-between items-center">
+                                            <div>
+                                                <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {Array.from({ length: 6 }).filter((_, index) => {
+                            if (selectedCategory === "FunRun") return true;
+                            return false;
+                        }).map((_, index) => (
+                            <div key={index}>
+                                <Card
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    onClick={() => {/* Handle card click */}}
+                                >
+                                    <CardContent className="flex flex-col">
+                                        <Image
+                                            src={EventImages()[index]} 
+                                            alt={`Event ${index + 1}`} 
+                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                        />
+                                        <div className="m-4 flex justify-between items-center">
+                                            <div>
+                                                <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {Array.from({ length: 6 }).filter((_, index) => {
+                            if (selectedCategory === "GalaEvent") return true;
+                            return false;
+                        }).map((_, index) => (
+                            <div key={index}>
+                                <Card
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    onClick={() => {/* Handle card click */}}
+                                >
+                                    <CardContent className="flex flex-col">
+                                        <Image
+                                            src={EventImages()[index]} 
+                                            alt={`Event ${index + 1}`} 
+                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                        />
+                                        <div className="m-4 flex justify-between items-center">
+                                            <div>
+                                                <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {Array.from({ length: 6 }).filter((_, index) => {
+                            if (selectedCategory === "Concert") return true;
+                            return false;
+                        }).map((_, index) => (
+                            <div key={index}>
+                                <Card
+                                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                    onClick={() => {/* Handle card click */}}
+                                >
+                                    <CardContent className="flex flex-col">
+                                        <Image
+                                            src={EventImages()[index]} 
+                                            alt={`Event ${index + 1}`} 
+                                            className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                        />
+                                        <div className="m-4 flex justify-between items-center">
+                                            <div>
+                                                <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                {/* Recent events */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <Card 
-                        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                        onClick={() => {/* Handle card click */}}
-                    >
-                        <CardContent className="flex flex-col">
-                            <Image 
-                                src={eventImage1} 
-                                alt="Description" 
-                                className="mb-2 max-h-48 rounded-t-lg object-cover"
-                            />
-                            <div className="m-4 flex justify-between items-center">
-                                <div>
-                                    <span className="text-2xl font-semibold">Card 1</span>
-                                    <p className="text-sm">This is a short description of Card 1.</p>
-                                </div>
+                <div className="mt-8 mb-8 hidden md:block">
+                    <Tabs defaultValue="All">
+                        <TabsList className="grid w-full grid-cols-5">
+                            <TabsTrigger value="All">All</TabsTrigger>
+                            <TabsTrigger value="Donation">Donation</TabsTrigger>
+                            <TabsTrigger value="FunRun">Fun Run</TabsTrigger>
+                            <TabsTrigger value="GalaEvent">Gala Event</TabsTrigger>
+                            <TabsTrigger value="Concert">Concert</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="All">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <div key={index}>
+                                        <Card
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            onClick={() => {/* Handle card click */}}
+                                        >
+                                            <CardContent className="flex flex-col">
+                                                <Image
+                                                    src={EventImages()[index]} 
+                                                    alt={`Event ${index + 1}`} 
+                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                />
+                                                <div className="m-4 flex justify-between items-center">
+                                                    <div>
+                                                        <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                        <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                ))}
                             </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card 
-                        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                        onClick={() => {/* Handle card click */}}
-                    >
-                        <CardContent className="flex flex-col">
-                            <Image 
-                                src={eventImage2} 
-                                alt="Description" 
-                                className="mb-2 max-h-48 rounded-t-lg object-cover"
-                            />                            
-                            <div className="m-4 flex justify-between items-center">
-                                <div>
-                                    <span className="text-2xl font-semibold">Card 2</span>
-                                    <p className="text-sm">This is a short description of Card 2.</p>
-                                </div>
+                        </TabsContent>
+                        <TabsContent value="Donation">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <div key={index}>
+                                        <Card
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            onClick={() => {/* Handle card click */}}
+                                        >
+                                            <CardContent className="flex flex-col">
+                                                <Image
+                                                    src={EventImages()[index]} 
+                                                    alt={`Event ${index + 1}`} 
+                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                />
+                                                <div className="m-4 flex justify-between items-center">
+                                                    <div>
+                                                        <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                        <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                ))}
                             </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card 
-                        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                        onClick={() => {/* Handle card click */}}
-                    >
-                        <CardContent className="flex flex-col">
-                            <Image 
-                                src={eventImage3} 
-                                alt="Description" 
-                                className="mb-2 max-h-48 rounded-t-lg object-cover"
-                            />                            
-                            <div className="m-4 flex justify-between items-center">
-                                <div>
-                                    <span className="text-2xl font-semibold">Card 3</span>
-                                    <p className="text-sm">This is a short description of Card 3.</p>
-                                </div>
+                        </TabsContent>
+                        <TabsContent value="FunRun">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <div key={index}>
+                                        <Card
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            onClick={() => {/* Handle card click */}}
+                                        >
+                                            <CardContent className="flex flex-col">
+                                                <Image
+                                                    src={EventImages()[index]} 
+                                                    alt={`Event ${index + 1}`} 
+                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                />
+                                                <div className="m-4 flex justify-between items-center">
+                                                    <div>
+                                                        <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                        <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                ))}
                             </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card 
-                        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                        onClick={() => {/* Handle card click */}}
-                    >
-                        <CardContent className="flex flex-col">
-                            <Image 
-                                src={eventImage4} 
-                                alt="Description" 
-                                className="mb-2 max-h-48 rounded-t-lg object-cover"
-                            />                            
-                            <div className="m-4 flex justify-between items-center">
-                                <div>
-                                    <span className="text-2xl font-semibold">Card 4</span>
-                                    <p className="text-sm">This is a short description of Card 4.</p>
-                                </div>
+                        </TabsContent>
+                        <TabsContent value="GalaEvent">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <div key={index}>
+                                        <Card
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            onClick={() => {/* Handle card click */}}
+                                        >
+                                            <CardContent className="flex flex-col">
+                                                <Image
+                                                    src={EventImages()[index]} 
+                                                    alt={`Event ${index + 1}`} 
+                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                />
+                                                <div className="m-4 flex justify-between items-center">
+                                                    <div>
+                                                        <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                        <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                ))}
                             </div>
-                        </CardContent>
-                    </Card>
+                        </TabsContent>
+                        <TabsContent value="Concert">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <div key={index}>
+                                        <Card
+                                            className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                            onClick={() => {/* Handle card click */}}
+                                        >
+                                            <CardContent className="flex flex-col">
+                                                <Image
+                                                    src={EventImages()[index]} 
+                                                    alt={`Event ${index + 1}`} 
+                                                    className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                                />
+                                                <div className="m-4 flex justify-between items-center">
+                                                    <div>
+                                                        <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                                        <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                ))}
+                            </div>
+                        </TabsContent>
+                    </Tabs>
                 </div>
-            </div>
+
+                <Separator />
+
+                {/* Subtitle*/}
+                <div className="mt-7 flex items-center">
+                    <MapPin className="text-3xl mb-6 sm:text-4xl md:text-5xl mr-2" size={36}/>
+                    <h2 className="font-giorgio font-bold text-3xl mb-6 sm:text-4xl md:text-5xl">Events near you</h2>
+                </div>
+
+                {/* Events near you */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_, index) => (
+                        <div key={index}>
+                            <Card
+                                className="cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                                onClick={() => {/* Handle card click */}}
+                            >
+                                <CardContent className="flex flex-col">
+                                    <Image
+                                        src={EventImages()[index]} 
+                                        alt={`Event ${index + 1}`} 
+                                        className="mb-2 max-h-48 rounded-t-lg object-cover"
+                                    />
+                                    <div className="m-4 flex justify-between items-center">
+                                        <div>
+                                            <span className="text-2xl font-semibold">Card {index + 1}</span>
+                                            <p className="text-sm">This is a short description of Card {index + 1}.</p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    ))}
+                </div>
+                
+                <Separator className="mt-8"/>
+
+            </main>
         </div>
     );
 };
