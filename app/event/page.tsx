@@ -84,7 +84,7 @@ const EventPage = () => {
             />
 
             {/* Main Content */}
-            <div className="h-screen w-screen flex flex-col mt-8 md:ml-10 sm:ml-8 md:mr-10 sm:mr-8">
+            <main className="h-screen w-screen flex flex-col mt-8 md:ml-10 sm:ml-8 md:mr-10 sm:mr-8">
                 <div className="flex items-center gap-2">
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -269,7 +269,7 @@ const EventPage = () => {
                         </CardContent>
                     </Card>
                 </div>
-            </div>
+            </main>
         </div>
     );
 };
