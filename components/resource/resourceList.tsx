@@ -20,11 +20,11 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
     return (
         <>
             {showModify ? (
-                <ResourceModify />
+                <ResourceModify loading={loading} resources={resources} />
             ) : (
                 <>
                     <div className="w-full flex justify-end">
-                            <Button onClick={handleButtonClick} className="bg-[#0077B6] hover:bg-[#038BD4] mr-6">Add Resource</Button>
+                        <Button onClick={handleButtonClick} className="bg-[#0077B6] hover:bg-[#038BD4] mr-6">Modify Resource</Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 p-6">
                         {loading ? (
@@ -40,6 +40,8 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
                                     name={resource.name}
                                     category={resource.category}
                                     number={resource.number}
+                                    // Do not show the action when the resource bars are used for listing
+                                    showActions={false}
                                     // actionLabel={resource.actionLabel}
                                     // onActionClick={() => handleAction(resource.name)}
                                 />

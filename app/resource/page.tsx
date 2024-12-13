@@ -161,9 +161,7 @@ const ResourcePage = () => {
                         )}
                     </div> */}
                     {/* For listing the resources */}
-                    <ResourceList loading={loading} resources={resources} />
-
-                    {/* For editing the resources */}
+                    <ResourceList loading={loading} resources={resources} />                    
                 </div>
             </main>
         </div>
