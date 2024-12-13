@@ -16,13 +16,17 @@ import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerDescription, DrawerTitle, DrawerHeader, DrawerClose, DrawerFooter } from '@/components/ui/drawer';
-
+import { supabase } from '@/lib/supabaseClient';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const NotificationPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>("");
+    const [notifications, setNotifications] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const [selectedNotificationIndex, setSelectedNotificationIndex] = useState<number | null>(null);
 
     useEffect(() => {
         // Check if window is defined (client-side)
@@ -50,7 +54,39 @@ const NotificationPage = () => {
         };
 
         fetchUser();
-    }, []);
+    }, []); // Only run once on mount
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            setLoading(true);
+            try {
+                const response = await supabase
+                    .from('notifications')
+                    .select(`
+                        *,
+                        users:other_id (full_name, profile_picture)
+                    `)
+                    .order('notis_timestamp', { ascending: false });
+
+                if (response.error) {
+                    throw new Error(response.error.message);
+                }
+
+                if (response.data) {
+                    setNotifications(response.data);
+                    console.log("Fetched Notifications: ", response.data);
+                } else {
+                    console.log("No notifications found.");
+                }
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchNotifications();
+    }, []); // Only run once on mount
 
     const handleLogout = async () => {
         await signOut();
@@ -89,86 +125,87 @@ const NotificationPage = () => {
                         <div className="mt-7 mb-7">
                             <h1 className="font-giorgio font-bold text-4xl sm:text-5xl md:text-6xl">Notification</h1>
                         </div>
-                        <div className="flex justify-start">
-                            <div className="w-full md:w-1/3 mb-8">
-                                <Select onValueChange={(value) => setSelectedCategory(value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select here" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Timeline</SelectLabel>
-                                            <SelectItem value="AllTime">All Time</SelectItem>
-                                            <SelectItem value="Today">Today</SelectItem>
-                                            <SelectItem value="3days">3 days ago</SelectItem>
-                                            <SelectItem value="1week">1 week ago</SelectItem>
-                                            <SelectItem value="1month">1 month ago</SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
 
                         <div className="flex flex-col">
                             <Drawer>
-                                {Array.from({ length: 10 }).map((_, index) => (
-                                    <div key={index}>
-                                        <DrawerTrigger asChild>
-                                            <button className="flex w-full hover:bg-blue-100 rounded-lg transition duration-200 p-4">
-                                                <div className="mr-4">
-                                                    <div className="flex items-center">
-                                                        <Avatar>
-                                                            <AvatarImage 
-                                                                src={avatarImage.src} 
-                                                                alt="avatar" 
-                                                                className='object-cover max-h-48'
-                                                            />
-                                                            <AvatarFallback>H</AvatarFallback>
-                                                        </Avatar>
-                                                    </div>
-                                                </div>
-                                                <div className="flex flex-col text-left">
-                                                    <h1 className="font-roboto font-bold text-xl">Donation Provided</h1>
-                                                    <p className="font-roboto text-sm">Dicky has donated a box, an apple and a beer.</p>
-                                                </div>
-                                            </button>
-                                        </DrawerTrigger>
-                                        <div className='w-full'>
-                                            <Separator className='mt-2 mb-2'/>
-                                        </div>
-                                    </div>
-                                ))}
-                                <DrawerContent>
-                                    <div className="mx-auto w-full max-w-sm">
-                                        <DrawerHeader>
-                                            <DrawerTitle className="font-roboto font-bold text-3xl">Donation Provided</DrawerTitle>
-                                            <DrawerDescription className="font-roboto text-2x1">Dicky has donated a box, an apple and a beer.</DrawerDescription>
-                                            <p className="font-roboto text-sm text-gray-500">{new Date().toLocaleString()}</p>
-                                        </DrawerHeader>
-                                        <div className="flex items-center">
-                                            <div className="mr-2">
-                                                <Avatar>
-                                                    <AvatarImage 
-                                                        src={avatarImage.src} 
-                                                        alt="avatar" 
-                                                        className='object-cover max-h-48'
-                                                    />
-                                                    <AvatarFallback>H</AvatarFallback>
-                                                </Avatar>
-                                            </div>
-                                            <div className="flex flex-col text-left mt-5 mb-5">
-                                                <h1 className="font-roboto font-bold text-xl">Dicky</h1>
-                                                <p className="font-roboto text-sm">Dicky is a generous donor who has contributed various items to help those in need.</p>
+                                {loading ? (
+                                    Array.from({ length: 5 }).map((_, index) => (
+                                        <div key={index} className="flex items-center space-x-4 mb-8">
+                                            <Skeleton className="h-12 w-12 rounded-full" />
+                                            <div className="space-y-2">
+                                                <Skeleton className="h-4 w-[250px]" />
+                                                <Skeleton className="h-4 w-[200px]" />
                                             </div>
                                         </div>
-                                        <DrawerFooter>
-                                            <Button>Mark as read</Button>
-                                            <DrawerClose asChild>
-                                            <Button variant="outline">Cancel</Button>
-                                            </DrawerClose>
-                                        </DrawerFooter>
+                                    ))
+                                ) : (
+                                    <div>
+                                        {notifications.map((notification, index) => (
+                                            <div key={notification.notis_id}>
+                                                <DrawerTrigger asChild>
+                                                    <button
+                                                        className="flex w-full hover:bg-blue-100 rounded-lg transition duration-200 p-4"
+                                                        onClick={() => setSelectedNotificationIndex(index)}
+                                                    >
+                                                        <div className="mr-4">
+                                                            <div className="flex">
+                                                                <Avatar className="h-16 w-16 items-center">
+                                                                    <AvatarImage 
+                                                                        src={notification.users.profile_picture || avatarImage.src}
+                                                                        alt="avatar" 
+                                                                        className='object-cover h-full w-full'
+                                                                    />
+                                                                    <AvatarFallback>H</AvatarFallback>
+                                                                </Avatar>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col text-left">
+                                                            <h1 className="font-roboto font-bold text-xl">{notification.users.full_name}</h1>
+                                                            <p className='font-roboto text-sm text-gray-500 mb-2'>{new Date(notification.notis_timestamp).toISOString().split('T')[0]}</p>
+                                                            <p className="font-roboto text-sm">{notification.notis_title}</p>
+                                                        </div>
+                                                    </button>
+                                                </DrawerTrigger>
+                                                <div className='w-full'>
+                                                    <Separator className='mt-2 mb-2'/>
+                                                </div>
+
+                                                {selectedNotificationIndex === index && (
+                                                    <DrawerContent>
+                                                        <div className="mx-auto max-w-sm">
+                                                            <DrawerHeader>
+                                                                <DrawerTitle className="font-roboto font-bold text-3xl">{notification.notis_title}</DrawerTitle>
+                                                                <DrawerDescription className="font-roboto text-2x1">{notification.notis_description}</DrawerDescription>
+                                                                <p className="font-roboto text-sm text-gray-500">{notification.notis_timestamp}</p>
+                                                            </DrawerHeader>
+                                                            <div className="flex items-center">
+                                                                <div className=" ml-4 mr-2">
+                                                                    <Avatar>
+                                                                        <AvatarImage 
+                                                                            src={notification.users.profile_picture} 
+                                                                            alt="avatar" 
+                                                                            className='object-cover max-h-48'
+                                                                        />
+                                                                        <AvatarFallback>H</AvatarFallback>
+                                                                    </Avatar>
+                                                                </div>
+                                                                <div className="flex flex-col text-left mt-5 mb-5 w-2/3">
+                                                                    <h1 className="font-roboto font-bold text-xl">{notification.users.full_name}</h1>
+                                                                </div>
+                                                            </div>
+                                                            <DrawerFooter>
+                                                                <Button>Mark as read</Button>
+                                                                <DrawerClose asChild>
+                                                                    <Button variant="outline">Cancel</Button>
+                                                                </DrawerClose>
+                                                            </DrawerFooter>
+                                                        </div>
+                                                    </DrawerContent>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
-                                </DrawerContent>
+                                )}
                             </Drawer>
                         </div>
 
