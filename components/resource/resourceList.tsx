@@ -1,6 +1,6 @@
 import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
 import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
-import { Package, Truck, Users } from 'lucide-react';
+import { Apple, Croissant, Drumstick, Beef, Salad, Shirt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import ResourceModify from './resourceModify';
@@ -29,7 +29,7 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 p-6">
                         {loading ? (
-                            // Show skeletons while loading
+                            // Show at most 10 skeletons while loading
                             Array.from({ length: 10 }).map((_, index) => (
                                 <ResourceBarSkeleton key={index} />
                             ))
@@ -37,7 +37,8 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
                             resources.map((resource, index) => (
                                 <ResourceBar 
                                     key={index}
-                                    icon={resource.icon === "Package" ? Package : resource.icon === "Truck" ? Truck : Users} // Map icon names to actual components
+                                    index={index}
+                                    icon={resource.resource_category === "Foods" ? Drumstick : Shirt } // Map icon names to actual components
                                     name={resource.resource_name}
                                     category={resource.resource_category}
                                     number={resource.resource_amount}

@@ -123,7 +123,7 @@ const ResourcePage = () => {
                 <div className="flex items-center gap-2">
                     <Breadcrumb>
                         <BreadcrumbList>
-                            <BreadcrumbItem>
+                            <BreadcrumbItem className="ml-6">
                                 <BreadcrumbLink href="#">Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />

@@ -75,14 +75,16 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, clas
                         className="bg-[#F3F3F3] text-sm border px-2 py-1 rounded-lg w-full"
                         required
                     />
-                    <input
-                        type="text"
-                        placeholder="Enter the category"
+                    <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="bg-[#F3F3F3] text-sm border px-2 py-1 rounded-lg w-full mt-2"
+                        className={`bg-[#F3F3F3] text-sm border px-2 py-1 rounded-lg w-full mt-2 ${category === '' ? 'text-gray-500' : 'text-black'}`}
                         required
-                    />
+                    >
+                        <option value="" className="text-gray-500">Select a category</option>
+                        <option value="Foods">Foods</option>
+                        <option value="Wearable Items">Wearable Items</option>
+                    </select>
                 </div>
             </div>
 

@@ -2,7 +2,7 @@
 
 import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
 import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
-import { CloudCog, Package, Truck, Users } from 'lucide-react';
+import { Apple, Croissant, Drumstick, Beef, Salad, Shirt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import ResourceList from  './resourceList';
@@ -10,6 +10,7 @@ import ResourceInputBar from './ResourceInputBar';
 import { updateRecord, deleteRecord } from '@/lib/supabaseAPI';
 import { toast } from 'react-toastify'; // Import toast for notifications
 import ConfirmationModal from './ConfirmationModal'; // Import the confirmation modal
+import router from 'next/router';
 import WarningModal from './WarningModal'; // Import the warning modal
 import { useRouter } from 'next/navigation';
 
@@ -27,6 +28,7 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
     const [resourceIDToDelete, setResourceIDToDelete] = useState<number | null>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [visibleResources, setVisibleResources] = useState(resources); // Track visible resources
+    const router = useRouter();
 
 
 
@@ -76,9 +78,11 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
 
             // Update the local state with the new resource list
             setResourceList(updatedResources);
-            
-            toast.success('Resources updated successfully!', {autoClose: 1500}); // Show success message
+            toast.success('Resources updated successfully!', {autoClose: 1300}); // Show success message
             console.log("LOCAL Updated resources:", resourceList);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500)
         } catch (error) {
             console.error('Error saving resources:', error);
             toast.error('Error updating resources. Please try again.'); // Show error message
@@ -162,7 +166,8 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
                             visibleResources.map((resource, index) => (
                                 <ResourceBar 
                                     key={index}
-                                    icon={resource.icon === "Package" ? Package : resource.icon === "Truck" ? Truck : Users} // Map icon names to actual components
+                                    index={index}
+                                    icon={resource.resource_category === "Foods" ? Drumstick : Shirt} // Map icon names to actual components
                                     name={resource.resource_name}
                                     category={resource.resource_category}
                                     number={localResourceAmounts[index]}
