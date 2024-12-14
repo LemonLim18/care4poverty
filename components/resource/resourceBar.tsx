@@ -81,7 +81,7 @@ const ResourceBar: React.FC<ResourceBarProps> = ({
                     </button>
                     <button
                         onClick={onDelete}
-                        className="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
+                        className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
                     >
                         Delete
                     </button>

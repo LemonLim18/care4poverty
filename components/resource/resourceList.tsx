@@ -2,8 +2,9 @@ import ResourceBar from '@/components/resource/resourceBar'; // Adjust the impor
 import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
 import { Package, Truck, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ResourceModify from './resourceModify';
+import { useRouter } from 'next/navigation';
 
 interface ResourceListProps {
     loading: boolean;
@@ -23,7 +24,7 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
                 <ResourceModify loading={loading} resources={resources} />
             ) : (
                 <>
-                    <div className="w-full flex justify-end">
+                    <div className="w-full flex justify-end mt-3">
                         <Button onClick={handleButtonClick} className="bg-[#0077B6] hover:bg-[#038BD4] mr-6">Modify Resource</Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 p-6">
@@ -37,13 +38,11 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
                                 <ResourceBar 
                                     key={index}
                                     icon={resource.icon === "Package" ? Package : resource.icon === "Truck" ? Truck : Users} // Map icon names to actual components
-                                    name={resource.name}
-                                    category={resource.category}
-                                    number={resource.number}
+                                    name={resource.resource_name}
+                                    category={resource.resource_category}
+                                    number={resource.resource_amount}
                                     // Do not show the action when the resource bars are used for listing
                                     showActions={false}
-                                    // actionLabel={resource.actionLabel}
-                                    // onActionClick={() => handleAction(resource.name)}
                                 />
                             ))
                         )}
