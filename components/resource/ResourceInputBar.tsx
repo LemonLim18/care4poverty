@@ -87,7 +87,7 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, clas
             </div>
 
             {/* Right Section: Number and Action Button */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
                 <input
                     type="number"
                     placeholder="Enter the number"
@@ -99,7 +99,7 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, clas
                 />
                 <button 
                     onClick={handleSubmit} 
-                    className="px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
+                    className="px-[26px] py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
                 >
                     Add Resource
                 </button>
