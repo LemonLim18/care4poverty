@@ -205,6 +205,15 @@ const NotificationPage = () => {
                             </Drawer>
                         </div>   
                     </div>
+                    <div className="hidden md:block w-1/3 flex flex-col">
+                        <Image
+                            src={sideImage1.src} 
+                            alt='image'
+                            width={300}
+                            height={500}
+                            className="mb-2 object-cover mx-auto"
+                        />
+                    </div>
                 </div>
             </main>
         </div>
