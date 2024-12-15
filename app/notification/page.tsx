@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerDescription, DrawerTitle, DrawerHeader, DrawerClose, DrawerFooter } from '@/components/ui/drawer';
 import { supabase } from '@/lib/supabaseClient';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getNotifications } from '@/lib/supabaseAPI';
 
 const NotificationPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
@@ -59,22 +60,16 @@ const NotificationPage = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             setLoading(true);
+            const storedUserData = sessionStorage.getItem('user');
+            const parsedUserData = storedUserData ? JSON.parse(storedUserData) : null; // Parse the user data
             try {
-                const response = await supabase
-                    .from('notifications')
-                    .select(`
-                        *,
-                        users:other_id (full_name, profile_picture)
-                    `)
-                    .order('notis_timestamp', { ascending: false });
-
-                if (response.error) {
-                    throw new Error(response.error.message);
+                const { data, error } = await getNotifications('notifications', parsedUserData?.id, {}, 'notis_timestamp');
+                if (error) {
+                    throw new Error(error.message);
                 }
-
-                if (response.data) {
-                    setNotifications(response.data);
-                    console.log("Fetched Notifications: ", response.data);
+                if (data) {
+                    setNotifications(data);
+                    console.log("Fetched Notifications: ", data);
                 } else {
                     console.log("No notifications found.");
                 }
@@ -86,7 +81,8 @@ const NotificationPage = () => {
         };
 
         fetchNotifications();
-    }, []); // Only run once on mount
+    }, []);
+    
 
     const handleLogout = async () => {
         await signOut();
