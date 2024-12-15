@@ -9,7 +9,8 @@ export type DataRecord = {
 export const createRecord = async (table: string, data: DataRecord) => {
   const { data: responseData, error } = await supabase
     .from(table)
-    .insert([data]);
+    .insert([data])
+    .select('*'); // Fetch the inserted record
 
   return { data: responseData, error };
 };
@@ -50,6 +51,16 @@ export const getAllRecords = async (table: string) => {
   const { data, error } = await supabase
     .from(table)
     .select('*');
+
+  return { data, error };
+};
+
+// Get all records from a specified table based on a field and value
+export const getRecordsByField = async (table: string, field: string, value: any) => {
+  const { data, error } = await supabase
+    .from(table)
+    .select('*')
+    .eq(field, value); // Fetch records where the specified field matches the value
 
   return { data, error };
 };
@@ -104,5 +115,5 @@ export const getEvents = async (table: string, type: string | null = null, filte
   const { data, error } = await query;
 
   return { data, error };
-};
 
+};

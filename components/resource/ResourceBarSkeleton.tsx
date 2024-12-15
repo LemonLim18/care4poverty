@@ -7,12 +7,12 @@ const ResourceBarSkeleton: React.FC = () => {
             <div className="flex items-center w-full h-full gap-x-4">
                 <div className="w-10 h-10 bg-gray-300 rounded-full"></div> {/* Placeholder for icon */}
                 <div className="flex flex-col gap-y-2 w-full">
-                    <div className="h-4 bg-gray-300 rounded w-1/4"></div> {/* Placeholder for number */}
-                    <div className="h-4 bg-gray-300 rounded w-1/4"></div> {/* Placeholder for number */}
+                    <div className="h-4 bg-gray-300 rounded w-1/4"></div> {/* Placeholder for name */}
+                    <div className="h-4 bg-gray-300 rounded w-1/4"></div> {/* Placeholder for category */}
                 </div>
             </div>
             {/* Right Section: Action Button Placeholder */}
-            <div className="h-8 bg-gray-300 rounded w-6 "></div> {/* Placeholder for button */}
+            <div className="h-8 bg-gray-300 rounded w-6 mr-5 "></div> {/* Placeholder for number */}
         </div>
     );
 };
