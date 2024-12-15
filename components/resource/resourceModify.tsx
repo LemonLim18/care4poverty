@@ -2,7 +2,7 @@
 
 import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
 import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
-import { Apple, Croissant, Drumstick, Beef, Salad, Shirt } from 'lucide-react';
+import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import ResourceList from  './resourceList';
@@ -151,7 +151,7 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
                         </div>
                         <div>
                                 <Button onClick={handleShowList} className="bg-[#038BD4] hover:bg-[#0077B6] mr-6">
-                                    Show Resource
+                                    Back
                                 </Button>
                         </div>
                     </div>
@@ -167,7 +167,7 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
                                 <ResourceBar 
                                     key={index}
                                     index={index}
-                                    icon={resource.resource_category === "Foods" ? Drumstick : Shirt} // Map icon names to actual components
+                                    icon={resource.resource_category === "Foods" ? Utensils : Shirt} // Map icon names to actual components
                                     name={resource.resource_name}
                                     category={resource.resource_category}
                                     number={localResourceAmounts[index]}

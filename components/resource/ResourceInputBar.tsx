@@ -101,7 +101,7 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, clas
                 />
                 <button 
                     onClick={handleSubmit} 
-                    className="px-[26px] py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
+                    className="px-[26px] py-1 bg-[#038BD4] text-white rounded-md hover:bg-[#0077B6] transition-colors duration-300"
                 >
                     Add Resource
                 </button>

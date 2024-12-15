@@ -92,7 +92,7 @@ const ResourceBar: React.FC<ResourceBarProps> = ({
                     <>
                         <button
                             onClick={onAdd}
-                            className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-300"
+                            className="px-3 py-1 bg-[#1f7744] text-white rounded-md hover:bg-green-600 transition-colors duration-300"
                         >
                             +
                         </button>
