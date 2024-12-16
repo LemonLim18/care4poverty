@@ -64,3 +64,56 @@ export const getRecordsByField = async (table: string, field: string, value: any
 
   return { data, error };
 };
+
+// Get records for notifications
+export const getNotifications = async (table: string, userId?: string, filters?: object, orderBy?: string) => {
+  let query = supabase.from(table).select(`
+      *,
+      users:other_id (full_name, profile_picture)
+  `);
+
+  if (userId) {
+    query = query.eq('user_id', userId); // Filter by user ID
+  }
+
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      query = query.eq(key, value); // Apply additional filters
+    });
+  }
+
+  if (orderBy) {
+    query = query.order(orderBy, { ascending: false }); // Apply sorting
+  }
+
+  const { data, error } = await query;
+
+  return { data, error };
+};
+
+// Get records for events
+export const getEvents = async (table: string, type: string | null = null, filters?: object, orderBy?: string) => {
+  let query = supabase.from(table).select(`
+      *,
+      users:org_id (*)
+  `);
+
+  if (type !== null) {
+    query = query.eq('event_type', type); // Filter by type
+  }
+
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      query = query.eq(key, value); // Apply additional filters
+    });
+  }
+
+  if (orderBy) {
+    query = query.order(orderBy, { ascending: false }); // Apply sorting
+  }
+
+  const { data, error } = await query;
+
+  return { data, error };
+
+};
