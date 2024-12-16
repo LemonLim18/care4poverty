@@ -9,7 +9,7 @@ interface WarningModalProps {
 }
 
 const WarningModal: React.FC<WarningModalProps> = ({ isOpen, onClose, onConfirm, resourceName }) => {
-    console.log("Resource Name in Warning Modal: ", resourceName);
+    // console.log("Resource Name in Warning Modal: ", resourceName);
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogTrigger asChild>

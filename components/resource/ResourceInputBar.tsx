@@ -1,17 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import { createRecord } from '@/lib/supabaseAPI'; // Adjust the import path based on your project structure
 import { toast } from 'react-toastify'; // Import the toast module
 
 interface ResourceInputBarProps {
     onAddResource: (name: string, category: string, number: number) => void;
+    scannedInput?: {barcode: number, category: string, item_name: string};
     className?: string; // Optional className prop for additional styling
 }
 
-const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, className }) => {
+const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, scannedInput, className }) => {
+    // Manually Key In
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
     const [number, setNumber] = useState(1);
+
+    // If detected scanned input, set the name and category
+    useEffect(() => {
+        console.log("Scanned Input in Check: ", scannedInput)
+        if(scannedInput) {
+            setName(scannedInput.item_name);
+            setCategory(scannedInput.category);
+        }
+        console.log('Scanned Input:', scannedInput);
+    }, [scannedInput])
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -61,7 +73,7 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, clas
         >
             {/* Left Section: Icon */}
             <div className="flex items-center space-x-4">
-                <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
+                <div className="ml-3 flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
                     <FaPlus className="text-blue-500 w-6 h-6" /> {/* Replace with your icon */}
                 </div>
                 
@@ -72,7 +84,7 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, clas
                         placeholder="Enter the product name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="bg-[#F3F3F3] text-sm border px-2 py-1 rounded-lg w-full"
+                        className="bg-[#F3F3F3] text-sm border px-3 py-1 rounded-lg w-full"
                         required
                     />
                     <select

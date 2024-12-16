@@ -1,6 +1,6 @@
 import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
 import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
-import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils } from 'lucide-react';
+import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils, PencilLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; 
 import { useEffect, useState } from 'react';
@@ -34,11 +34,11 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
             ) : (
                 <>
                     <div className="w-full flex justify-end mt-3">
-                        <Button onClick={handleButtonClick} className="bg-[#0077B6] hover:bg-[#038BD4] mr-6">Update Resource</Button>
+                        <Button onClick={handleButtonClick} className="bg-[#038BD4] hover:bg-[#0077B6] mr-6"><PencilLine/>Update Resource</Button>
                     </div>
 
                     <Tabs value={activeTab} onValueChange={setActiveTab}>
-                        <TabsList className={`bg-[#0077B6] text-white ml-6 mt-3`}>
+                        <TabsList className={`bg-[#038BD4] text-white ml-6 mt-3`}>
                             <TabsTrigger className="font-bold" value="All">
                                 All
                             </TabsTrigger>
