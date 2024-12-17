@@ -48,6 +48,12 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
         console.log("Resource List after add new items: ", resourceList);
     }, [resourceList]); // Run this effect whenever resourceList change
 
+    useEffect(() => {
+        if(scannedData) {
+            console.log("Scanned Data: ", scannedData);
+        }
+    }, [scannedData]);
+
     const handleShowList = () => {
         setShowList(true);
     }
@@ -159,13 +165,27 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
                     toast.success("Scanner connected!", {autoClose: 1200});
                     setTimeout(() => {
                         toast.info("Loading in 5 seconds...", {autoClose: 5000});
-                    }, 1000)
+                    }, 1000);
+
+                    const eventSource = new EventSource('http://127.0.0.1:5000/scan-barcode');
+
+                    eventSource.onmessage = (event) => {
+                        const scannedResult = JSON.parse(event.data);
+                        console.log("Scanned result: ", scannedResult);
+                        setScannedData(scannedResult);
+                    };
+                    eventSource.onerror = (err) => {
+                        console.log("Error in SSE connection: ", err);
+                        eventSource.close();
+                    };
                 }else{
                     toast.error("Failed to connect scanner. Please try again.", {autoClose: 1200});
                 }
-                const response = await axios.get('http://127.0.0.1:5000/scan-barcode');
-                console.log("Scanned response: ", response);
-                setScannedData(response.data);
+
+                // const response = await axios.get('http://127.0.0.1:5000/scan-barcode');
+                // console.log("Scanned response: ", response);
+                // setScannedData(response.data);
+                
             } catch (error) {
                 console.log("Error scanning barcode: ", error);
             }
