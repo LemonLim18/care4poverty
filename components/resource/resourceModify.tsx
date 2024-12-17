@@ -49,6 +49,10 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
     }, [resourceList]); // Run this effect whenever resourceList change
 
     useEffect(() => {
+        console.log("Newly Added Visible Resources: ", visibleResources);
+    }, [visibleResources]);
+
+    useEffect(() => {
         if(scannedData) {
             console.log("Scanned Data: ", scannedData);
         }
@@ -58,15 +62,16 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
         setShowList(true);
     }
 
-    const handleAddResource = (name: string, category: string, number: number) => {
+    const handleAddResource = (resource_name: string, resource_category: string, resource_number: number) => {
         const newResource = {
             icon: "Package", // You can set a default icon or modify this as needed
-            name,
-            category,
-            number,
+            resource_name,
+            resource_category,
+            resource_number,
             actionLabel: "Manage" // Default action label
         };
         setResourceList(prevResources => [newResource, ...prevResources]); // Add new resource at the top
+        setVisibleResources(prevResources => [newResource, ...prevResources]); // Add new resource at the top
     };
 
     const handleSave = () => {
