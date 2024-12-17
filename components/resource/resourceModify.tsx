@@ -2,7 +2,7 @@
 
 import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
 import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
-import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils, ScanQrCode, ScanSearch, Unplug } from 'lucide-react';
+import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils, ScanQrCode, ScanSearch, Unplug, ChartNoAxesColumnIncreasing } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import ResourceList from  './resourceList';
@@ -151,8 +151,9 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
 
     const handleScan = async() => {
         if(isConnected) {
-            // Disconnect logic
             setIsConnected(false)
+            const disconnect = await axios.get('http://127.0.0.1:5000/disconnect')
+            console.log("Disconnect response: ", disconnect);
             toast.success("Scanner disconnected", {autoClose: 1200});
         } else {
             setScanLoading(true);

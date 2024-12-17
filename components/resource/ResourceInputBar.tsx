@@ -84,13 +84,13 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, scan
                         placeholder="Enter the product name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="bg-[#F3F3F3] text-sm border px-3 py-1 rounded-lg w-full"
+                        className="bg-[#F3F3F3] text-sm border px-3 py-1 rounded-lg w-[30vw] md:w-full"
                         required
                     />
                     <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className={`bg-[#F3F3F3] text-sm border px-2 py-1 rounded-lg w-full mt-2 ${category === '' ? 'text-gray-500' : 'text-black'}`}
+                        className={`bg-[#F3F3F3] text-sm border px-2 py-1 rounded-lg w-[30vw] md:w-full mt-2 ${category === '' ? 'text-gray-500' : 'text-black'}`}
                         required
                     >
                         <option value="" className="text-gray-500">Select a category</option>
@@ -101,7 +101,7 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, scan
             </div>
 
             {/* Right Section: Number and Action Button */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center ml-5 space-x-4">
                 <input
                     type="number"
                     placeholder="Enter the number"
