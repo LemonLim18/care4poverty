@@ -142,6 +142,16 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                             </div>
                             <ChevronRight size={18} />
                         </button>
+                        <button 
+                            onClick={() => navigateToPage('/Education')}
+                            className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                        >
+                            <div className="flex items-center gap-2">
+                                <Calendar size={18} />
+                                <span className="font-roboto text-sm">Event</span>
+                            </div>
+                            <ChevronRight size={18} />
+                        </button>
                     </SidebarGroup>
                 </SidebarContent>
                 <SidebarFooter className="bg-[#0077B6] p-4">
