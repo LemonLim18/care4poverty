@@ -7,27 +7,40 @@ import { useRouter } from 'next/navigation';
 import { UserType } from '@/datatypes/types';
 import { getUser, signOut } from '@/lib/authFactory';
 import { toast } from 'react-toastify';
+import { Package, Truck, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
+import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
+import { getAllRecords, getRecordById, getRecordsByField } from "@/lib/supabaseAPI";
+// later need to get the all resources from a specified organization
+import ResourceList from "@/components/resource/resourceList";
+
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const ResourcePage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
     const [user, setUser] = useState<User | null>(null);
+    const [userId, setUserId] = useState<string | null>(null);
+    const [resources, setResources] = useState<any[]>([]);
     const router = useRouter();
-    
-    useEffect(() => {
-        // Check if window is defined (client-side)
-        if (typeof window !== 'undefined') {
-            const storedUserData = sessionStorage.getItem('user');
-            if (storedUserData) {
-                const parsedUserData = JSON.parse(storedUserData);
-                setUserData(parsedUserData);
-                console.log("Session Storage: ", parsedUserData);
-            } else {
-                console.log('No user data found in session storage');
-            }
-        }
+    const [loading, setLoading] = useState(true);
 
+    // const testLoading = () => {
+    //     setLoading(true);
+    // }
+    
+    useEffect(() => {        
         const fetchUser = async () => {
             const currentUser: User | null = await getUser();
+            console.log("Current User: ", currentUser);
             if (!currentUser) {
                 toast.error('User not found! Redirecting to login...', {
                     autoClose: 1350,
@@ -35,11 +48,60 @@ const ResourcePage = () => {
                 router.push('/auth/login');
             } else {
                 setUser(currentUser);
+                setUserId(currentUser.id);
+                // Fetch user data after getting the current user
+                fetchUserData(currentUser.id);
             }
         };
 
+        const fetchUserData = async (userId: string) => {
+            const { data: userData, error: fetchError } = await getRecordById('users', userId);
+            if (fetchError) {
+                console.error('Error fetching user data:', fetchError.message);
+                return;
+            }
+            if (userData) {
+                sessionStorage.setItem('user', JSON.stringify(userData)); // Store user data
+                setUserData(userData); // Set user data in state
+                console.log('User data stored in session storage:', userData);
+            } else {
+                console.error("User data is undefined.");
+            }
+        }; 
+
         fetchUser();
+
+        // Check if window is defined (client-side)
+        if (typeof window !== 'undefined') {
+            const storedUserData = sessionStorage.getItem('user');
+            if (storedUserData) {
+                const parsedUserData = JSON.parse(storedUserData);
+                setUserData(parsedUserData);
+                console.log("Session Storage: ", parsedUserData);
+            } else {   
+                console.log('No user data found in session storage');
+            }
+        }
     }, []);
+
+    useEffect(() => {
+        const fetchResources = async () => {
+            try {
+                const { data, error } = await getAllRecords('resources'); // Fetch all records from the 'resources' table
+                console.log("Resources fetched: ", data);
+                if (error) {
+                    throw new Error('Error fetching resources: ' + error.message);
+                }
+                setResources(data || []); // Set to an empty array if data is null
+            } catch (error) {
+                console.error('Error fetching resources:', error);
+            } finally {
+                setLoading(false); // Set loading to false after fetching
+            }
+        };
+
+        fetchResources();
+    }, []); // Re-fetch when the location changes
 
     const handleLogout = async () => {
         await signOut();
@@ -57,20 +119,29 @@ const ResourcePage = () => {
                 userData={userData || undefined}
                 onLogout={handleLogout}
             />
+            <main className="h-screen w-screen flex flex-col mt-8 md:ml-10 sm:ml-8 md:mr-10 sm:mr-8">
+                <div className="flex items-center gap-2">
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem className="ml-6">
+                                <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>Resources</BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                </div>
 
-            {/* Main Content */}
-            {/* bg-blue-200 */}
-            <main className="bg-white w-full h-full flex-1 p-8 flex flex-col">
-                <h1 className="text-5xl font-bold font-giorgio">My Resources</h1>
-                {user ? (
-                    <div className="mt-4">
-                        <p>Welcome, to the resource page</p>
-                    </div>
-                ) : (
-                    <p>Loading...</p>
-                )}
+                {/* Title */}
+                <div className="mt-7 mb-7">
+                    <h1 className="ml-6 font-giorgio font-bold text-4xl sm:text-5xl md:text-6xl">My Resources</h1>
+                   
+                    {/* For listing the resources */}
+                    <ResourceList loading={loading} resources={resources} />                    
+                </div>
             </main>
         </div>
+        
     );
 };
 

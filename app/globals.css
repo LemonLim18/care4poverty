@@ -297,3 +297,11 @@ its corresponding value: name of the local file[])  */
     @apply bg-background text-foreground;
   }
 }
+
+.scrollbar-hidden {
+    scrollbar-width: none; /* For Firefox */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+}
