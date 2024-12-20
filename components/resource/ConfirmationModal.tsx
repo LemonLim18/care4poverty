@@ -21,7 +21,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, onClose, on
                     </DialogDescription>
                 </DialogHeader>
                 <div className="mt-4 flex justify-end">
-                    <button onClick={onConfirm} className="px-4 py-2 mr-2 bg-blue-500 text-white rounded">
+                    <button onClick={onConfirm} className="px-4 py-2 mr-2 bg-[#0077B6] text-white rounded">
                         Yes
                     </button>
                     <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">

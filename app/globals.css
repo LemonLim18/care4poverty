@@ -12,6 +12,58 @@ body::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Edge */
 }
 
+.requestScrollBar {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.requestScrollBar::-webkit-scrollbar {
+  width: 32px;
+}
+
+.requestScrollBar::-webkit-scrollbar-track {
+  background: #0077B6;
+}
+
+.requestScrollBar::-webkit-scrollbar-thumb {
+  background: white; 
+  border: 12px solid #0077B6;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(241, 241, 241); 
+}
+
+.requestScrollBar::-webkit-scrollbar-button {
+  /* display: none; */
+  height:2px;
+  background-color: #0077B6;
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact; /* For WebKit browsers */
+    print-color-adjust: exact; /* Standard property for compatibility */
+  }
+  .requestScrollBar {
+    background-color: #f0f0f0; /* Example color */
+    color: #000;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+  }
+}
+
+
+
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 /* It is like importing the styling file here locally, 
 and if you want to call each style category using tailwindcss

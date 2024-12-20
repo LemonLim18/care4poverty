@@ -9,6 +9,12 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		utilities: {
+			'.print-color-adjust-exact': {
+			  colorAdjust: 'exact', // Deprecated
+			  printColorAdjust: 'exact', // Standard
+			},
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -108,6 +114,9 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+	require("tailwindcss-animate"),
+	require("tailwind-scrollbar")
+],
 };
 export default config;
