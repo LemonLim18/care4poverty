@@ -2,7 +2,7 @@
 
 import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
 import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
-import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils, ScanQrCode, ScanSearch, Unplug } from 'lucide-react';
+import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils, ScanQrCode, ScanSearch, Unplug, ChartNoAxesColumnIncreasing } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import ResourceList from  './resourceList';
@@ -49,6 +49,10 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
     }, [resourceList]); // Run this effect whenever resourceList change
 
     useEffect(() => {
+        console.log("Newly Added Visible Resources: ", visibleResources);
+    }, [visibleResources]);
+
+    useEffect(() => {
         if(scannedData) {
             console.log("Scanned Data: ", scannedData);
         }
@@ -58,15 +62,16 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
         setShowList(true);
     }
 
-    const handleAddResource = (name: string, category: string, number: number) => {
+    const handleAddResource = (resource_name: string, resource_category: string, resource_number: number) => {
         const newResource = {
             icon: "Package", // You can set a default icon or modify this as needed
-            name,
-            category,
-            number,
+            resource_name,
+            resource_category,
+            resource_number,
             actionLabel: "Manage" // Default action label
         };
         setResourceList(prevResources => [newResource, ...prevResources]); // Add new resource at the top
+        setVisibleResources(prevResources => [newResource, ...prevResources]); // Add new resource at the top
     };
 
     const handleSave = () => {
@@ -151,8 +156,9 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
 
     const handleScan = async() => {
         if(isConnected) {
-            // Disconnect logic
             setIsConnected(false)
+            const disconnect = await axios.get('http://127.0.0.1:5000/disconnect')
+            console.log("Disconnect response: ", disconnect);
             toast.success("Scanner disconnected", {autoClose: 1200});
         } else {
             setScanLoading(true);

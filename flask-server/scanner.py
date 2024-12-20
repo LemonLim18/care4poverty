@@ -66,8 +66,7 @@ def scan_barcode_and_save(is_scanning):
         # Display the frame
         cv2.imshow('Barcode Scanner', frame)
         # Exit the loop when 'ESC' is pressed
-        if cv2.waitKey(1) & 0xFF == 27:
-            break
+        21
 
     # Release the webcam and close all OpenCV windows
     cap.release()
