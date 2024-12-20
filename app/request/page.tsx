@@ -55,6 +55,7 @@ type RequestType = {
   
 const RequestPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
+    const [availableInventory, setAvailableInventory] = useState<Record<string, number>>({});
     const [requestData, setRequestData] = useState<RequestType[] | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const [userId, setUserId] = useState<string | null>(null);
@@ -80,6 +81,91 @@ const RequestPage = () => {
             request.status.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }) || []; // Return an empty array if requestData is null
+
+    // Function to compute statistics
+    const computeStatistics = (requestData: RequestType[], availableInventory: Record<string, number>) => {
+        // Check if requestData is valid
+        if (!Array.isArray(requestData) || requestData.length === 0) {
+            return {
+                mostPreferredItem: null,
+                mostPreferredItemCount: 0,
+                leastPreferredItem: null,
+                leastPreferredItemCount: 0,
+                lackingItems: [],
+                mostFrequentUser: null,
+                mostFrequentUserCount: 0,
+                leastFrequentUser: null,
+                leastFrequentUserCount: 0,
+            };
+        }
+
+        // 1. Count occurrences of each item
+        const itemCounts = requestData.reduce((acc, request) => {
+            if (request.item_name) {
+                acc[request.item_name] = (acc[request.item_name] || 0) + 1;
+            }
+            return acc;
+        }, {} as Record<string, number>);
+
+        // 2. Most preferred item
+        const mostPreferredItem = Object.keys(itemCounts).length > 0 
+            ? Object.keys(itemCounts).reduce((a, b) => itemCounts[a] > itemCounts[b] ? a : b) 
+            : null;
+        const mostPreferredItemCount = mostPreferredItem ? itemCounts[mostPreferredItem] : 0;
+
+        // 3. Least preferred item
+        const leastPreferredItem = Object.keys(itemCounts).length > 0 
+            ? Object.keys(itemCounts).reduce((a, b) => itemCounts[a] < itemCounts[b] ? a : b) 
+            : null;
+        const leastPreferredItemCount = leastPreferredItem ? itemCounts[leastPreferredItem] : 0;
+
+        // 4. Lacking items
+        const lackingItems = Object.keys(itemCounts).map(item => {
+            const requestedCount = itemCounts[item];
+            const availableCount = availableInventory[item] || 0; // Get available count from inventory
+            const lackingCount = requestedCount > availableCount ? requestedCount - availableCount : 0;
+    
+            return {
+                name: item,
+                available: `${availableCount}/${requestedCount}`, // Format as x/y
+                lacking: lackingCount > 0 ? lackingCount : null // Only include if lacking
+            };
+        }).filter(item => item.lacking !== null); // Filter out items that are not lacking
+
+        // 5. Count occurrences of each user
+        const userRequests = requestData.reduce((acc, request) => {
+            if (request.beneficiary_name) {
+                acc[request.beneficiary_name] = (acc[request.beneficiary_name] || 0) + 1;
+            }
+            return acc;
+        }, {} as Record<string, number>);
+
+        // 6. Most frequently requested user
+        const mostFrequentUser = Object.keys(userRequests).length > 0 
+            ? Object.keys(userRequests).reduce((a, b) => userRequests[a] > userRequests[b] ? a : b) 
+            : null;
+        const mostFrequentUserCount = mostFrequentUser ? userRequests[mostFrequentUser] : 0;
+
+        // 7. Least frequently requested user
+        const leastFrequentUser = Object.keys(userRequests).length > 0 
+            ? Object.keys(userRequests).reduce((a, b) => userRequests[a] < userRequests[b] ? a : b) 
+            : null;
+        const leastFrequentUserCount = leastFrequentUser ? userRequests[leastFrequentUser] : 0;
+
+        return {
+            mostPreferredItem,
+            mostPreferredItemCount,
+            leastPreferredItem,
+            leastPreferredItemCount,
+            lackingItems,
+            mostFrequentUser,
+            mostFrequentUserCount,
+            leastFrequentUser,
+            leastFrequentUserCount,
+        };
+    };
+    // Compute statistics once data is fetched
+    const statistics = computeStatistics(requestData || [], availableInventory);
 
     // Function to export the table to PDF
     const exportToPDF = async () => {
@@ -202,7 +288,7 @@ const RequestPage = () => {
                 setUserId(currentUser.id);
                 // Fetch user data after getting the current user
                 fetchUserData(currentUser.id);
-                fetchRequestData(currentUser.id);
+                fetchRequestResourceData(currentUser.id);
             }
         };
 
@@ -233,22 +319,36 @@ const RequestPage = () => {
             }
         }
 
-        const fetchRequestData = async(userId: string) => {
+        const fetchRequestResourceData = async(userId: string) => {
             setLoading(true);
             if (!userId) return;
             const { data: requestData, error: fetchError } = await getRecordsByField('request','organization_id', userId);
+            const { data: resourceData, error: fetchResourceError } = await getRecordsByField('resources','organization_id', userId);
             console.log("Request Data: ", requestData);
             if (fetchError) {
                 console.error('Error fetching request data:', fetchError.message);
                 return;
+            } else if (fetchResourceError) {
+                console.error('Error fetching resource data:', fetchResourceError.message);
+                return;
             }
             if (requestData) {
                 sessionStorage.setItem('request', JSON.stringify(requestData)); // Store request data
+                // sessionStorage.setItem('resource', JSON.stringify(resourceData)); // Store resource data
                 setRequestData(requestData); // Set request data in state
                 console.log('Request data stored in session storage:', requestData);
             } else {
                 console.error("Request data is undefined.");
             } 
+            if (resourceData) {
+                const formattedInventory = resourceData.reduce((acc, item) => {
+                    acc[item.name] = item.availableCount; // Adjust 'availableCount' to the correct property name
+                    return acc;
+                }, {} as Record<string, number>);
+
+                setAvailableInventory(formattedInventory); // Set resource data in state
+                console.log('Resource data in useState variable: ', formattedInventory);
+            }
             setLoading(false)
         };
         fetchUser();
@@ -304,8 +404,10 @@ const RequestPage = () => {
                       <div className="flex w-full">
                         {/* TabList */}
                         <TabsList className="p-0 grid grid-cols-2 w-full max-w-[260px] rounded-b-none rounded-r-none bg-[#0077B6]">
-                          <TabsTrigger className="h-full data-[state=active]:bg-[#038BD4] data-[state=active]:rounded-bl-none data-[state=active]:text-white text-white" value="request-list">Request List</TabsTrigger>
-                          <TabsTrigger className="h-full data-[state=active]:bg-[#038BD4] data-[state=active]:rounded-r-none data-[state=active]:text-white text-white" value="password">Analysis</TabsTrigger>
+                          <TabsTrigger className="h-full data-[state=active]:bg-[#038BD4] data-[state=active]:rounded-bl-none data-[state=active]:text-white text-white" 
+                                       value="request-list">Request List</TabsTrigger>
+                          <TabsTrigger className="h-full data-[state=active]:bg-[#038BD4] data-[state=active]:rounded-r-none data-[state=active]:text-white text-white" 
+                                       value="analysis">Analysis</TabsTrigger>
                         </TabsList>
                         {/* Search Bar */}
                         <div className="flex w-full">
@@ -442,29 +544,47 @@ const RequestPage = () => {
                         </Card>
                     </TabsContent>
 
-                      <TabsContent className="mt-0" value="password">
+                    <TabsContent className="mt-0 w-full" value="analysis">
                         <Card className="rounded-t-none">
-                          <CardHeader>
-                            <CardTitle>Password</CardTitle>
-                            <CardDescription>
-                              Change your password here. After saving, you'll be logged out.
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            <div className="space-y-1">
-                              <Label htmlFor="current">Current password</Label>
-                              <Input id="current" type="password" />
-                            </div>
-                            <div className="space-y-1">
-                              <Label htmlFor="new">New password</Label>
-                              <Input id="new" type="password" />
-                            </div>
-                          </CardContent>
-                          {/* <CardFooter>
-                            <Button>Save password</Button>
-                          </CardFooter> */}
+                            {/* <CardHeader>
+                                <CardTitle className=" font-semibold">Request Analysis Summary</CardTitle>
+                            </CardHeader> */}
+                            <CardContent className="space-y-4">
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full bg-white">
+                                        <thead className="sticky top-0">
+                                            <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
+                                                <th className="py-3 px-4 text-left border-r">Metric</th>
+                                                <th className="py-3 px-4 text-left border-r">Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="text-sm">
+                                            <tr className="hover:bg-gray-50 border-b">
+                                                <td className="py-3 px-4 border-r">Most Preferred Item</td>
+                                                <td className="py-3 px-4 border-r">{statistics.mostPreferredItem || "None"} (Requests: {statistics.mostPreferredItemCount || 0})</td>
+                                            </tr>
+                                            <tr className="hover:bg-gray-50  border-b">
+                                                <td className="py-3 px-4 border-r">Least Preferred Item</td>
+                                                <td className="py-3 px-4 border-r">{statistics.leastPreferredItem || "None"} (Requests: {statistics.leastPreferredItemCount || 0})</td>
+                                            </tr>
+                                            <tr className="hover:bg-gray-50 border-b">
+                                                <td className="py-3 px-4 border-r">Lacking Items</td>
+                                                <td className="py-3 px-4 border-r">{statistics.lackingItems.length > 0 ? statistics.lackingItems.map(item => `${item.name} (Available: ${item.available})`).join(", ") : "None"}</td>
+                                            </tr>
+                                            <tr className="hover:bg-gray-50 border-b">
+                                                <td className="py-3 px-4 border-r">Most Frequently Requested User</td>
+                                                <td className="py-3 px-4 border-r">{statistics.mostFrequentUser || "None"} (Requests: {statistics.mostFrequentUserCount || 0})</td>
+                                            </tr>
+                                            <tr className="hover:bg-gray-50 border-b">
+                                                <td className="py-3 px-4 border-r">Least Frequently Requested User</td>
+                                                <td className="py-3 px-4 border-r">{statistics.leastFrequentUser || "None"} (Requests: {statistics.leastFrequentUserCount || 0})</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </CardContent>
                         </Card>
-                      </TabsContent>
+                    </TabsContent>
                     </Tabs>
                 </div>
             </main>
