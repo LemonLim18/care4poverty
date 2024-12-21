@@ -169,9 +169,9 @@ const RegisterPage = () => {
                     className="w-full border border-gray-400 rounded-sm p-1 h-8 text-sm"
                 >
                     <option value="">Select Role</option>
-                    <option value="charity-admin">Charity Organization Admin</option>
-                    <option value="donor">Donor</option>
-                    <option value="recipient">Recipient</option>
+                    <option value="Charity Admin">Charity Organization Admin</option>
+                    <option value="Donor">Donor</option>
+                    <option value="Beneficiary">Beneficiary</option>
                 </select>
             </div>
         </div>

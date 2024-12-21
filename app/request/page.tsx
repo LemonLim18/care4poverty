@@ -555,7 +555,7 @@ const RequestPage = () => {
                                         <thead className="sticky top-0">
                                             <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
                                                 <th className="py-3 px-4 text-left border-r">Metric</th>
-                                                <th className="py-3 px-4 text-left border-r">Value</th>
+                                                <th className="py-3 px-4 text-left border-r">Description</th>
                                             </tr>
                                         </thead>
                                         <tbody className="text-sm">
