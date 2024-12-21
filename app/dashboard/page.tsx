@@ -65,6 +65,7 @@ const DashboardPage = () => {
 
     const handleLogout = async () => {
         await signOut();
+        sessionStorage.clear(); // Clear session storage
         toast.success('Successfully logged out!', {
             autoClose: 1250, // Toast will disappear after 1500s
         });

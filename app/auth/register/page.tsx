@@ -80,7 +80,10 @@ const RegisterPage = () => {
             <h2 className="text-lg font-semibold">Basic Information</h2>
             
             <div className="space-y-1.5">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName">
+                    Full Name
+                    <span className="ml-[2px] text-red-500">*</span>
+                </Label>
                 <Input
                     id="fullName"
                     name="fullName"
@@ -92,7 +95,10 @@ const RegisterPage = () => {
             </div>
 
             <div className="space-y-1.5">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">
+                    Contact Email
+                    <span className="ml-[2px] text-red-500">*</span>
+                </Label>
                 <Input
                     id="email"
                     name="email"
@@ -105,7 +111,10 @@ const RegisterPage = () => {
             </div>
 
             <div className="space-y-1.5">
-                <Label htmlFor="icNumber">IC Number</Label>
+                <Label htmlFor="icNumber">
+                    IC Number
+                    <span className="ml-[2px] text-red-500">*</span>
+                </Label>
                 <Input
                     id="icNumber"
                     name="icNumber"
@@ -117,7 +126,10 @@ const RegisterPage = () => {
             </div>
 
             <div className="space-y-1.5">
-                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Label htmlFor="phoneNumber">
+                    Phone Number
+                    <span className="ml-[2px] text-red-500">*</span>
+                </Label>
                 <Input
                     id="phoneNumber"
                     name="phoneNumber"
@@ -130,7 +142,10 @@ const RegisterPage = () => {
             </div>
 
             <div className="space-y-1.5">
-                <Label htmlFor="profilePicture">Profile Picture</Label>
+                <Label htmlFor="profilePicture">
+                    Profile Picture
+                    <span className="ml-[2px] text-red-500">*</span>
+                </Label>
                 <Input
                     id="profilePicture"
                     name="profilePicture"
@@ -143,7 +158,10 @@ const RegisterPage = () => {
             </div>
 
             <div className="space-y-1.5">
-                <Label htmlFor="idProof">ID Proof</Label>
+                <Label htmlFor="idProof">
+                    ID Proof
+                    <span className="ml-[2px] text-red-500">*</span>
+                </Label>
                 <Input
                     id="idProof"
                     name="idProof"
@@ -156,7 +174,10 @@ const RegisterPage = () => {
             </div>
 
             <div className="space-y-1.5">
-                <Label htmlFor="role">Role</Label>
+                <Label htmlFor="role">
+                    Role
+                    <span className="ml-[2px] text-red-500">*</span>
+                </Label>
                 <select
                     id="role"
                     name="role"
@@ -169,9 +190,9 @@ const RegisterPage = () => {
                     className="w-full border border-gray-400 rounded-sm p-1 h-8 text-sm"
                 >
                     <option value="">Select Role</option>
-                    <option value="Charity Admin">Charity Organization Admin</option>
-                    <option value="Donor">Donor</option>
-                    <option value="Beneficiary">Beneficiary</option>
+                    <option value="charity-admin">Charity Organization Admin</option>
+                    <option value="donor">Donor</option>
+                    <option value="beneficiary">Beneficiary</option>
                 </select>
             </div>
         </div>
@@ -186,7 +207,10 @@ const RegisterPage = () => {
                         <h2 className="text-lg font-semibold">Organization Details</h2>
                         
                         <div className="space-y-1.5">
-                            <Label htmlFor="organizationName">Organization Name</Label>
+                            <Label htmlFor="organizationName">
+                                Organization Name
+                                <span className="ml-[2px] text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="organizationName"
                                 value={roleSpecificInfo.organizationName}
@@ -200,7 +224,10 @@ const RegisterPage = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="registrationNumber">Registration Number</Label>
+                            <Label htmlFor="registrationNumber">
+                                Registration Number
+                                <span className="ml-[2px] text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="registrationNumber"
                                 value={roleSpecificInfo.registrationNumber}
@@ -214,7 +241,10 @@ const RegisterPage = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="bankAccount">Bank Account</Label>
+                            <Label htmlFor="bankAccount">
+                                Bank Account
+                                <span className="ml-[2px] text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="bankAccount"
                                 value={roleSpecificInfo.bankAccount}
@@ -228,7 +258,10 @@ const RegisterPage = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="website">Website/Social Media</Label>
+                            <Label htmlFor="website">
+                                Website/Social Media
+                                <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="website"
                                 type="url"
@@ -242,7 +275,10 @@ const RegisterPage = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="registrationCert">Certificate of Registration</Label>
+                            <Label htmlFor="registrationCert">
+                                Certificate of Registration
+                                <span className="ml-[2px] text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="registrationCert"
                                 type="file"
@@ -257,7 +293,10 @@ const RegisterPage = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="orgAddress">Organization Address</Label>
+                            <Label htmlFor="orgAddress">
+                                Organization Address
+                                <span className="ml-[2px] text-red-500">*</span>
+                            </Label>
                             <Textarea
                                 id="orgAddress"
                                 value={roleSpecificInfo.orgAddress}
@@ -277,7 +316,10 @@ const RegisterPage = () => {
                     <div className="space-y-2">
                         <h2 className="text-lg font-semibold">Additional Details</h2>
                         <div className="space-y-1.5">
-                            <Label htmlFor="homeAddress">Home Address</Label>
+                            <Label htmlFor="homeAddress">
+                                Home Address
+                                <span className="ml-[2px] text-red-500">*</span>
+                            </Label>
                             <Textarea
                                 id="homeAddress"
                                 value={roleSpecificInfo.homeAddress}
@@ -290,7 +332,10 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div className="space-y-1.5">
-                            <Label htmlFor="incomeStatement">Income Statement</Label>
+                            <Label htmlFor="incomeStatement">
+                                Income Statement
+                                <span className="ml-[2px] text-red-500">*</span>    
+                            </Label>
                             <Input
                                 id="incomeStatement"
                                 type="file"
@@ -306,12 +351,15 @@ const RegisterPage = () => {
                     </div>
                 );
             
-            case 'recipient':
+            case 'beneficiary':
                 return (
                     <div className="space-y-2">
                         <h2 className="text-lg font-semibold">Additional Details</h2>
                         <div className="space-y-1.5">
-                            <Label htmlFor="homeAddress">Home Address</Label>
+                            <Label htmlFor="homeAddress">
+                                Home Address
+                                <span className="ml-[2px] text-red-500">*</span>
+                            </Label>
                             <Textarea
                                 id="homeAddress"
                                 value={roleSpecificInfo.homeAddress}
@@ -324,7 +372,10 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div className="space-y-1.5">
-                            <Label htmlFor="incomeStatement">Income Statement</Label>
+                            <Label htmlFor="incomeStatement">
+                                Income Statement
+                                <span className="ml-[2px] text-red-500">*</span>    
+                            </Label>
                             <Input
                                 id="incomeStatement"
                                 type="file"
@@ -339,7 +390,10 @@ const RegisterPage = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="medicalReport">Medical Report</Label>
+                            <Label htmlFor="medicalReport">
+                                Medical Report
+                                <span className="ml-[2px] text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="medicalReport"
                                 type="file"
