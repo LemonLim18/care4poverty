@@ -8,6 +8,7 @@ export type UserType = {
     email: string;
     role: string;
     organization_name: string;
+    organization_address: string;
     registration_number: string;
     bank_account: string;
     org_address: string;
