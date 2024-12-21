@@ -147,7 +147,11 @@ const ProfilePage = () => {
                   />
                   <div className="ml-4">
                     <h2 className="text-lg font-semibold">{userData.full_name}</h2>
-                    <p className="text-gray-500">{userData.role}</p>
+                    <p className="text-gray-500">
+                      {userData.role === 'charity-admin' && 'Charity Admin'}
+                      {userData.role === 'donor' && 'Donor'}
+                      {userData.role === 'beneficiary' && 'Beneficiary'}
+                    </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
