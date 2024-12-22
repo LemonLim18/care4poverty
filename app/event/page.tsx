@@ -202,7 +202,7 @@ const EventPage = () => {
                                                 className="cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
                                                 onClick={() => {}}
                                             >
-                                                <CardContent className="flex flex-col">
+                                                <CardContent className="flex flex-col p-0">
                                                     <div className="relative">
                                                         <Image
                                                             src={event.event_photos[0]}
@@ -371,7 +371,7 @@ const EventPage = () => {
                                             className="cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
                                             onClick={() => {}}
                                         >
-                                            <CardContent className="flex flex-col">
+                                            <CardContent className="flex flex-col p-0">
                                             <div className="relative">
                                                 <Image
                                                     src={eventsCategory.event_photos[0]}
@@ -446,7 +446,7 @@ const EventPage = () => {
                                                             className="cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
                                                             onClick={() => {}}
                                                         >
-                                                            <CardContent className="flex flex-col">
+                                                            <CardContent className="flex flex-col p-0">
                                                             <div className="relative">
                                                                 <Image
                                                                     src={event.event_photos[0]}
@@ -504,7 +504,7 @@ const EventPage = () => {
                                                                 <Button className='bg-blue-600 mt-5'>Click here for more details</Button>
                                                             </Link>
 
-                                                            <div className="relative mt-4">
+                                                            <div className="relative mt-4 p-0">
                                                                 <Carousel className="mt-4">
                                                                     <CarouselContent>
                                                                         {event.event_photos.map((photo: string, index: number) => (
@@ -609,7 +609,7 @@ const EventPage = () => {
                                                 className="cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
                                                 onClick={() => {}}
                                             >
-                                                <CardContent className="flex flex-col">
+                                                <CardContent className="flex flex-col p-0">
                                                     <div className="relative">
                                                         <Image
                                                             src={event.event_photos[0]}
