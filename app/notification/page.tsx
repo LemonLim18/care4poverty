@@ -205,7 +205,8 @@ const NotificationPage = () => {
                             </Drawer>
                         </div>   
                     </div>
-                    <div className="hidden md:block w-1/3 flex flex-col">
+                    {/* <div className="hidden md:block w-1/3 flex flex-col"> */}
+                    <div className="hidden md:block w-1/3 flex-col">
                         <Image
                             src={sideImage1.src} 
                             alt='image'
