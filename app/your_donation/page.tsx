@@ -268,56 +268,56 @@ const YourDonation = () => {
                             <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Recently Donated Items</h2>
                             <p className="font-roboto text-sm sm:text-sm md:text-sm text-gray-500">Donation summary</p>
                             <div className="grid grid-cols-2 md:grid-cols-4 mt-1">
-                                <Card className="m-1 bg-red-300 flex-1 transform transition-transform hover:scale-105">
+                                <Card className="m-1 bg-red-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
                                         <div className="flex items-center justify-center w-16 h-16 bg-red-500 rounded-full">
                                             <Shirt />
                                         </div>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="flex">
+                                        <div className="flex flex-col justify-center items-center">
                                             <p className='font-giorgio text-5xl font-bold'>20</p>
+                                            <p className='font-roboto text-md mt-1'>Wearable Items</p>
                                         </div>
-                                        <p className='font-roboto text-md mt-1'>Wearable Items</p>
                                     </CardContent>
                                 </Card>
-                                <Card className="m-1 bg-yellow-300 flex-1 transform transition-transform hover:scale-105">
+                                <Card className="m-1 bg-yellow-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
                                         <div className="flex items-center justify-center w-16 h-16 bg-orange-500 rounded-full">
                                             <Pizza />
                                         </div>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="flex">
+                                        <div className="flex flex-col justify-center items-center">
                                             <p className='font-giorgio text-5xl font-bold'>6</p>
+                                            <p className='font-roboto text-md mt-1'>Food</p>
                                         </div>
-                                        <p className='font-roboto text-md mt-1'>Food</p>
                                     </CardContent>
                                 </Card>
-                                <Card className="m-1 bg-green-300 flex-1 transform transition-transform hover:scale-105">
+                                <Card className="m-1 bg-green-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
                                         <div className="flex items-center justify-center w-16 h-16 bg-green-500 rounded-full">
                                             <CupSoda />
                                         </div>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="flex">
+                                        <div className="flex flex-col justify-center items-center">
                                             <p className='font-giorgio text-5xl font-bold'>10</p>
+                                            <p className='font-roboto text-md mt-1'>Drinks</p>
                                         </div>
-                                        <p className='font-roboto text-md mt-1'>Drinks</p>
                                     </CardContent>
                                 </Card>
-                                <Card className="m-1 bg-purple-300 flex-1 transform transition-transform hover:scale-105">
+                                <Card className="m-1 bg-purple-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
                                         <div className="flex items-center justify-center w-16 h-16 bg-purple-500 rounded-full">
                                             <HeartPulse />
                                         </div>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="flex">
+                                        <div className="flex flex-col justify-center items-center">
                                             <p className='font-giorgio text-5xl font-bold'>14</p>
+                                            <p className='font-roboto text-md mt-1'>Health supplies</p>
                                         </div>
-                                        <p className='font-roboto text-md mt-1'>Health supplies</p>
                                     </CardContent>
                                 </Card>
                             </div>
