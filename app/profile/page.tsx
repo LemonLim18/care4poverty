@@ -131,7 +131,7 @@ const ProfilePage = () => {
                         <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
-                    <BreadcrumbItem>Profile</BreadcrumbItem>
+                    <BreadcrumbItem className="font-bold text-black">Profile</BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
         </div>

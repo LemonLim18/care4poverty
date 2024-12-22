@@ -386,7 +386,7 @@ const RequestPage = () => {
                                 <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
-                            <BreadcrumbItem>Request</BreadcrumbItem>
+                            <BreadcrumbItem className="font-bold text-black">Request</BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>

@@ -122,7 +122,7 @@ const ResourcePage = () => {
                                 <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
-                            <BreadcrumbItem>Resources</BreadcrumbItem>
+                            <BreadcrumbItem className="font-bold text-black">Resources</BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>

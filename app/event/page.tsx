@@ -162,7 +162,7 @@ const EventPage = () => {
                                 <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
-                            <BreadcrumbItem>Event</BreadcrumbItem>
+                            <BreadcrumbItem className="font-bold text-black">Event</BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>
