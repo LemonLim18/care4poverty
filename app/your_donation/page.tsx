@@ -277,7 +277,7 @@ const YourDonation = () => {
                                     <CardContent>
                                         <div className="flex flex-col justify-center items-center">
                                             <p className='font-giorgio text-5xl font-bold'>20</p>
-                                            <p className='font-roboto text-md mt-1'>Wearable Items</p>
+                                            <p className='font-roboto text-md mt-1 mb-5'>Wearable Items</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -290,7 +290,7 @@ const YourDonation = () => {
                                     <CardContent>
                                         <div className="flex flex-col justify-center items-center">
                                             <p className='font-giorgio text-5xl font-bold'>6</p>
-                                            <p className='font-roboto text-md mt-1'>Food</p>
+                                            <p className='font-roboto text-md mt-1 mb-5'>Food</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -303,7 +303,7 @@ const YourDonation = () => {
                                     <CardContent>
                                         <div className="flex flex-col justify-center items-center">
                                             <p className='font-giorgio text-5xl font-bold'>10</p>
-                                            <p className='font-roboto text-md mt-1'>Drinks</p>
+                                            <p className='font-roboto text-md mt-1 mb-5'>Drinks</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -316,7 +316,7 @@ const YourDonation = () => {
                                     <CardContent>
                                         <div className="flex flex-col justify-center items-center">
                                             <p className='font-giorgio text-5xl font-bold'>14</p>
-                                            <p className='font-roboto text-md mt-1'>Health supplies</p>
+                                            <p className='font-roboto text-md mt-1 mb-5'>Health supplies</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -327,7 +327,7 @@ const YourDonation = () => {
                     <div className='md:w-1/3 flex flex-col'>
                         <Card className='p-5'>
                             <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Donation Overview</h2>
-                            <div className="mt-12">
+                            <div className="mt-10">
                                 <ChartContainer config={chartConfigOverview} className="min-h-[200px] w-full">
                                     <BarChart accessibilityLayer data={chartDataOverview}>
                                         <CartesianGrid vertical={false} />
@@ -422,8 +422,8 @@ const YourDonation = () => {
                     <div className='md:w-1/3 flex flex-col p-1'>
                         <Card className="flex flex-col">
                             <CardHeader className="items-center pb-0 p-6">
-                                <CardTitle>Donation Overview by Category</CardTitle>
-                                <CardDescription>January - June 2024</CardDescription>
+                                <div className="font-bold text-lg">Donation Overview by Category</div>
+                                <div className="font-roboto text-sm">January - June 2024</div>
                             </CardHeader>
                             <CardContent className="flex-1 pb-0">
                                 <ChartContainer
@@ -472,10 +472,10 @@ const YourDonation = () => {
                         <Card>
                             <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
                                 <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-                                <CardTitle>Donation trend over time</CardTitle>
-                                <CardDescription>
-                                    Showing total donations and funds for the last 3 months
-                                </CardDescription>
+                                    <div className="font-bold text-lg">Donation trend over time</div>
+                                    <div className="font-roboto text-sm">
+                                        Showing total donations and funds for the last 3 months
+                                    </div>
                                 </div>
                                 <div className="flex">
                                 {["globaldonation", "globalfund"].map((key) => {
