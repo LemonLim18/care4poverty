@@ -51,6 +51,7 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                     <SidebarGroup className='bg-[#0077B6]'>
                         <h4 className="font-roboto text-[#D2D2D2] text-xsm mx-2">Account</h4>
                         {/* PROFILE */}
+                        {(userData?.role === 'donor' || userData?.role === 'beneficiary' || userData?.role === "charity-admin") && (
                         <button 
                             onClick={() => navigateToPage('/profile')}
                             className="flex items-center justify-between gap-2 w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
@@ -61,6 +62,7 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                             </div>
                             <ChevronRight size={18}/>
                         </button>
+                        )}
                         {/* Charity Admin: ORGANIZATION */}
                         {userData?.role === 'charity-admin' && (
                             <button 

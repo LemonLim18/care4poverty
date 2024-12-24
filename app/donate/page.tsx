@@ -12,21 +12,13 @@ import { Separator } from "@/components/ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';  // Add this import at the top of your file
-import { Select, SelectItem, SelectLabel, SelectGroup, SelectContent, SelectValue, SelectTrigger } from '@/components/ui/select';
 import { RotateCw, Map, MapPin, MapPinned, MapPinCheckInside, BookImage, ChartPie, IdCard, Phone, Mail, PanelsTopLeft } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { Dialog, DialogTrigger, DialogContent,  DialogTitle, DialogDescription, DialogHeader } from "@/components/ui/dialog";
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { getAllRecords, getRecordsByField } from '@/lib/supabaseAPI';
+import { getAllRecords, getRecordById, getRecordsByField } from '@/lib/supabaseAPI';
 import { Button } from '@/components/ui/button';
 
-import Image1 from '@/public/images/charity_center/charity_center1.png';
-import Image2 from '@/public/images/charity_center/charity_center2.jpeg';
-import Image3 from '@/public/images/charity_center/charity_center3.jpeg';
-import Image4 from '@/public/images/charity_center/charity_center4.jpg';
 import Image5 from '@/public/images/charity_center/charity_center5.jpeg';
-import Image6 from '@/public/images/charity_center/charity_center6.jpg';
 import { Input } from '@/components/ui/input';
 
 const DonatePage = () => {
@@ -40,6 +32,41 @@ const DonatePage = () => {
     
     useEffect(() => {
         // window.scrollTo(0, 0);
+        const fetchUser = async () => {
+            const currentUser: User | null = await getUser();
+            if (!currentUser) {
+                toast.error('User not found! Redirecting to login...', {
+                    autoClose: 1350,
+                });
+                router.push('/auth/login');
+            } else {
+                setUser(currentUser);
+            }
+            console.log("Current User: ", currentUser?.id);
+            const storedUserData = sessionStorage.getItem('user');
+            console.log("Stored User Data: ", storedUserData);
+            if (storedUserData && storedUserData !== "null" && storedUserData !== "undefined") {
+                const parsedUserData = JSON.parse(storedUserData);
+                setUserData(parsedUserData);
+                console.log("User Session Storage: ", parsedUserData);
+            } else {
+                try {
+                    
+                    const { data: userFetchData, error: fetchError } = await getRecordById('users', currentUser?.id || '');
+                    if (fetchError) {
+                        console.error('Error fetching user data:', fetchError.message);
+                        return;
+                    }
+                    setUserData(userFetchData || null);
+                    sessionStorage.setItem('user', JSON.stringify(userData));
+                    console.log('User Data fetched from server:', userFetchData);
+                } catch (error) {
+                    console.error('Unexpected error fetching user data:', error);
+                }
+            }
+        };
+
+        fetchUser();
 
         // Check if window is defined (client-side)
         if (typeof window !== 'undefined') {
@@ -52,20 +79,6 @@ const DonatePage = () => {
                 console.log('No user data found in session storage');
             }
         }
-
-        const fetchUser = async () => {
-            const currentUser: User | null = await getUser();
-            if (!currentUser) {
-                toast.error('User not found! Redirecting to login...', {
-                    autoClose: 1350,
-                });
-                router.push('/auth/login');
-            } else {
-                setUser(currentUser);
-            }
-        };
-
-        fetchUser();
     }, []);
 
     useEffect(() => {
@@ -108,7 +121,13 @@ const DonatePage = () => {
         return charityCenter.organization_district.toLowerCase().includes(locationFilter.toLowerCase()) ||
                charityCenter.organization_name.toLowerCase().includes(locationFilter.toLowerCase());
     });
+
+    console.log("Filtered Charity Data: ", filteredCharityData);
     
+    const handleRefresh = () => {
+        // clear the input
+        setLocationFilter("");
+    }
 
     const handleLogout = async () => {
         await signOut();
@@ -129,7 +148,7 @@ const DonatePage = () => {
 
             {/* Main Content */}
             {/* <main className="h-full w-full overflow-x-hidden flex flex-col mt-8 mx-5 md:mx-10"> */}
-            <main className="h-full w-full overflow-x-hidden flex flex-col mt-8 mb-8 ml-5 md:ml-10">
+            <main className="h-full w-full overflow-x-hidden flex flex-col mt-8 mb-8 ml-5 md:ml-16">
                 <div className="flex items-center gap-2">
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -137,7 +156,7 @@ const DonatePage = () => {
                                 <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
-                            <BreadcrumbItem className="font-bold whitespace-nowrap text-black">Charity Center</BreadcrumbItem>
+                            <BreadcrumbItem className="font-bold whitespace-nowrap text-black">Donate</BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>
@@ -159,7 +178,7 @@ const DonatePage = () => {
                                 onChange={handleLocationChange} // Handle the input change
                             />
                         </div>
-                        <Button className="mr-0 sm:mr-10 bg-[#0077B6] hover:bg-[#038BD4] text-white"onClick={()=> {}}>
+                        <Button className="mr-0 sm:mr-10 bg-[#0077B6] hover:bg-[#038BD4] text-white"onClick={handleRefresh}>
                             <RotateCw/>
                             <span className="hidden sm:block font-roboto">Refresh</span>
                         </Button>
@@ -194,41 +213,45 @@ const DonatePage = () => {
                         <div className="flex gap-4 mt-2 w-full ">
                             {/* {charityData.map((charityCenter, index) => ( */} {/* Display all the charity centers*/}
                             {filteredCharityData.map((charityCenter, index) => (
-                                <Card
+                                <Link 
                                     key={index}
-                                    className="mr-10 min-w-[300px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
-                                    onClick={() => {}}
+                                    href={{pathname: "/centers", query: {id: charityCenter?.id}}}    // Link to the charity center page
+                                    passHref //passHref ensures that the link is passed as well to the child component, such that when click the Card, it will also trigger the redirection
                                 >
-                                    <CardContent className="flex flex-col">
-                                        <div className="relative">
-                                            <Image
-                                                src={charityCenter.profile_picture}
-                                                alt="charity image"
-                                                width={600}
-                                                height={400}
-                                                draggable
-                                                onClick={(e) => e.preventDefault()}
-                                                className="h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
-                                            />
-                                            <div className="absolute bottom-0 left-0 flex flex-col items-center justify-center py-3 w-full bg-[#002154] opacity-85 text-white">
-                                                <p className="my-1 font-roboto font-semibold text-center">
-                                                    {charityCenter.organization_name}
-                                                </p>
-                                                <p className="my-1 font-roboto font-semibold text-sm">
-                                                    <span className="font-roboto text-[#0084ff]">0.5KM</span>
-                                                     &middot; {charityCenter.organization_district}
-                                                </p>
+                                    <Card
+                                        className="mr-10 min-w-[300px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
+                                    >
+                                        <CardContent className="flex flex-col">
+                                            <div className="relative">
+                                                <Image
+                                                    src={charityCenter.profile_picture}
+                                                    alt="charity image"
+                                                    width={600}
+                                                    height={400}
+                                                    draggable
+                                                    priority
+                                                    className="h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
+                                                />
+                                                <div className="absolute bottom-0 left-0 flex flex-col items-center justify-center py-3 w-full bg-[#002154] opacity-85 text-white">
+                                                    <p className="my-1 font-roboto font-semibold text-center">
+                                                        {charityCenter.organization_name}
+                                                    </p>
+                                                    <p className="my-1 font-roboto font-semibold text-sm">
+                                                        <span className="font-roboto text-[#0084ff]">0.5KM</span>
+                                                         &middot; {charityCenter.organization_district}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
                             ))}
                         </div>
                     )}
                 </div>
 
                 {/* Explore other places */}
-                <div className="mt-10 mb-2 flex">
+                <div className="mt-12 mb-2 flex">
                     <Map className="text-3xl sm:text-4xl md:text-5xl mr-2" size={30}/>
                     <h2 className="font-roboto font-bold text-lg sm:text-xl md:text-2xl">Explore other places</h2>
                 </div>
@@ -252,7 +275,7 @@ const DonatePage = () => {
                         // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
                         // Explore other places
                         <div className="flex gap-4 mt-2 w-full ">
-                            <Card
+                            {/* <Card
                                 // className="mr-10 min-w-[300px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
                                 className="mr-10 min-w-[500px] max-h-[250px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
                                 onClick={() => {}}
@@ -265,6 +288,7 @@ const DonatePage = () => {
                                             width={600}
                                             height={400}
                                             draggable
+                                            priority
                                             onClick={(e) => e.preventDefault()}
                                             className="h-full  rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                         />
@@ -277,10 +301,11 @@ const DonatePage = () => {
                                         </div>
                                     </div>
                                 </CardContent>
-                            </Card>
+                            </Card> */}
 
                             {/* {charityData.map((charityCenter, index) => ( */} {/* Display all the charity centers */}
                             {filteredCharityData.map((charityCenter, index) => (
+                            
                             <Card
                                 key={index}
                                 className="mr-10 min-w-[500px] max-h-[250px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
@@ -294,7 +319,7 @@ const DonatePage = () => {
                                             width={600}
                                             height={400}
                                             draggable
-                                            onClick={(e) => e.preventDefault()}
+                                            priority
                                             className="h-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
                                         />
                                         <div className="h-[43%] absolute bottom-0 left-0 flex items-center py-3 gap-x-6 w-full bg-[#A9D2FC] opacity-95 text-black">
