@@ -189,6 +189,10 @@ const DonationPage = () => {
         return <div>Charity ID not found in the URL!</div>;
     }
 
+    const handleReturn = () => {
+        router.push(`/centers?id=${charityId}`);
+    }
+
     const handleSubmit = async() => {
         if(!isTermsAgreed) {
             toast.error('Please agree to the terms and conditions before submitting.', {autoClose: 1500});
@@ -363,7 +367,7 @@ const DonationPage = () => {
                         </div>
                         <footer className={`bg-white fixed w-full md:w-[calc(100%-255px)] z-50 bottom-0 right-0 text-white py-4 pl-16 pr-10 flex justify-between rounded-t-3xl ${isFooterShadowVisible? 'shadow-[0_-2px_4px_rgba(0,0,0,0.1)]' : 'shadow-none' }`}>
                             <div className="w-full text-black">
-                                <p className="font-roboto font-bold">Terms & Conditions</p>
+                                <p className="font-roboto font-bold text-sm md:text-md">Terms & Conditions</p>
                                 <label className="mt-1 flex items-center">
                                     <input
                                         type="checkbox"
@@ -371,13 +375,20 @@ const DonationPage = () => {
                                         onChange={(e) => setIsTermsAgreed(e.target.checked)}    // Capture the action of the user, send it to useState variable, and return back to the check input
                                         className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 accent-gray-900"
                                     />
-                                    <span className="w-full ml-3 text-sm font-roboto font-light">
+                                    <span className="w-full ml-3 text-xsm md:text-sm font-roboto font-light">
                                         I hereby agree to the terms and conditions provided
                                     </span>
                                 </label>
                             </div>
                             <button 
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                                className="text-black hover:underline hover:border-gray-900
+                                 text-xsm md:text-sm lg:text-base py-2 px-4 lg:px-8 lg:py-3 mr-4 md:mr-4 border border-gray-300 rounded-full"
+                                onClick={handleReturn}
+                            >
+                                Back
+                            </button>
+                            <button 
+                                className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xsm md:text-sm lg:text-base py-2 px-4 lg:px-8 lh:py-3 rounded-full"
                                 onClick={handleSubmit}
                             >
                                 Donate
