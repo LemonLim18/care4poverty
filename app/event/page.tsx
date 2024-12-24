@@ -298,9 +298,6 @@ const EventPage = () => {
                                                         <AvatarFallback>H</AvatarFallback>
                                                     </Avatar>
                                                 </div>
-                                                
-                                                
-                                                
                                                 <div className="flex flex-col text-left">
                                                     <div className="flex mb-1">
                                                         <IdCard className='ml-3 mr-3' />
