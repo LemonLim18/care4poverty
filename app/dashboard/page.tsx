@@ -14,10 +14,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartStyle, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PieSectorDataItem } from 'recharts/types/polar/Pie';
-import { TrendingUp } from "lucide-react";
+import { Link, PanelsTopLeft, Mail, Phone, IdCard, TrendingUp } from "lucide-react";
 import image from "../../public/images/donation.jpeg"
 import image2 from "../../public/images/dummy/avatar.jpg"
 import Image from 'next/image'; // Ensure this import is present
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const typeData = [
     { month: "january", donation: 186, fund: 120, fill: "var(--color-january)" },
@@ -330,6 +331,32 @@ const DashboardPage = () => {
                     </h1>
                 </div>
 
+                <div className="mt-4 mb-4 flex flex-col">
+                    <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl mb-3">Top Contributors</h2>
+                    <div className=" gap-4">
+                        <div className='flex p-4 grid grid-cols-2 md:grid-cols-4'>
+                            {[...Array(4)].map((_, index) => (
+                                <div key={index} className='flex'>
+                                    <Avatar className='h-12 w-12'>
+                                        <AvatarImage 
+                                            src="https://github.com/shadcn.png" 
+                                            alt="avatar" 
+                                            className='object-cover'
+                                        />
+                                        <AvatarFallback>H</AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex flex-col ml-3">
+                                        <h1 className="font-roboto font-bold text-xl sm:text-xl md:text-xl">John Doe</h1>
+                                        <h1 className="font-roboto text-sm sm:text-sm md:text-sm">100 donations</h1>
+                                    </div>
+                                    
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Donation and Fund Comparison */}    
                 <div className="mt-2 mb-2">
                     <Card>
                         <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
@@ -659,21 +686,41 @@ const DashboardPage = () => {
                     </div>
                 </div>
                 
-                <h2 className="font-giorgio font-bold text-2xl sm:text-3xl md:text-4xl">Most Supportive Donors</h2>
-                <div className="mt-2 mb-2 grid md:grid-cols-2 grid-cols-1 gap-2 mb-4">
-                    <div className="p-1 flex">
-                            <div className="">
-                                <Image 
-                                src={image2.src} 
-                                alt="donation" 
-                                width={100} 
-                                height={100} 
-                                priority 
-                                draggable={false} 
-                                className="object-cover w-24 h-24 rounded-full"
-                            />
+                <h2 className="font-giorgio font-bold text-4xl sm:text-4xl md:text-5xl mb-3">Latest News</h2>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+                    {[...Array(3)].map((_, index) => (
+                        <div
+                            className="cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden mb-5"
+                            key={index}
+                        >
+                        <div className="flex flex-col">
+                            <div>
+                                <Image
+                                    src="/images/localCharity.jpg"
+                                    alt="event"
+                                    width={600}
+                                    height={500}
+                                    priority
+                                    draggable={false}
+                                    onClick={(e) => e.preventDefault()}
+                                    className="h-48 w-full object-cover transition-transform duration-200 hover:scale-110"
+                                />
+                            </div>
+                            <div className="m-4 flex flex-col justify-between items-center">
+                                <div>
+                                    <a href="https://www.charityConnectGlobal.org" className="font-roboto text-sm text-gray-500" target="_blank" rel="noopener noreferrer">
+                                        www.charityConnectGlobal.org
+                                    </a>
+                                    <p className="font-roboto text-xl font-semibold mt-2">Charity Connect Global</p>
+                                    <p className="font-roboto text-sm">
+                                        A centralized platform connecting donors and charities worldwide, enabling seamless contributions 
+                                        to impactful causes.
+                                    </p>
+                                </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
             </main>
         </div>
