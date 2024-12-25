@@ -16,6 +16,7 @@ const config: Config = {
 			},
 		},
   		colors: {
+			'custom-border-blue': 'rgba(12, 140, 233, 0.3)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
