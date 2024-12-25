@@ -9,7 +9,7 @@ import {
     SidebarProvider,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Archive,Home, Settings, User, LogOut, BarChart, Package, Building, Send, ChevronRight, Bell, Calendar, GraduationCap, ScrollText, HandHeart, HandCoins } from "lucide-react"; // Import icons
+import { Archive, Home, LayoutDashboard, Settings, User, LogOut, BarChart, Package, Building, Send, ChevronRight, Bell, Calendar, GraduationCap, ScrollText, HandHeart, HandCoins } from "lucide-react"; // Import icons
 import logoPng from "@/public/images/logo.png";
 import { UserType } from  "@/datatypes/types";
 import { useRouter } from 'next/navigation';
@@ -80,12 +80,12 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                          {/* Your Donation */}
                         {userData?.role === 'donor' && (
                             <button 
-                                onClick={() => navigateToPage('/your_donation')}
+                                onClick={() => navigateToPage('/donorDashboard')}
                                 className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
                             >
                                 <div className="flex items-center gap-2">
-                                    <Archive size={18} />
-                                    <span className="font-roboto text-sm">Your Donation</span>
+                                    <LayoutDashboard size={18} />
+                                    <span className="font-roboto text-sm">Dashboard</span>
                                 </div>
                                 <ChevronRight size={18} />
                             </button>
@@ -94,12 +94,12 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                          {/* Your Request */}
                         {userData?.role === 'beneficiary' && (
                             <button 
-                                onClick={() => navigateToPage('/your_request')}
+                                onClick={() => navigateToPage('/beneficiaryDashboard')}
                                 className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
                             >
                                 <div className="flex items-center gap-2">
-                                    <Archive size={18} />
-                                    <span className="font-roboto text-sm">Your Request</span>
+                                    <LayoutDashboard size={18} />
+                                    <span className="font-roboto text-sm">Dashboard</span>
                                 </div>
                                 <ChevronRight size={18} />
                             </button>
@@ -115,7 +115,7 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                                 className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
                             >
                                 <div className="flex items-center gap-2">
-                                    <BarChart size={18} />
+                                    <LayoutDashboard size={18} />
                                     <span className="font-roboto text-sm">Dashboard</span>
                                 </div>
                                 <ChevronRight size={18} />

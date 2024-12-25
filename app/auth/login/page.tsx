@@ -82,8 +82,23 @@ const LoginPage = () => {
         }
 
         if (userData) {
+          const userRole = userData.role;
           sessionStorage.setItem('user', JSON.stringify(userData)); // Store user data
           console.log('User data stored in session storage:', userData);
+          
+          setTimeout(() => {
+            console.log("User Role: ", userRole);
+            if(userRole === 'charity-admin') {
+              console.log("Charity Admin");
+              router.push('/dashboard'); 
+            } else if (userRole === 'donor') {
+              console.log("Donor");
+              router.push('/donorDashboard'); 
+            } else if (userRole === 'beneficiary') {
+              console.log("Beneficiary");
+              router.push('/beneficiaryDashboard'); 
+            }
+          }, 1800);
         } else {
           console.error("User data is undefined.");
         }
@@ -91,9 +106,7 @@ const LoginPage = () => {
         console.error("User ID is undefined.");
       }
 
-      setTimeout(() => {
-        router.push('/dashboard'); // Redirect to the dashboard after successful registration
-      }, 1800);
+      
     }
   };
 

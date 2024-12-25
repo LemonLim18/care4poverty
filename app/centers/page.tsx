@@ -137,8 +137,8 @@ const CharityDetailedPage = () => {
                     {charityData ? (
                         <>
                             <div className="w-full flex space-x-20">
-                                <Carousel className="bg-red-500 min-w-[450px] h-[270px] rounded-3xl mt-4 overflow-hidden">
-                                    <CarouselContent className="ml-0 bg-blue-200 w-full rounded-3xl overflow-hidden">
+                                <Carousel className="bg-red-500 min-w-[450px] max-h-[270px] rounded-3xl mt-4 ">
+                                    <CarouselContent className="ml-0 bg-blue-200 min-w-[450px] max-h-[270px] rounded-3xl overflow-hidden">
                                         <Image
                                             src={charityData.profile_picture}
                                             alt={charityData.organization_name}
@@ -149,8 +149,8 @@ const CharityDetailedPage = () => {
                                             className="object-cover justify-center h-full"
                                         />
                                     </CarouselContent>
-                                    <CarouselPrevious className="border-2 border-black bg-[#F5F9FE] hover:bg-white transform -translate-y-1/2" />
-                                    <CarouselNext className="border-2 border-black bg-[#F5F9FE] hover:bg-white transform -translate-y-1/2" />
+                                    <CarouselPrevious className="border-2 z-[9999] border-black bg-[#F5F9FE] hover:bg-white cursor-pointer transform -translate-y-1/2" />
+                                    <CarouselNext className="border-2 border-black bg-[#F5F9FE] hover:bg-white hover:cursor-pointer transform -translate-y-1/2" />
                                 </Carousel>
                                 <section className="w-full flex flex-col justify-center ">
                                     <p className="text-left px-4 font-roboto font-light">Posted 40 mins ago</p>

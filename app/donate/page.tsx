@@ -212,7 +212,11 @@ const DonatePage = () => {
                         // Place near you
                         <div className="flex gap-4 mt-2 w-full ">
                             {/* {charityData.map((charityCenter, index) => ( */} {/* Display all the charity centers*/}
-                            {filteredCharityData.map((charityCenter, index) => (
+                            {filteredCharityData.length === 0 ? ( // Check if there are no charity centers
+                                <div className="text-center w-full">
+                                    <p className="mt-8 text-lg text-gray-700 font-roboto">No available center</p>
+                                </div>
+                            ) : (filteredCharityData.map((charityCenter, index) => (
                                 <Link 
                                     key={index}
                                     href={{pathname: "/centers", query: {id: charityCenter?.id}}}    // Link to the charity center page
@@ -245,7 +249,7 @@ const DonatePage = () => {
                                         </CardContent>
                                     </Card>
                                 </Link>
-                            ))}
+                            )))}
                         </div>
                     )}
                 </div>
@@ -304,7 +308,11 @@ const DonatePage = () => {
                             </Card> */}
 
                             {/* {charityData.map((charityCenter, index) => ( */} {/* Display all the charity centers */}
-                            {filteredCharityData.map((charityCenter, index) => (
+                            {filteredCharityData.length === 0 ? ( // Check if there are no charity centers
+                                <div className="text-center w-full">
+                                    <p className="mt-8 text-lg text-gray-700 font-roboto">No available center</p>
+                                </div>
+                            ) : (filteredCharityData.map((charityCenter, index) => (
                             
                             <Card
                                 key={index}
@@ -332,7 +340,7 @@ const DonatePage = () => {
                                     </div>
                                 </CardContent>
                             </Card>
-                        ))}
+                        )))}
                         </div>
                     )}
                 </div>

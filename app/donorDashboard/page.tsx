@@ -39,7 +39,7 @@ const chartConfigOverview = {
     },
 } satisfies ChartConfig;
 
-const YourRequest = () => {
+const YourDonation = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
@@ -87,7 +87,7 @@ const YourRequest = () => {
           label: "Page Views",
         },
         globaldonation: {
-          label: "request",
+          label: "donation",
           color: "hsl(var(--chart-1))",
         },
         globalfund: {
@@ -247,26 +247,26 @@ const YourRequest = () => {
                 <div className="flex items-center gap-2">
                     <Breadcrumb>
                         <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">Home</BreadcrumbLink>
-                            </BreadcrumbItem>
+                            <BreadcrumbItem>Home</BreadcrumbItem>
                             <BreadcrumbSeparator />
-                            <BreadcrumbItem>Your Request</BreadcrumbItem>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink className="font-semibold text-black" href="/beneficiaryDashboard">Dashboard</BreadcrumbLink>
+                            </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>
 
                 {/* Title */}
                 <div className="mt-7 mb-7">
-                    <h1 className="font-giorgio font-bold text-4xl sm:text-5xl md:text-6xl">Your Request</h1>
+                    <h1 className="font-giorgio font-bold text-4xl sm:text-5xl md:text-6xl">Dashboard</h1>
                 </div>
 
                 {/* first colume */}
                 <div className="mt-1 mb-2 mr-10 md:mr-0 md:flex">
                     <div className='md:w-2/3 md:mr-4 mb-5 flex flex-col'>
                         <Card className='p-5 flex-1'>
-                            <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Recently Requested Items</h2>
-                            <p className="font-roboto text-sm sm:text-sm md:text-sm text-gray-500">Request summary</p>
+                            <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Recently Donated Items</h2>
+                            <p className="font-roboto text-sm sm:text-sm md:text-sm text-gray-500">Donation summary</p>
                             <div className="grid grid-cols-2 md:grid-cols-4 mt-1">
                                 <Card className="m-1 bg-red-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
@@ -326,7 +326,7 @@ const YourRequest = () => {
                     {/* financial overview */}
                     <div className='md:w-1/3 flex flex-col'>
                         <Card className='p-5'>
-                            <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Request Overview</h2>
+                            <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Donation Overview</h2>
                             <div className="mt-10">
                                 <ChartContainer config={chartConfigOverview} className="min-h-[200px] w-full">
                                     <BarChart accessibilityLayer data={chartDataOverview}>
@@ -352,7 +352,7 @@ const YourRequest = () => {
                 {/* second colume */}
                 <div className="mt-1 mb-2 mr-10 md:mr-0 md:flex md:flex-col">
                     <div className="mt-7 flex">
-                        <h2 className="font-giorgio font-bold text-2xl sm:text-3xl md:text-4xl">Organizations Requested</h2>
+                        <h2 className="font-giorgio font-bold text-2xl sm:text-3xl md:text-4xl">Supported Organizations</h2>
                     </div>
                     <div className='mt-5 grid grid-cols-1 md:grid-cols-3 gap-4'>
                         {[...Array(6)].map((_, index) => (
@@ -370,7 +370,7 @@ const YourRequest = () => {
                                 
                                 <div 
                                     className="absolute h-1/2 inset-0 z-10 bg-white bg-opacity-80"
-                                    style={{ top: '50%' }}
+                                    style={{ top: '50%'}}
                                 >
                                     <div className="m-4">
                                         <h2 className="font-roboto text-lg font-bold sm:text-2xl md:text-2xl">Glasses to the Rescue</h2>
@@ -422,7 +422,7 @@ const YourRequest = () => {
                     <div className='md:w-1/3 flex flex-col p-1'>
                         <Card className="flex flex-col">
                             <CardHeader className="items-center pb-0 p-6">
-                                <div className="font-bold text-lg">Request Overview by Category</div>
+                                <div className="font-bold text-lg">Donation Overview by Category</div>
                                 <div className="font-roboto text-sm">January - June 2024</div>
                             </CardHeader>
                             <CardContent className="flex-1 pb-0">
@@ -472,9 +472,9 @@ const YourRequest = () => {
                         <Card>
                             <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
                                 <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-                                    <div className="font-bold text-lg">Request trend over time</div>
+                                    <div className="font-bold text-lg">Donation trend over time</div>
                                     <div className="font-roboto text-sm">
-                                        Showing total requests and funds for the last 3 months
+                                        Showing total donations and funds for the last 3 months
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -594,4 +594,4 @@ const YourRequest = () => {
     );
 }
 
-export default YourRequest;
+export default YourDonation;
