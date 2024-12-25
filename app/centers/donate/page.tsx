@@ -79,6 +79,7 @@ const DonationPage = () => {
     }, []);
 
     useEffect(() => {
+        
         const fetchCharityData = async () => {
             if (charityId) {
                 const {data, error} = await getRecordById('users', charityId);
@@ -106,11 +107,11 @@ const DonationPage = () => {
             }
             console.log("Current User: ", currentUser?.id);
             const storedUserData = sessionStorage.getItem('user');
-            console.log("Stored User Data: ", storedUserData);
+            // console.log("Stored User Data: ", storedUserData);
             if (storedUserData && storedUserData !== "null" && storedUserData !== "undefined") {
                 const parsedUserData = JSON.parse(storedUserData);
                 setUserData(parsedUserData);
-                console.log("User Session Storage: ", parsedUserData);
+                // console.log("User Session Storage: ", parsedUserData);
             } else {
                 try {
                     
@@ -141,19 +142,19 @@ const DonationPage = () => {
         }, 1000);
     };
 
-    const splitIntoSentences = (text: string) => {
-        return text.split('.').map((sentence) => {
-            const trimmedSentence = sentence.trim();
-            return trimmedSentence ? trimmedSentence + '.' : ''; // Add a period only if the sentence is not empty
-        }).filter(sentence => sentence !== ''); // Filter out any empty sentences
-    };
+    // const splitIntoSentences = (text: string) => {
+    //     return text.split('.').map((sentence) => {
+    //         const trimmedSentence = sentence.trim();
+    //         return trimmedSentence ? trimmedSentence + '.' : ''; // Add a period only if the sentence is not empty
+    //     }).filter(sentence => sentence !== ''); // Filter out any empty sentences
+    // };
 
-    const sentences = splitIntoSentences(charityData?.organization_description || '');
-    const groupSentences = [];
+    // const sentences = splitIntoSentences(charityData?.organization_description || '');
+    // const groupSentences = [];
 
-    for (let i=0; i < sentences.length; i++) {
-        groupSentences.push(sentences.slice(i, i+5).join(' '));
-    }
+    // for (let i=0; i < sentences.length; i++) {
+    //     groupSentences.push(sentences.slice(i, i+5).join(' '));
+    // }
 
     const addResource = () => {
         setResources([...resources, { name: '', category: '', quantity: 1 }]);
@@ -265,7 +266,7 @@ const DonationPage = () => {
                             
                             {/* First Column */}
                             <div className="flex flex-col">
-                                <p className="font-bold">Items to be donated</p>
+                                <p className="font-bold">Items to be Donated</p>
                                 {resources.map((resource, index) => (
                                     <div key={index} className={`mt-2 flex items-center justify-between p-4 bg-white border shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl`}>
                                         <div className="flex items-center space-x-4">
