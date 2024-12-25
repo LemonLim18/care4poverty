@@ -118,8 +118,13 @@ const DonatePage = () => {
     };
 
     const filteredCharityData = charityData.filter((charityCenter) => {
-        return charityCenter.organization_district.toLowerCase().includes(locationFilter.toLowerCase()) ||
-               charityCenter.organization_name.toLowerCase().includes(locationFilter.toLowerCase());
+        const districtMatch = charityCenter.organization_district 
+            ? charityCenter.organization_district.toLowerCase().includes(locationFilter.toLowerCase()) 
+            : false; // If organization_district is not present, default to false
+
+        const nameMatch = charityCenter.organization_name.toLowerCase().includes(locationFilter.toLowerCase());
+
+        return districtMatch || nameMatch; // Return true if either condition matches
     });
 
     console.log("Filtered Charity Data: ", filteredCharityData);
