@@ -91,7 +91,7 @@ const RegisterPage = () => {
                     value={sharedInfo.fullName}
                     onChange={handleSharedInfoChange}
                     required
-                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
                 />
             </div>
 
@@ -107,7 +107,7 @@ const RegisterPage = () => {
                     value={sharedInfo.email}
                     onChange={handleSharedInfoChange}
                     required
-                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
                 />
             </div>
 
@@ -122,7 +122,7 @@ const RegisterPage = () => {
                     value={sharedInfo.icNumber}
                     onChange={handleSharedInfoChange}
                     required
-                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
                 />
             </div>
 
@@ -138,7 +138,7 @@ const RegisterPage = () => {
                     value={sharedInfo.phoneNumber}
                     onChange={handleSharedInfoChange}
                     required
-                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
                 />
             </div>
 
@@ -156,8 +156,8 @@ const RegisterPage = () => {
                     required
                     className="hidden"
                 />
-                <label htmlFor="profilePicture" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}>
-                    <span className={`mx-auto ${sharedInfo.profilePicture ? 'text-[#7D7D7D] hover:font-bold transition-colors duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{sharedInfo.profilePicture ? sharedInfo.profilePicture.name : 'Choose File'}</span>
+                <label htmlFor="profilePicture" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
+                    <span className={`mx-auto ${sharedInfo.profilePicture ? 'text-[#7D7D7D] hover:font-bold' : 'text-[#0C8CE9]'}`}>{sharedInfo.profilePicture ? sharedInfo.profilePicture.name : 'Choose File'}</span>
                 </label>
                 
             </div>
@@ -176,8 +176,8 @@ const RegisterPage = () => {
                     required
                     className="hidden"
                 />
-                <label htmlFor="idProof" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}>
-                    <span className={`mx-auto ${sharedInfo.idProof ? 'text-[#7D7D7D] hover:font-bold transition-colors duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{sharedInfo.idProof ? sharedInfo.idProof.name : 'Choose File'}</span>
+                <label htmlFor="idProof" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
+                    <span className={`mx-auto ${sharedInfo.idProof ? 'text-[#7D7D7D] hover:font-bold' : 'text-[#0C8CE9]'}`}>{sharedInfo.idProof ? sharedInfo.idProof.name : 'Choose File'}</span>
                 </label>
             </div>
 
@@ -195,7 +195,7 @@ const RegisterPage = () => {
                         setSharedInfo({...sharedInfo, role: e.target.value});
                     }}
                     required
-                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg focus:text-black flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}
+                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg focus:text-black flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
                     style={{color: selectedRole ? '#7D7D7D' : '#0C8CE9'}}
                 >
                     <option value="">Select Role</option>
@@ -216,9 +216,9 @@ const RegisterPage = () => {
                         <h2 className="text-3xl font-semibold font-giorgio mt-8 mb-8">Organization Details</h2>
                         
                         <div className="space-y-1">
-                                <Label htmlFor="organizationName" className="text-base font-medium">
+                            <Label htmlFor="organizationName" className="text-base font-medium">
                                 Organization Name
-                            <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
+                                <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
                             </Label>
                             <Input
                                 id="organizationName"
@@ -228,7 +228,7 @@ const RegisterPage = () => {
                                     organizationName: e.target.value
                                 })}
                                 required
-                                className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                                className={`h-11 ${selectedRole ? 'w-96' : 'w-0'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
                             />
                         </div>
 
@@ -325,7 +325,7 @@ const RegisterPage = () => {
             
             case 'donor':
                 return (
-                    <div className="space-y-5">
+                    <div className={`space-y-5 transition-opacity duration-300 ${selectedRole === 'donor' ? 'opacity-100' : 'opacity-0'}`}>
                         <h2 className="text-3xl font-semibold font-giorgio mt-8 mb-8">Additional Details</h2>
                         <div className="space-y-1">
                             <Label htmlFor="homeAddress" className="text-base font-medium">
@@ -368,7 +368,7 @@ const RegisterPage = () => {
             
             case 'beneficiary':
                 return (
-                    <div className="space-y-5">
+                    <div className={`space-y-5 transition-opacity duration-300 ${selectedRole === 'beneficiary' ? 'opacity-100' : 'opacity-0'}`}>
                         <h2 className="text-3xl font-semibold font-giorgio mt-8 mb-8">Additional Details</h2>
                         <div className="space-y-1">
                             <Label htmlFor="homeAddress" className="text-base font-medium">
