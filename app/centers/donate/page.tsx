@@ -31,6 +31,7 @@ interface Resource {
 }
 
 interface DonationResponseProps {
+    donorId: string,
     items: Resource[];
     deliveryMethod: string;
     pickupLocation?: string;
@@ -106,6 +107,7 @@ const DonationPage = () => {
                 setUser(currentUser);
             }
             console.log("Current User: ", currentUser?.id);
+            
             const storedUserData = sessionStorage.getItem('user');
             // console.log("Stored User Data: ", storedUserData);
             if (storedUserData && storedUserData !== "null" && storedUserData !== "undefined") {
@@ -205,6 +207,7 @@ const DonationPage = () => {
         }
 
         const donationData = {
+            donor_id: userData?.id,
             org_id: charityId,
             donation_items: resources,
             delivery_method: selectedDeliveryMethod,

@@ -210,12 +210,12 @@ const RequestPage = () => {
             return;
         }
 
-        const recipientName = charityData?.full_name;
-        console.log("Recipient Name: ", recipientName);
+        const recipientId = userData?.id;
+        console.log("Recipient Id: ", recipientId); 
 
         const requestData = {
+            beneficiary_id: recipientId,
             organization_id: charityId,
-            beneficiary_name: recipientName,
             request_items: requestResources,
             delivery_method: selectedDeliveryMethod,
             pickup_location: pickupLocation,
@@ -234,9 +234,9 @@ const RequestPage = () => {
         } else {
             toast.success('Request submitted successfully!', {autoClose: 1500});
             console.log('Request submitted:', RequestResponse);
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 1500);
         }
     }
 
