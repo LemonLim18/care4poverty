@@ -48,7 +48,7 @@ const RequestPage = () => {
     const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState<string | null>(null);
     const [pickupLocation, setPickupLocation] = useState('');
     const [isFooterShadowVisible, setIsFooterShadowVisible] = useState(false);
-    // const [donationResponse, setDonationResponse] = useState<DonationResponseProps | null>(null);
+    const [totalSelectedItems, setTotalSelectedItems] = useState(0);
 
     // Color arrays for cycling
     const foodBgColors = ['bg-red-500', 'bg-blue-500', 'bg-yellow-500'];
@@ -192,6 +192,10 @@ const RequestPage = () => {
         }
     };
 
+    const updateTotalSelectedItems = (change: number) => {
+        setTotalSelectedItems(prev => Math.max(0, prev + change)); // Ensure it doesn't go below 0
+    };
+
     if (!charityId) {
         return <div>Charity ID not found in the URL!</div>;
     }
@@ -279,7 +283,15 @@ const RequestPage = () => {
                             
                             {/* First Column */}
                             <div className="flex flex-col w-full">
-                                <p className="font-bold">Items to be Requested</p>
+                                <div className="flex items-center">
+                                    <p className="font-bold">Items to be Requested:</p>
+                                    <p className={`ml-1 text-md font-roboto font-semibold
+                                        ${totalSelectedItems >= 5 ? 'text-red-600' : 'text-green-600'}    
+                                    `}>
+                                        {/* Change here as well for the restriction display */}
+                                        ({totalSelectedItems}/5)
+                                    </p>
+                                </div>
                                 {requestResources.map((resource, index) => (
                                     <div key={index} className={`mt-2 flex w-full items-center justify-between p-4 bg-white border shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl`}>
                                         <div className="flex items-center space-x-4">
@@ -304,15 +316,24 @@ const RequestPage = () => {
                                         <div className="flex items-center">
                                             <Plus className="text-gray-600 w-5 h-5 hover:scale-125 hover:cursor-pointer" 
                                                 onClick={() => {
-                                                    if (resource.request_amount < resource.resource_amount) { // Check if request_amount is less than resource_amount
+                                                    // Maximum number of items that can be selected
+                                                    if (resource.request_amount < resource.resource_amount && totalSelectedItems < 5) { // Check if request_amount is less than resource_amount and totalSelectedItems is less than 5
                                                         handleResourceChange(index, 'request_amount', resource.request_amount + 1);
+                                                        updateTotalSelectedItems(1); // Increment total selected items
                                                     }
                                                 }} 
                                             />
                                             <input
                                                 type="number"
                                                 value={resource.request_amount}
-                                                onChange={(e) => handleResourceChange(index, 'request_amount', Number(e.target.value))}
+                                                onChange={(e) => {
+                                                    const newValue = Number(e.target.value);
+                                                    if (newValue <= resource.resource_amount && newValue >= 0) { // Ensure the input does not exceed resource_amount and is not negative
+                                                        const difference = newValue - resource.request_amount; // Calculate the difference
+                                                        handleResourceChange(index, 'request_amount', newValue);
+                                                        updateTotalSelectedItems(difference); // Update total selected items based on the difference
+                                                    }
+                                                }}
                                                 className="bg-white border border-1 border-gray-400 text-sm rounded-full w-[50px] h-[50px] mt-2 mx-3 pl-3 text-center"
                                                 required
                                             />
@@ -320,6 +341,7 @@ const RequestPage = () => {
                                                 onClick={() => {
                                                     if (resource.request_amount > 0) { // Prevent going below 0
                                                         handleResourceChange(index, 'request_amount', resource.request_amount - 1);
+                                                        updateTotalSelectedItems(-1); // Decrement total selected items
                                                     }
                                                 }} 
                                             />
