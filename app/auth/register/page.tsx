@@ -47,6 +47,8 @@ const RegisterPage = () => {
     const [roleSpecificInfo, setRoleSpecificInfo] = useState({
         // Charity Admin fields
         organizationName: '',
+        organizationDistrict: '',
+        organizationDescription: '',
         registrationNumber: '',
         bankAccount: '',
         orgAddress: '',
@@ -214,7 +216,6 @@ const RegisterPage = () => {
                 return (
                     <div className="space-y-5">
                         <h2 className="text-3xl font-semibold font-giorgio mt-8 mb-8">Organization Details</h2>
-                        
                         <div className="space-y-1">
                             <Label htmlFor="organizationName" className="text-base font-medium">
                                 Organization Name
@@ -228,11 +229,47 @@ const RegisterPage = () => {
                                     organizationName: e.target.value
                                 })}
                                 required
-                                className={`h-11 ${selectedRole ? 'w-96' : 'w-0'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
                             />
                         </div>
 
                         <div className="space-y-1">
+                            <Label htmlFor="organizationDistrict" className="text-base font-medium">
+                                Organization District
+                                <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
+                            </Label>
+                            <Input
+                                id="organizationDistrict"
+                                name="organizationDistrict"
+                                value={roleSpecificInfo.organizationDistrict}
+                                onChange={(e) => setRoleSpecificInfo({
+                                    ...roleSpecificInfo,
+                                    organizationDistrict: e.target.value
+                                })}
+                                required
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
+                            />
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label htmlFor="organizationDescription" className="text-base font-medium">
+                                Organization Description
+                                <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
+                            </Label>
+                            <textarea
+                                id="organizationDescription"
+                                name="organizationDescription"
+                                value={roleSpecificInfo.organizationDescription}
+                                onChange={(e) => setRoleSpecificInfo({
+                                    ...roleSpecificInfo,
+                                    organizationDescription: e.target.value
+                                })}
+                                required
+                                className="h-[129px] w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
+                            />
+                        </div>
+
+                        <div className="space-y-1 mt-4">
                             <Label htmlFor="registrationNumber" className="text-base font-medium">
                                 Registration Number
                                 <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
@@ -245,7 +282,7 @@ const RegisterPage = () => {
                                     registrationNumber: e.target.value
                                 })}
                                 required
-                                className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
                             />
                         </div>
 
@@ -262,7 +299,7 @@ const RegisterPage = () => {
                                     bankAccount: e.target.value
                                 })}
                                 required
-                                className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
                             />
                         </div>
 
@@ -279,7 +316,7 @@ const RegisterPage = () => {
                                     ...roleSpecificInfo,
                                     website: e.target.value
                                 })}
-                                className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
                             />
                         </div>
 
@@ -299,7 +336,7 @@ const RegisterPage = () => {
                                 required
                                 className="hidden"
                             />
-                            <label htmlFor="registrationCert" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}>
+                            <label htmlFor="registrationCert" className={`h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}>
                                 <span className={`mx-auto ${roleSpecificInfo.registrationCert ? 'text-[#7D7D7D] hover:font-bold transition-colors duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.registrationCert ? roleSpecificInfo.registrationCert.name : 'Choose File'}</span>
                             </label>
                         </div>
@@ -317,7 +354,7 @@ const RegisterPage = () => {
                                     orgAddress: e.target.value
                                 })}
                                 required
-                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                                className={`h-[129px] w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}
                             />
                         </div>
                     </div>
@@ -325,7 +362,7 @@ const RegisterPage = () => {
             
             case 'donor':
                 return (
-                    <div className={`space-y-5 transition-opacity duration-300 ${selectedRole === 'donor' ? 'opacity-100' : 'opacity-0'}`}>
+                    <div className="space-y-5">
                         <h2 className="text-3xl font-semibold font-giorgio mt-8 mb-8">Additional Details</h2>
                         <div className="space-y-1">
                             <Label htmlFor="homeAddress" className="text-base font-medium">
@@ -340,7 +377,7 @@ const RegisterPage = () => {
                                     homeAddress: e.target.value
                                 })}
                                 required
-                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}
                             />
                         </div>
                         <div className="space-y-1">
@@ -368,7 +405,7 @@ const RegisterPage = () => {
             
             case 'beneficiary':
                 return (
-                    <div className={`space-y-5 transition-opacity duration-300 ${selectedRole === 'beneficiary' ? 'opacity-100' : 'opacity-0'}`}>
+                    <div className="space-y-5">
                         <h2 className="text-3xl font-semibold font-giorgio mt-8 mb-8">Additional Details</h2>
                         <div className="space-y-1">
                             <Label htmlFor="homeAddress" className="text-base font-medium">
@@ -383,7 +420,7 @@ const RegisterPage = () => {
                                     homeAddress: e.target.value
                                 })}
                                 required
-                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9]`}
+                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}
                             />
                         </div>
                         <div className="space-y-1">
@@ -489,7 +526,7 @@ const RegisterPage = () => {
                 <div className="flex justify-center">
                     <Button 
                         type="submit"
-                        className="mr-5 mt-4 h-11 w-32 bg-[#0077B6] hover:bg-[#00689F] rounded-lg text-base"
+                        className="mr-5 mt-2 h-11 w-32 bg-[#0077B6] hover:bg-[#00689F] rounded-lg text-base"
                     >
                         Register
                     </Button>
