@@ -26,7 +26,9 @@ const CharityDetailedPage = () => {
     const charityId = searchParams.get('id');
     const [userData, setUserData] = useState<UserType | null>(null);
     const [user, setUser] = useState<User | null>(null);
+    const [userRole, setUserRole] = useState<string | null>(null);
     const [charityData, setCharityData] = useState<UserType | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -60,23 +62,27 @@ const CharityDetailedPage = () => {
             console.log("Stored User Data: ", storedUserData);
             if (storedUserData && storedUserData !== "null" && storedUserData !== "undefined") {
                 const parsedUserData = JSON.parse(storedUserData);
+                setUserRole(parsedUserData.role);
                 setUserData(parsedUserData);
                 console.log("User Session Storage: ", parsedUserData);
+                console.log("User Role Session Storage: ", parsedUserData.role);
             } else {
                 try {
-                    
                     const { data: userFetchData, error: fetchError } = await getRecordById('users', currentUser?.id || '');
                     if (fetchError) {
                         console.error('Error fetching user data:', fetchError.message);
                         return;
                     }
+                    setUserRole(userFetchData?.role || null);
                     setUserData(userFetchData || null);
                     sessionStorage.setItem('user', JSON.stringify(userData));
                     console.log('User Data fetched from server:', userFetchData);
+                    console.log('User Role fetched from server:', userFetchData?.role);
                 } catch (error) {
                     console.error('Unexpected error fetching user data:', error);
                 }
             }
+            setLoading(false);
         };
 
         fetchUser();
@@ -110,6 +116,17 @@ const CharityDetailedPage = () => {
         return <div>Charity ID not found in the URL!</div>;
     }
 
+    const handleRedirection = () => {
+        if (userRole === 'beneficiary') {
+            router.push(`/centers/request?id=${charityId}`);
+        } else if (userRole === 'donor') {
+            router.push(`/centers/donate?id=${charityId}`);
+        } else {
+            toast.error('User role not found!');
+        }
+    }
+    // () => router.push(`/centers/donate?id=${charityData.id}`)
+
     return (
         <div className="h-full flex">
             <SideBarComponent 
@@ -126,10 +143,10 @@ const CharityDetailedPage = () => {
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/donate">Donate</BreadcrumbLink>
+                                <BreadcrumbLink href="/donate">{userRole === 'beneficiary' ? 'Request' : userRole === 'donor'? 'Donate' : '...'}</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
-                            <BreadcrumbItem className="font-bold text-black">{charityData?.organization_name}</BreadcrumbItem>
+                            <BreadcrumbItem className="font-bold text-black">{loading? '...' : charityData?.organization_name}</BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>
@@ -137,7 +154,8 @@ const CharityDetailedPage = () => {
                     {charityData ? (
                         <>
                             <div className="w-full flex space-x-20">
-                                <Carousel className="bg-red-500 min-w-[450px] max-h-[270px] rounded-3xl mt-4 ">
+                                {/* <Carousel className="bg-red-500 min-w-[450px] max-h-[270px] rounded-3xl mt-4 "> */}
+                                <Carousel className="min-w-[450px] max-h-[270px] rounded-3xl mt-4 ">
                                     <CarouselContent className="ml-0 bg-blue-200 min-w-[450px] max-h-[270px] rounded-3xl overflow-hidden">
                                         <Image
                                             src={charityData.profile_picture}
@@ -149,18 +167,18 @@ const CharityDetailedPage = () => {
                                             className="object-cover justify-center h-full"
                                         />
                                     </CarouselContent>
-                                    <CarouselPrevious className="border-2 z-[9999] border-black bg-[#F5F9FE] hover:bg-white cursor-pointer transform -translate-y-1/2" />
+                                    <CarouselPrevious className="border-2 border-black bg-[#F5F9FE] hover:bg-white cursor-pointer transform -translate-y-1/2" />
                                     <CarouselNext className="border-2 border-black bg-[#F5F9FE] hover:bg-white hover:cursor-pointer transform -translate-y-1/2" />
                                 </Carousel>
                                 <section className="w-full flex flex-col justify-center ">
-                                    <p className="text-left px-4 font-roboto font-light">Posted 40 mins ago</p>
+                                    <p className="text-left px-4 mb-1 font-roboto text-sm font-light">Posted 40 mins ago</p>
                                     <div className="w-full px-4 flex justify-between items-center">
                                         <h1 className="font-giorgio font-bold text-5xl">{charityData.organization_name}</h1>
                                         <Button 
                                             className="bg-[#0077B6] hover:bg-[#038BD4] rounded-lg"
-                                            onClick={() => router.push(`/centers/donate?id=${charityData.id}`)}
+                                            onClick={handleRedirection}
                                         >
-                                            I want to donate
+                                            {userRole === 'beneficiary' ? 'I want to request' : 'I want to donate'}
                                         </Button>
                                     </div>
                                     <div className="flex flex-col justify-center items-start gap-y-3 mt-6 px-4">
@@ -171,7 +189,7 @@ const CharityDetailedPage = () => {
                                     </div>
                                     {/* Items Needed */}
                                     <div className="mt-4 px-4">
-                                        <p className="text-lg font-roboto font-bold">Items Needed</p>
+                                        <p className="text-lg font-roboto font-bold">{userRole === 'beneficiary' ? 'Items Provided' : 'Items Needed'}</p>
                                         <div className="flex mt-2 gap-x-1">
                                             <Badge className="py-1 w-[110px] flex justify-center bg-[#8A71E7] hover:bg-[#7a5ce4] font-roboto font-light text-white hover:scale-105 cursor-default">Dress</Badge>
                                             <span className="text-3xl flex items-center">·</span>
@@ -181,7 +199,6 @@ const CharityDetailedPage = () => {
                                             <span className="text-3xl flex items-center">·</span>
                                             <Badge className="py-1 w-[110px] flex justify-center bg-[#39AF01] hover:bg-[#458527] font-roboto font-light text-white hover:scale-105 cursor-default">Food Oil</Badge>
                                         </div>
-                                        
                                     </div>
                                 </section>
                             </div>
@@ -197,7 +214,7 @@ const CharityDetailedPage = () => {
                             </div>
                         </>
                     ) : (
-                        <div>Loading...</div>
+                        <div className="[@media(min-width:255px)]:ml-[70px] absolute top-[50%] left-[50%] ">Loading...</div>
                     )}
                 </div>
             </main>
