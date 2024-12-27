@@ -141,20 +141,34 @@ const LoginPage = () => {
               </button>
             </p>  */}
             <p className="flex relative justify-end bg-white w-full mt-6 mb-6"> 
-              <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <title>I am a signup icon :)</title>
-                <g id="Complete">
-                  <g id="user-add">
-                    <g>
-                      <path d="M17,21V19a4,4,0,0,0-4-4H5a4,4,0,0,0-4,4v2" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                      <circle cx="9" cy="7" r="4" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                      <line x1="17" y1="11" x2="23" y2="11" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                      <line x1="20" y1="8" x2="20" y2="14" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+              <div className="flex items-center">
+                <svg 
+                  width="24px" 
+                  height="24px" 
+                  viewBox="0 0 24 24" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="flex-shrink-0"
+                >
+                  <title>I am a signup icon :)</title>
+                  <g id="Complete">
+                    <g id="user-add">
+                      <g>
+                        <path d="M17,21V19a4,4,0,0,0-4-4H5a4,4,0,0,0-4,4v2" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <circle cx="9" cy="7" r="4" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <line x1="17" y1="11" x2="23" y2="11" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <line x1="20" y1="8" x2="20" y2="14" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                      </g>
                     </g>
                   </g>
-                </g>
-              </svg>
-                <span onClick={() => router.push('/auth/signup')} className="ml-4 text-[#0C8CE9] hover:font-bold hover:underline cursor-pointer transition-all duration-150 ease-in-out">Signup</span>
+                </svg>
+                <span 
+                  onClick={() => router.push('/auth/signup')} 
+                  className="ml-4 text-[#0C8CE9] hover:font-bold hover:underline cursor-pointer transition-all duration-150 ease-in-out"
+                  style={{ width: 'max-content' }}
+                >
+                  Signup
+                </span>
+              </div>
             </p> 
             {/* </div> */}
             <div className='flex justify-center mb-4 w-full'>
@@ -203,7 +217,7 @@ const LoginPage = () => {
                 </button>
               </div>
               <Button type="submit" disabled={loading} className='h-11 bg-[#0077B6] hover:bg-[#00689F] font-roboto font-regular px-6'>
-                {loading ? 'Loading...' : 'Sign In'}
+                {loading ? 'Loading...' : 'Login'}
               </Button>
             </form>
             {/* group div for additional actions */}

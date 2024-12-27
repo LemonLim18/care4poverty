@@ -200,10 +200,21 @@ const SignupPage = () => {
       {/* <div className="flex flex-1 item-center justify-center bg-gray-100"> */}
         <Card className="flex flex-[100%] md:flex-[40%] w-full h-full overflow-hidden item-center justify-center rounded-none">
           <CardContent className="transform scale-[0.9] h-full w-full max-w-[453px] my-2 [@media(min-height:730px)]:my-6 mx-8 lg:mx-20  flex flex-col justify-between items-center">  {/* Justify between to put space between the element vertically */}
-            <p className="flex justify-end bg-white text-right w-full mt-6 mb-6"> 
-              <button className="flex text-black hover:underline font-roboto text-[17px] gap-2" onClick={() => router.push('/auth/login') }>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z"/></svg>                Login
-              </button>
+            <p className="flex justify-end bg-white text-right w-full mt-6 mb-6">
+              <div className="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="#5f6368"
+                  className="flex-shrink-0"
+                >
+                    <title>I am a login icon :)</title>
+                    <path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z"/>
+                    </svg>
+              <span onClick={() => router.push('/auth/login')} className="ml-4 text-[#0C8CE9] hover:font-bold cursor-pointer" style={{ width: 'max-content' }}>Login</span>
+              </div>
             </p> 
             <div className='flex justify-center mb-4 w-full'>
               <a href="/">
