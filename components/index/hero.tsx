@@ -37,7 +37,7 @@ export const Hero: React.FC<HeroProps> = ({
         {buttonText && (
           <button
             onClick={onButtonClick}
-            className="px-8 py-3 bg-[#0077B6] rounded-md text-white font-semibold transition-colors hover:[#0077B6]"
+            className="px-8 py-3 bg-[#0077B6] hover:bg-[#026194] rounded-md text-white font-semibold transition-colors"
           >
             {buttonText}
           </button>

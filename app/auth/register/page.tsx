@@ -229,7 +229,7 @@ const RegisterPage = () => {
                                     organizationName: e.target.value
                                 })}
                                 required
-                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                             />
                         </div>
 
@@ -247,7 +247,7 @@ const RegisterPage = () => {
                                     organizationDistrict: e.target.value
                                 })}
                                 required
-                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                             />
                         </div>
 
@@ -265,7 +265,7 @@ const RegisterPage = () => {
                                     organizationDescription: e.target.value
                                 })}
                                 required
-                                className="h-[129px] w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
+                                className="h-[129px] w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                             />
                         </div>
 
@@ -282,7 +282,7 @@ const RegisterPage = () => {
                                     registrationNumber: e.target.value
                                 })}
                                 required
-                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                             />
                         </div>
 
@@ -299,7 +299,7 @@ const RegisterPage = () => {
                                     bankAccount: e.target.value
                                 })}
                                 required
-                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                             />
                         </div>
 
@@ -316,7 +316,7 @@ const RegisterPage = () => {
                                     ...roleSpecificInfo,
                                     website: e.target.value
                                 })}
-                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out"
+                                className="h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                             />
                         </div>
 
@@ -336,8 +336,8 @@ const RegisterPage = () => {
                                 required
                                 className="hidden"
                             />
-                            <label htmlFor="registrationCert" className={`h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}>
-                                <span className={`mx-auto ${roleSpecificInfo.registrationCert ? 'text-[#7D7D7D] hover:font-bold transition-colors duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.registrationCert ? roleSpecificInfo.registrationCert.name : 'Choose File'}</span>
+                            <label htmlFor="registrationCert" className={`h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
+                                <span className={`mx-auto ${roleSpecificInfo.registrationCert ? 'text-[#7D7D7D] hover:font-bold transition-all duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.registrationCert ? roleSpecificInfo.registrationCert.name : 'Choose File'}</span>
                             </label>
                         </div>
 
@@ -354,7 +354,7 @@ const RegisterPage = () => {
                                     orgAddress: e.target.value
                                 })}
                                 required
-                                className={`h-[129px] w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}
+                                className={`h-[129px] w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
                             />
                         </div>
                     </div>
@@ -377,7 +377,7 @@ const RegisterPage = () => {
                                     homeAddress: e.target.value
                                 })}
                                 required
-                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}
+                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
                             />
                         </div>
                         <div className="space-y-1">
@@ -396,8 +396,8 @@ const RegisterPage = () => {
                                 required
                                 className="hidden"
                             />
-                            <label htmlFor="incomeStatement" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}>
-                                <span className={`mx-auto ${roleSpecificInfo.incomeStatement ? 'text-[#7D7D7D] hover:font-bold transition-colors duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.incomeStatement ? roleSpecificInfo.incomeStatement.name : 'Choose File'}</span>
+                            <label htmlFor="incomeStatement" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
+                                <span className={`mx-auto ${roleSpecificInfo.incomeStatement ? 'text-[#7D7D7D] hover:font-bold transition-all duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.incomeStatement ? roleSpecificInfo.incomeStatement.name : 'Choose File'}</span>
                             </label>
                         </div>
                     </div>
@@ -420,7 +420,7 @@ const RegisterPage = () => {
                                     homeAddress: e.target.value
                                 })}
                                 required
-                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}
+                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
                             />
                         </div>
                         <div className="space-y-1">
@@ -439,8 +439,8 @@ const RegisterPage = () => {
                                 required
                                 className="hidden"
                             />
-                            <label htmlFor="incomeStatement" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}>
-                                <span className={`mx-auto ${roleSpecificInfo.incomeStatement ? 'text-[#7D7D7D] hover:font-bold transition-colors duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.incomeStatement ? roleSpecificInfo.incomeStatement.name : 'Choose File'}</span>
+                            <label htmlFor="incomeStatement" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
+                                <span className={`mx-auto ${roleSpecificInfo.incomeStatement ? 'text-[#7D7D7D] hover:font-bold transition-all duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.incomeStatement ? roleSpecificInfo.incomeStatement.name : 'Choose File'}</span>
                             </label>
                         </div>
 
@@ -460,8 +460,8 @@ const RegisterPage = () => {
                                 required
                                 className="hidden"
                             />
-                            <label htmlFor="medicalReport" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-colors duration-150 ease-in-out`}>
-                                <span className={`mx-auto ${roleSpecificInfo.medicalReport ? 'text-[#7D7D7D] hover:font-bold transition-colors duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.medicalReport ? roleSpecificInfo.medicalReport.name : 'Choose File'}</span>
+                            <label htmlFor="medicalReport" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
+                                <span className={`mx-auto ${roleSpecificInfo.medicalReport ? 'text-[#7D7D7D] hover:font-bold transition-all duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.medicalReport ? roleSpecificInfo.medicalReport.name : 'Choose File'}</span>
                             </label>
                         </div>
                     </div>
@@ -509,7 +509,7 @@ const RegisterPage = () => {
             </div>
             <h1 className="font-giorgio font-bold text-5xl text-center mt-20">Let's get you started</h1>
             <span className="text-center font-medium text-lg text-[#8B8B8B] mt-2">Enter the details to get going</span>
-            <h1 className="absolute top-0 right-0 m-12 text-lg">
+            <h1 className="absolute top-0 right-0 m-12 text-base">
                 Already registered ? <Link href="/auth/login" className="ml-5 text-[#0C8CE9] hover:font-bold hover:underline"> Login</Link>
             </h1>
             <form onSubmit={handleSubmit} className="w-full max-w-6xl">
@@ -526,7 +526,7 @@ const RegisterPage = () => {
                 <div className="flex justify-center">
                     <Button 
                         type="submit"
-                        className="mr-5 mt-2 h-11 w-32 bg-[#0077B6] hover:bg-[#00689F] rounded-lg text-base"
+                        className="mr-6 mt-2 h-11 w-32 bg-[#0077B6] hover:bg-[#00689F] rounded-lg text-base"
                     >
                         Register
                     </Button>
