@@ -140,35 +140,29 @@ const LoginPage = () => {
                 Back
               </button>
             </p>  */}
-            <p className="flex relative justify-end bg-white w-full mt-6 mb-6"> 
-              <div className="flex items-center">
+            <p className="flex relative justify-end bg-white w-full mt-6 mb-6">
+              <button className="flex gap-4 text-[#0C8CE9] hover:font-bold cursor-pointer transition-all duration-150 ease-in-out" onClick={() => router.push('/auth/signup') }>
                 <svg 
                   width="24px" 
                   height="24px" 
                   viewBox="0 0 24 24" 
                   xmlns="http://www.w3.org/2000/svg"
-                  className="flex-shrink-0"
+                  fill="#5f6368"
                 >
                   <title>I am a signup icon :)</title>
                   <g id="Complete">
                     <g id="user-add">
                       <g>
-                        <path d="M17,21V19a4,4,0,0,0-4-4H5a4,4,0,0,0-4,4v2" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                        <circle cx="9" cy="7" r="4" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                        <line x1="17" y1="11" x2="23" y2="11" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                        <line x1="20" y1="8" x2="20" y2="14" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <path d="M17,21V19a4,4,0,0,0-4-4H5a4,4,0,0,0-4,4v2" fill="none" stroke="#5f6368" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <circle cx="9" cy="7" r="4" fill="none" stroke="#5f6368" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <line x1="17" y1="11" x2="23" y2="11" fill="none" stroke="#5f6368" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <line x1="20" y1="8" x2="20" y2="14" fill="none" stroke="#5f6368" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
                       </g>
                     </g>
                   </g>
                 </svg>
-                <span 
-                  onClick={() => router.push('/auth/signup')} 
-                  className="ml-4 text-[#0C8CE9] hover:font-bold hover:underline cursor-pointer transition-all duration-150 ease-in-out"
-                  style={{ width: 'max-content' }}
-                >
-                  Signup
-                </span>
-              </div>
+                <span>Signup</span>
+              </button>
             </p> 
             {/* </div> */}
             <div className='flex justify-center mb-4 w-full'>
@@ -188,7 +182,7 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] rounded-lg transition-all duration-300 ease-in-out"
+                className="h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] rounded-lg transition-all duration-150 ease-in-out"
               />
               <div className="relative group">
                 <Input
@@ -197,7 +191,7 @@ const LoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className={`h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] group-hover:border-[#0C8CE9] rounded-lg transition-all duration-300 ease-in-out ${showPassword ? 'text-black' : 'text-[#7D7D7D]'} transition-colors duration-200`}
+                  className={`h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] group-hover:border-[#0C8CE9] rounded-lg transition-all duration-150 ease-in-out ${showPassword ? 'text-black' : 'text-[#7D7D7D]'} transition-colors duration-150`}
                 />
                 <button
                   type="button"

@@ -201,20 +201,19 @@ const SignupPage = () => {
         <Card className="flex flex-[100%] md:flex-[40%] w-full h-full overflow-hidden item-center justify-center rounded-none">
           <CardContent className="transform scale-[0.9] h-full w-full max-w-[453px] my-2 [@media(min-height:730px)]:my-6 mx-8 lg:mx-20  flex flex-col justify-between items-center">  {/* Justify between to put space between the element vertically */}
             <p className="flex justify-end bg-white text-right w-full mt-6 mb-6">
-              <div className="flex items-center">
+              <button onClick={() => router.push('/auth/login')} className="flex gap-4 text-[#0C8CE9] hover:font-bold cursor-pointer transition-all duration-150 ease-in-out">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="24px"
                   viewBox="0 -960 960 960"
                   width="24px"
                   fill="#5f6368"
-                  className="flex-shrink-0"
                 >
-                    <title>I am a login icon :)</title>
-                    <path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z"/>
-                    </svg>
-              <span onClick={() => router.push('/auth/login')} className="ml-4 text-[#0C8CE9] hover:font-bold cursor-pointer" style={{ width: 'max-content' }}>Login</span>
-              </div>
+                  <title>I am a login icon :)</title>
+                  <path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z"/>
+                  </svg>
+                <span>Login</span>
+              </button>
             </p> 
             <div className='flex justify-center mb-4 w-full'>
               <a href="/">
@@ -227,16 +226,16 @@ const SignupPage = () => {
             </div>
             {/* <CardTitle className="text-center">Login</CardTitle> */}
             {/* <form onSubmit={handleSubmit} className="space-y-4 w-full"> */}
-            <form onSubmit={handleSubmit} className=" space-y-4 w-full">
+            <form onSubmit={handleSubmit} className=" space-y-5 w-full">
               <Input
                 type="email"
-                placeholder="Enter your username/email"
+                placeholder="Enter your username / email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-gray-400 rounded-sm"
+                className="h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] rounded-lg transition-all duration-150 ease-in-out"
               />
-              <div className="relative">
+              <div className="relative group">
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
@@ -246,26 +245,26 @@ const SignupPage = () => {
                     setPasswordError('');
                   }}
                   required
-                  className="border-gray-400 rounded-sm pr-10"
+                  className={`h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] group-hover:border-[#0C8CE9] rounded-lg transition-all duration-150 ease-in-out ${showPassword ? 'text-black' : 'text-[#7D7D7D]'} transition-colors duration-150`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${showPassword ? 'text-[#0C8CE9]' : 'text-[#7D7D7D]'} hover:text-[#0C8CE9]`}
                 >
                   {showPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   )}
                 </button>
               </div>
-              <div className="relative">
+              <div className="relative group">
                 <Input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
@@ -275,19 +274,19 @@ const SignupPage = () => {
                     setPasswordError('');
                   }}
                   required
-                  className="border-gray-400 rounded-sm pr-10"
+                  className={`h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] group-hover:border-[#0C8CE9] rounded-lg transition-all duration-150 ease-in-out ${showConfirmPassword ? 'text-black' : 'text-[#7D7D7D]'} transition-colors duration-150`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${showConfirmPassword ? 'text-[#0C8CE9]' : 'text-[#7D7D7D]'} hover:text-[#0C8CE9]`}
                 >
                   {showConfirmPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -307,8 +306,8 @@ const SignupPage = () => {
                   Forgot password?
                 </button> */}
                 <p className="mt-4 text-center">
-                  Already have an account?{' '}
-                  <button className="text-blue-500 hover:underline"  onClick={() => router.push('/auth/login')}>
+                  Already have an account ?{' '}
+                  <button className="text-[#0C8CE9] hover:font-bold"  onClick={() => router.push('/auth/login')}>
                     Sign In
                   </button>
                 </p>
@@ -360,9 +359,9 @@ const SignupPage = () => {
             </Button>
 
             <p className="mb-32 text-[0.9rem] text-center">
-              By clicking continue, you agree to the <span className="underline">
+              By clicking continue, you agree to the <span className="hover:text-[#0C8CE9] underline">
                 <a href="#">Terms and Service</a>
-              </span> and <span className="underline">
+              </span> and <span className="hover:text-[#0C8CE9] underline">
                 <a href="#">Privacy and Policy</a>
               </span>
             </p>
