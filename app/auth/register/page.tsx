@@ -510,7 +510,7 @@ const RegisterPage = () => {
             <h1 className="font-giorgio font-bold text-5xl text-center mt-20">Let's get you started</h1>
             <span className="text-center font-medium text-lg text-[#8B8B8B] mt-2">Enter the details to get going</span>
             <h1 className="absolute top-0 right-0 m-12 text-base">
-                Already registered ? <Link href="/auth/login" className="ml-5 text-[#0C8CE9] hover:font-bold hover:underline"> Login</Link>
+                Already registered ? <span onClick={() => router.push('/auth/login')} className="ml-5 text-[#0C8CE9] hover:font-bold hover:underline cursor-pointer"> Login</span>
             </h1>
             <form onSubmit={handleSubmit} className="w-full max-w-6xl">
                 <div className={`grid ${selectedRole ? 'md:grid-cols-2' : 'grid-cols-1'} gap-4`}>

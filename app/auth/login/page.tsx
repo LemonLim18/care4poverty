@@ -140,10 +140,9 @@ const LoginPage = () => {
                 Back
               </button>
             </p>  */}
-            <p className="flex relative right-[-5px] justify-end bg-white w-full mt-6 mb-6 "> 
-              <button className="flex text-black hover:underline font-roboto text-[17px] gap-2" onClick={() => router.push('/auth/signup') }>
+            <p className="flex relative justify-end bg-white w-full mt-6 mb-6"> 
               <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <title>i</title>
+                <title>I am a signup icon :)</title>
                 <g id="Complete">
                   <g id="user-add">
                     <g>
@@ -155,8 +154,7 @@ const LoginPage = () => {
                   </g>
                 </g>
               </svg>
-                Signup
-              </button>
+                <span onClick={() => router.push('/auth/signup')} className="ml-4 text-[#0C8CE9] hover:font-bold hover:underline cursor-pointer transition-all duration-150 ease-in-out">Signup</span>
             </p> 
             {/* </div> */}
             <div className='flex justify-center mb-4 w-full'>
@@ -169,52 +167,52 @@ const LoginPage = () => {
               </a>
             </div>
             {/* <CardTitle className="text-center">Login</CardTitle> */}
-            <form onSubmit={handleSubmit} className="space-y-4 w-full">
+            <form onSubmit={handleSubmit} className="space-y-5 w-full">
               <Input
                 type="email"
-                placeholder="Username/Email"
+                placeholder="Username / Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-gray-400 rounded-sm"
+                className="h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] rounded-lg transition-all duration-300 ease-in-out"
               />
-              <div className="relative">
+              <div className="relative group">
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="border-gray-400 rounded-sm pr-10"
+                  className={`h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] group-hover:border-[#0C8CE9] rounded-lg transition-all duration-300 ease-in-out ${showPassword ? 'text-black' : 'text-[#7D7D7D]'} transition-colors duration-200`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className={`absolute right-2 top-1/2 -translate-y-1/2 ${showPassword ? 'text-[#0C8CE9]' : 'text-[#7D7D7D]'} hover:text-[#0C8CE9]`}
                 >
                   {showPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   )}
                 </button>
               </div>
-              <Button type="submit" disabled={loading} className='bg-[#0077B6] hover:bg-[#00689F] font-inter px-6'>
+              <Button type="submit" disabled={loading} className='h-11 bg-[#0077B6] hover:bg-[#00689F] font-roboto font-regular px-6'>
                 {loading ? 'Loading...' : 'Sign In'}
               </Button>
             </form>
             {/* group div for additional actions */}
             <div className="bg-white text-[0.9rem] flex flex-col items-start mt-6 mb-4 w-full space-y-1">
-                <button className="text-[#535353] hover:underline hover:text-gray-800 font-roboto" onClick={() => setDialogOpen(true) }>
-                  Forgot password?
+                <button className="text-[#535353] hover:text-[#0C8CE9] hover:font-bold font-roboto" onClick={() => setDialogOpen(true) }>
+                  Forgot password ?
                 </button>
-                <button className="text-[#535353] hover:underline hover:text-gray-800 font-roboto" onClick={() => router.push('/auth/signup')}>
-                  Register new account?
+                <button className="text-[#535353] hover:text-[#0C8CE9] hover:font-bold font-roboto" onClick={() => router.push('/auth/signup')}>
+                  Register new account ?
                 </button>
             </div>
 
@@ -237,9 +235,9 @@ const LoginPage = () => {
             </Button>
 
             <p className="mb-32 text-[0.9rem] text-center">
-              By clicking continue, you agree to the <span className="underline">
+              By clicking continue, you agree to the <span className="hover:text-[#0C8CE9] underline">
                 <a href="#">Terms and Service</a>
-              </span> and <span className="underline">
+              </span> and <span className="hover:text-[#0C8CE9] underline">
                 <a href="#">Privacy and Policy</a>
               </span>
             </p>
