@@ -451,8 +451,8 @@ const RequestPage = () => {
                             <CardContent className="space-y-4">
 
                                 {/* Table */}
-                                <div className="max-h-[400px] requestScrollBar">
-                                <table className="min-w-full bg-white border-2 border-custom-border-blue border-t-0 mt-[0px]">
+                                <div className="max-h-[600px] requestScrollBar">
+                                <table className="min-w-full bg-white border-2 border-custom-border-blue border-t-0 border-r-0 mt-[0px]">
                                     <thead className="sticky top-0">
                                         <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
                                             <th className="py-3 w-[125px] border-r">Date</th>
@@ -546,22 +546,22 @@ const RequestPage = () => {
                     </TabsContent>
 
                     <TabsContent className="mt-0 w-full" value="analysis">
-                        <Card className="rounded-t-none">
+                        <Card className="rounded-t-none rounded-b-lg">
                             {/* <CardHeader>
                                 <CardTitle className=" font-semibold">Request Analysis Summary</CardTitle>
                             </CardHeader> */}
                             <CardContent className="space-y-4">
                                 <div className="overflow-x-auto">
-                                    <table className="min-w-full bg-white">
+                                    <table className="min-w-full bg-white border-2 border-custom-border-blue border-t-0 border-r-0 mt-[0px]">
                                         <thead className="sticky top-0">
                                             <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
-                                                <th className="py-3 px-4 text-left border-r">Metric</th>
-                                                <th className="py-3 px-4 text-left border-r">Description</th>
+                                                <th className="py-3 px-4 text-left border-r font-roboto">Metric</th>
+                                                <th className="py-3 px-4 text-left border-r font-roboto">Description</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="text-sm">
+                                        <tbody className="text-sm font-roboto">
                                             <tr className="hover:bg-gray-50 border-b">
-                                                <td className="py-3 px-4 border-r">Most Preferred Item</td>
+                                                <td className="py-3 px-4 border-r ">Most Preferred Item</td>
                                                 <td className="py-3 px-4 border-r">{statistics.mostPreferredItem || "None"} (Requests: {statistics.mostPreferredItemCount || 0})</td>
                                             </tr>
                                             <tr className="hover:bg-gray-50  border-b">
