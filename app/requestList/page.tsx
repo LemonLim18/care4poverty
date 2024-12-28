@@ -447,7 +447,7 @@ const RequestPage = () => {
                       </div>
 
                     <TabsContent className="mt-0 w-full" value="request-list">
-                        <Card className="rounded-none border-t-custom-border-blue mt-[-1px]">
+                        <Card className="rounded-none border-t-custom-border-blue mt-[-1px] bg-white">
                             <CardContent className="space-y-4">
 
                                 {/* Table */}
@@ -546,13 +546,13 @@ const RequestPage = () => {
                     </TabsContent>
 
                     <TabsContent className="mt-0 w-full" value="analysis">
-                        <Card className="rounded-t-none rounded-b-lg">
+                        <Card className="rounded-t-none rounded-b-lg border-2 border-custom-border-blue border-t-0">
                             {/* <CardHeader>
                                 <CardTitle className=" font-semibold">Request Analysis Summary</CardTitle>
                             </CardHeader> */}
                             <CardContent className="space-y-4">
                                 <div className="overflow-x-auto">
-                                    <table className="min-w-full bg-white border-2 border-custom-border-blue border-t-0 border-r-0 mt-[0px]">
+                                    <table className="min-w-full bg-white border-t-0 border-r-0 mt-[0px]">
                                         <thead className="sticky top-0">
                                             <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
                                                 <th className="py-3 px-4 text-left border-r font-roboto">Metric</th>
