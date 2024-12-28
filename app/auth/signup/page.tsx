@@ -215,14 +215,12 @@ const SignupPage = () => {
                 <span>Login</span>
               </button>
             </p> 
-            <div className='flex justify-center mb-4 w-full'>
-              <a href="/">
-                <Image 
-                  src={logoPng}
-                  alt="Logo Png"
-                  className="w-[15rem]"
-                />
-              </a>
+            <div onClick = {() => router.push('/')} className="flex justify-center mb-4 w-full cursor-pointer">
+              <Image 
+                src={logoPng}
+                alt="Logo Png"
+                className="w-[15rem]"
+              />
             </div>
             {/* <CardTitle className="text-center">Login</CardTitle> */}
             {/* <form onSubmit={handleSubmit} className="space-y-4 w-full"> */}
@@ -308,7 +306,7 @@ const SignupPage = () => {
                 <p className="mt-4 text-center">
                   Already have an account ?{' '}
                   <button className="text-[#0C8CE9] hover:font-bold"  onClick={() => router.push('/auth/login')}>
-                    Sign In
+                    Login
                   </button>
                 </p>
             </div>
@@ -349,7 +347,7 @@ const SignupPage = () => {
               <Image 
                   src={googleIcon}
                   alt="Google Logo Png"
-                  className="flex-shrink-0 relative left-[-35px] md:left-[-13%] [@media(min-width:980px)]:left-[-20%] [@media(min-width:1000px)]:left-[-35px]  h-[40px] w-[40px]"
+                  className="flex-shrink-0 relative left-[-35px] md:left-[-13%] [@media(min-width:980px)]:left-[-20%] [@media(min-width:1000px)]:left-[-35px] h-[30px] w-[30px] bg-white rounded-sm ml-1"
               />
               {/* [@media(min-height:730px)]:my-6  */}
               {/* <span className="flex-1">Sign Up with Google</span> Flexible text container */}

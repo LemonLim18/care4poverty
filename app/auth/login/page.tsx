@@ -149,7 +149,7 @@ const LoginPage = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="#5f6368"
                 >
-                  <title>I am a signup icon :)</title>
+                  <title>I am a sign up icon :)</title>
                   <g id="Complete">
                     <g id="user-add">
                       <g>
@@ -161,18 +161,16 @@ const LoginPage = () => {
                     </g>
                   </g>
                 </svg>
-                <span>Signup</span>
+                <span>Sign Up</span>
               </button>
             </p> 
             {/* </div> */}
-            <div className='flex justify-center mb-4 w-full'>
-              <a href="/">
-                <Image 
-                  src={logoPng}
-                  alt="Logo Png"
-                  className="w-[15rem]"
-                />
-              </a>
+            <div onClick = {() => router.push('/')} className="flex justify-center mb-4 w-full cursor-pointer">
+              <Image 
+                src={logoPng}
+                alt="Logo Png"
+                className="w-[15rem]"
+              />
             </div>
             {/* <CardTitle className="text-center">Login</CardTitle> */}
             <form onSubmit={handleSubmit} className="space-y-5 w-full">
@@ -234,7 +232,7 @@ const LoginPage = () => {
               <Image 
                   src={googleIcon}
                   alt="Google Logo Png"
-                  className="flex-shrink-0 relative left-[-35px] md:left-[-13%] [@media(min-width:980px)]:left-[-20%] [@media(min-width:1000px)]:left-[-35px]  h-[40px] w-[40px]"
+                  className="flex-shrink-0 relative left-[-35px] md:left-[-13%] [@media(min-width:980px)]:left-[-20%] [@media(min-width:1000px)]:left-[-35px] h-[30px] w-[30px] bg-white rounded-sm ml-1"
               />
               {/* [@media(min-height:730px)]:my-6  */}
               <span className="flex-1">
