@@ -92,11 +92,15 @@ export const getNotifications = async (table: string, userId?: string, filters?:
 };
 
 // Get records for events
-export const getEvents = async (table: string, type: string | null = null, filters?: object, orderBy?: string) => {
+export const getEvents = async (table: string, userId: string | null = null, type: string | null = null, filters?: object, orderBy?: string) => {
   let query = supabase.from(table).select(`
       *,
       users:org_id (*)
   `);
+
+  if (userId !== null) {
+    query = query.eq('org_id', userId);
+  }
 
   if (type !== null) {
     query = query.eq('event_type', type); // Filter by type
@@ -115,5 +119,4 @@ export const getEvents = async (table: string, type: string | null = null, filte
   const { data, error } = await query;
 
   return { data, error };
-
 };
