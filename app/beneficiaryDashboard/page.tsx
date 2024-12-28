@@ -268,7 +268,7 @@ const YourRequest = () => {
                             <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Recently Requested Items</h2>
                             <p className="font-roboto text-sm sm:text-sm md:text-sm text-gray-500">Request summary</p>
                             <div className="grid grid-cols-2 md:grid-cols-4 mt-1">
-                                <Card className="m-1 bg-red-300 flex flex-col items-center transform transition-transform hover:scale-105">
+                                <Card className="m-2 bg-red-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
                                         <div className="flex items-center justify-center w-16 h-16 bg-red-500 rounded-full">
                                             <Shirt />
@@ -281,7 +281,7 @@ const YourRequest = () => {
                                         </div>
                                     </CardContent>
                                 </Card>
-                                <Card className="m-1 bg-yellow-300 flex flex-col items-center transform transition-transform hover:scale-105">
+                                <Card className="m-2 bg-yellow-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
                                         <div className="flex items-center justify-center w-16 h-16 bg-orange-500 rounded-full">
                                             <Pizza />
@@ -294,7 +294,7 @@ const YourRequest = () => {
                                         </div>
                                     </CardContent>
                                 </Card>
-                                <Card className="m-1 bg-green-300 flex flex-col items-center transform transition-transform hover:scale-105">
+                                <Card className="m-2 bg-green-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
                                         <div className="flex items-center justify-center w-16 h-16 bg-green-500 rounded-full">
                                             <CupSoda />
@@ -307,7 +307,7 @@ const YourRequest = () => {
                                         </div>
                                     </CardContent>
                                 </Card>
-                                <Card className="m-1 bg-purple-300 flex flex-col items-center transform transition-transform hover:scale-105">
+                                <Card className="m-2 bg-purple-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
                                         <div className="flex items-center justify-center w-16 h-16 bg-purple-500 rounded-full">
                                             <HeartPulse />
