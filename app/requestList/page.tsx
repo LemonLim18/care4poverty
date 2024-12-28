@@ -555,8 +555,8 @@ const RequestPage = () => {
                                     <table className="min-w-full bg-white border-t-0 border-r-0 mt-[0px]">
                                         <thead className="sticky top-0">
                                             <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
-                                                <th className="py-3 px-4 text-left border-r font-roboto">Metric</th>
-                                                <th className="py-3 px-4 text-left border-r font-roboto">Description</th>
+                                                <th className="py-3 px-4 text-center border-r font-roboto">Metric</th>
+                                                <th className="py-3 px-4 text-center border-r font-roboto">Description</th>
                                             </tr>
                                         </thead>
                                         <tbody className="text-sm font-roboto">
