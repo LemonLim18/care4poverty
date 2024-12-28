@@ -20,7 +20,10 @@ import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from "@/com
 import { Dialog, DialogTrigger, DialogContent,  DialogTitle, DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { getEvents } from '@/lib/supabaseAPI';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
+
+const Map = dynamic(() => import('@/components/map/map'), { ssr: false });
 
 const EventPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
@@ -288,6 +291,8 @@ const EventPage = () => {
                                                             <h1 className="font-roboto font-bold mt-4">Location:</h1>
                                                             <h1 className="font-roboto">{event.event_location}</h1>
 
+                                                            <Map locationText={event.event_location} />
+
                                                             <Link href={event.event_url} passHref target="_blank">
                                                                 <Button className='bg-blue-600 mt-5'>Click here for more details</Button>
                                                             </Link>
@@ -446,6 +451,8 @@ const EventPage = () => {
 
                                                 <h1 className="font-roboto font-bold mt-4">Location:</h1>
                                                 <h1 className="font-roboto">{event.event_location}</h1>
+                                                
+                                                <Map locationText={event.event_location} />
 
                                                 <Link href={event.event_url} passHref target="_blank">
                                                     <Button className='bg-blue-600 mt-5'>Click here for more details</Button>
@@ -489,8 +496,6 @@ const EventPage = () => {
                                                         <AvatarFallback>H</AvatarFallback>
                                                     </Avatar>
                                                 </div>
-                                                
-                                                
                                                 
                                                 <div className="flex flex-col text-left">
                                                     <div className="flex mb-1">
@@ -691,6 +696,8 @@ const EventPage = () => {
                                                             <h1 className="font-roboto font-bold mt-4">Location:</h1>
                                                             <h1 className="font-roboto">{event.event_location}</h1>
 
+                                                            <Map locationText={event.event_location} />
+
                                                             <Link href={event.event_url} passHref target="_blank">
                                                                 <Button className='bg-blue-600 mt-5'>Click here for more details</Button>
                                                             </Link>
@@ -733,8 +740,6 @@ const EventPage = () => {
                                                                     <AvatarFallback>H</AvatarFallback>
                                                                 </Avatar>
                                                             </div>
-                                                            
-                                                            
                                                             
                                                             <div className="flex flex-col text-left">
                                                                 <div className="flex mb-1">
@@ -852,6 +857,8 @@ const EventPage = () => {
 
                                                 <h1 className="font-roboto font-bold mt-4">Location:</h1>
                                                 <h1 className="font-roboto">{event.event_location}</h1>
+
+                                                <Map locationText={event.event_location} />
 
                                                 <Link href={event.event_url} passHref target="_blank">
                                                     <Button className='bg-blue-600 mt-5'>Click here for more details</Button>
