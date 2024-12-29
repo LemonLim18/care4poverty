@@ -63,19 +63,6 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                             <ChevronRight size={18}/>
                         </button>
                         )}
-                        {/* Charity Admin: ORGANIZATION */}
-                        {userData?.role === 'charity-admin' && (
-                            <button 
-                                onClick={() => navigateToPage('/organization')}
-                                className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
-                            >
-                                <div className="flex items-center gap-2">
-                                    <Building size={18} />
-                                    <span className="font-roboto text-sm">Organization</span>
-                                </div>
-                                <ChevronRight size={18} />
-                            </button>
-                        )}
 
                          {/* Your Donation */}
                         {userData?.role === 'donor' && (

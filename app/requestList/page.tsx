@@ -404,64 +404,65 @@ const RequestPage = () => {
                       <div className="flex w-full">
                         {/* TabList */}
                         <TabsList className="p-0 grid grid-cols-2 w-full max-w-[260px] rounded-b-none rounded-r-none bg-[#0077B6]">
-                          <TabsTrigger className="h-full data-[state=active]:bg-[#038BD4] data-[state=active]:rounded-bl-none data-[state=active]:text-white text-white" 
+                          <TabsTrigger className="h-full data-[state=active]:bg-[#038BD4] rounded-b-none rounded-r-none data-[state=active]:font-medium data-[state=active]:text-white data-[state=active]:rounded-tl-lg font-roboto font-normal text-white" 
                                        value="request-list">Request List</TabsTrigger>
-                          <TabsTrigger className="h-full data-[state=active]:bg-[#038BD4] data-[state=active]:rounded-r-none data-[state=active]:text-white text-white" 
+                          <TabsTrigger className="h-full data-[state=active]:bg-[#038BD4] rounded-r-none rounded-l-none data-[state=active]:font-medium data-[state=active]:text-white font-roboto font-normal text-white" 
                                        value="analysis">Analysis</TabsTrigger>
                         </TabsList>
                         {/* Search Bar */}
                         <div className="flex w-full">
                           <Input
                             autoComplete="off"
-                            placeholder="Search..."
-                            className="flex min-w-[50px] rounded-none"
+                            placeholder="Search"
+                            className="rounded-none text-[#7D7D7D] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] text-sm mr-[0px] ml-[0px] bg-[#F5F9FE] border-2 border-custom-border-blue  transition-all duration-150 ease-in-out px-4 bg-[#F5F9FE] focus:text-black hover:border-[#0C8CE9]"
                             value={searchQuery}
                             onChange={handleSearchChange} // Update state on input change
                           />
                           <div className="flex">
                               <Button 
-                                className="w-[10px] bg-white hover:bg-[#edf4fc] border rounded-none" 
+                                className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] border rounded-none border-custom-border-blue border-2 mr-[-2px] group border-l-0" 
                                 onClick={() => {
                                         console.log('Save as PDF')
                                         exportToPDF();
                                         }}>
-                                    <FaRegFilePdf className="text-[#5D7EAE]"/>
+                                    <div className="text-[#5D7EAE] hover:text-[#F5F9FE] group-hover:text-[#F5F9FE]"><FaRegFilePdf/></div>      
+                                    
                               </Button>
-                              <Button className="w-[10px] bg-white hover:bg-[#edf4fc] border rounded-none" 
+                              <Button className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] border rounded-none border-custom-border-blue border-2 mr-[-2px] group" 
                                 onClick={() => {
                                         console.log('Print')
                                         printTable();
                                         }}>
-                                    <Printer className="text-[#5D7EAE]"/>
+                                    <div className="text-[#5D7EAE] hover:text-[#F5F9FE] group-hover:text-[#F5F9FE]"><Printer/></div>      
                               </Button>
-                              <Button className="w-[10px] bg-white hover:bg-[#edf4fc] border rounded-l-none rounded-br-none" 
+                              <Button className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] border rounded-l-none rounded-br-none border-custom-border-blue border-2 group" 
                                 onClick={() => {
                                         console.log('Download')
                                         downloadCSV();
                                         }}>
-                                    <Download className="text-[#5D7EAE]"/>
+                                    <div className="text-[#5D7EAE] hover:text-[#F5F9FE] group-hover:text-[#F5F9FE]"><Download/></div>      
                               </Button>
                           </div>
                         </div>
                       </div>
 
                     <TabsContent className="mt-0 w-full" value="request-list">
-                        <Card className="rounded-t-none">
+                        <Card className="rounded-none border-t-custom-border-blue mt-[-1px] bg-white">
                             <CardContent className="space-y-4">
 
                                 {/* Table */}
-                                <div className="max-h-[400px] requestScrollBar">
-                                <table className="min-w-full bg-white">
+                                <div className="max-h-[600px] requestScrollBar">
+                                <table className="min-w-full bg-white border-2 border-custom-border-blue border-t-0 border-r-0 mt-[0px]">
                                     <thead className="sticky top-0">
                                         <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
-                                            <th className="py-3 px-4 border-r">Date</th>
-                                            <th className="py-3  border-r">Beneficiary</th>
-                                            <th className="py-3 px-4 border-r">Item Name</th>
-                                            <th className="py-3 px-4 border-r">Item Category</th>
-                                            <th className="py-3 px-4 border-r">Item No</th>
-                                            <th className="py-3 px-4 border-r">Status</th>
+                                            <th className="py-3 w-[125px] border-r">Date</th>
+                                            <th className="py-3 w-[124px] border-r">Beneficiary</th>
+                                            <th className="py-3 w-[200px] border-r">Item Name</th>
+                                            <th className="py-3 w-[200px] border-r">Item Category</th>
+                                            <th className="py-3 w-[200px] border-r">Item No</th>
+                                            <th className="py-3 w-[200px] border-r">Status</th>
                                             {/* This is the edit column */}
-                                            <th className="py-3 w-[8px] border-r"></th>
+                                            <th className="py-3 w-[32px] border-r"></th>
                                             {/* <th className="py-3 border-r"> </th> */}
                                         </tr>
                                     </thead>
@@ -471,7 +472,7 @@ const RequestPage = () => {
                                         Array.from({ length: 5 }).map((_, index) => (
                                           <tr
                                             key={index}
-                                            className="animate-pulse text-sm text-center border-b border-slate-200"
+                                            className="animate-pulse text-sm text-center border-b border-slate-200g"
                                           >
                                             <td className="py-3 border-r">
                                               <div className="h-4 bg-slate-200 rounded w-[96px] mx-auto"></div>
@@ -545,22 +546,22 @@ const RequestPage = () => {
                     </TabsContent>
 
                     <TabsContent className="mt-0 w-full" value="analysis">
-                        <Card className="rounded-t-none">
+                        <Card className="rounded-t-none rounded-b-lg border-2 border-custom-border-blue border-t-0">
                             {/* <CardHeader>
                                 <CardTitle className=" font-semibold">Request Analysis Summary</CardTitle>
                             </CardHeader> */}
                             <CardContent className="space-y-4">
                                 <div className="overflow-x-auto">
-                                    <table className="min-w-full bg-white">
+                                    <table className="min-w-full bg-white border-t-0 border-r-0 mt-[0px]">
                                         <thead className="sticky top-0">
                                             <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
-                                                <th className="py-3 px-4 text-left border-r">Metric</th>
-                                                <th className="py-3 px-4 text-left border-r">Description</th>
+                                                <th className="py-3 px-4 text-center border-r font-roboto">Metric</th>
+                                                <th className="py-3 px-4 text-center border-r font-roboto">Description</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="text-sm">
+                                        <tbody className="text-sm font-roboto">
                                             <tr className="hover:bg-gray-50 border-b">
-                                                <td className="py-3 px-4 border-r">Most Preferred Item</td>
+                                                <td className="py-3 px-4 border-r ">Most Preferred Item</td>
                                                 <td className="py-3 px-4 border-r">{statistics.mostPreferredItem || "None"} (Requests: {statistics.mostPreferredItemCount || 0})</td>
                                             </tr>
                                             <tr className="hover:bg-gray-50  border-b">
