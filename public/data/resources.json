@@ -1,0 +1,72 @@
+[
+    {
+        "icon": "Package",
+        "name": "Rice",
+        "category": "Foods",
+        "number": 45,
+        "actionLabel": "Manage"
+    },
+    {
+        "icon": "Truck",
+        "name": "Trousers",
+        "category": "Wearable Items",
+        "number": 12,
+        "actionLabel": "Track"
+    },
+    {
+        "icon": "Users",
+        "name": "Canned Products",
+        "category": "Foods",
+        "number": 87,
+        "actionLabel": "Recruit"
+    },
+    {
+        "icon": "Clipboard",
+        "name": "Shoes",
+        "category": "Wearable Items",
+        "number": 34,
+        "actionLabel": "View"
+    },
+    {
+        "icon": "Calendar",
+        "name": "Events",
+        "category": "Planning",
+        "number": 5,
+        "actionLabel": "Schedule"
+    },
+    {
+        "icon": "PieChart",
+        "name": "Budget Reports",
+        "category": "Finance",
+        "number": 8,
+        "actionLabel": "Review"
+    },
+    {
+        "icon": "Store",
+        "name": "Donations",
+        "category": "Charity",
+        "number": 20,
+        "actionLabel": "Monitor"
+    },
+    {
+        "icon": "Briefcase",
+        "name": "Partnerships",
+        "category": "Networking",
+        "number": 15,
+        "actionLabel": "Expand"
+    },
+    {
+        "icon": "Shield",
+        "name": "Compliance",
+        "category": "Regulations",
+        "number": 10,
+        "actionLabel": "Audit"
+    },
+    {
+        "icon": "Bell",
+        "name": "Notifications",
+        "category": "Alerts",
+        "number": 29,
+        "actionLabel": "Check"
+    }
+]

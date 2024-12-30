@@ -9,7 +9,14 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		utilities: {
+			'.print-color-adjust-exact': {
+			  colorAdjust: 'exact', // Deprecated
+			  printColorAdjust: 'exact', // Standard
+			},
+		},
   		colors: {
+			'custom-border-blue': 'rgba(12, 140, 233, 0.3)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -49,6 +56,16 @@ const config: Config = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
   		borderRadius: {
@@ -56,23 +73,52 @@ const config: Config = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-		fontFamily: {
-			roboto: ['Roboto', 'sans-serif'],
-			inter: ['Inter', 'sans-serif'], 
-			'giorgio': ['Giorgio Sans', 'sans-serif'],
+  		fontFamily: {
+  			roboto: ['Roboto', 'sans-serif'],
+  			inter: ['Inter', 'sans-serif'],
+  			giorgio: ['Giorgio Sans', 'sans-serif']
+  		},
+  		fontWeight: {
+  			thin: '100',
+  			extralight: '200',
+  			light: '300',
+  			regular: '400',
+  			medium: '500',
+  			bold: '700',
+  			heavy: '800',
+  			black: '900'
+  		},
+		fontSize: {
+			xsm: '0.76rem',
 		},
-		fontWeight: {
-			thin: '100',
-			extralight: '200',
-			light: '300',
-			regular: '400',
-			medium: '500',
-			bold: '700',
-			heavy: '800',
-			black: '900',
-		},
+  		keyframes: {
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		animation: {
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
+  		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+	require("tailwindcss-animate"),
+	require("tailwind-scrollbar"),
+	require("tailwind-scrollbar-hide"),
+],
 };
 export default config;

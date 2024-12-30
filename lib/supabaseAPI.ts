@@ -9,7 +9,8 @@ export type DataRecord = {
 export const createRecord = async (table: string, data: DataRecord) => {
   const { data: responseData, error } = await supabase
     .from(table)
-    .insert([data]);
+    .insert([data])
+    .select('*'); // Fetch the inserted record
 
   return { data: responseData, error };
 };
@@ -50,6 +51,72 @@ export const getAllRecords = async (table: string) => {
   const { data, error } = await supabase
     .from(table)
     .select('*');
+
+  return { data, error };
+};
+
+// Get all records from a specified table based on a field and value
+export const getRecordsByField = async (table: string, field: string, value: any) => {
+  const { data, error } = await supabase
+    .from(table)
+    .select('*')
+    .eq(field, value); // Fetch records where the specified field matches the value
+
+  return { data, error };
+};
+
+// Get records for notifications
+export const getNotifications = async (table: string, userId?: string, filters?: object, orderBy?: string) => {
+  let query = supabase.from(table).select(`
+      *,
+      users:other_id (full_name, profile_picture)
+  `);
+
+  if (userId) {
+    query = query.eq('user_id', userId); // Filter by user ID
+  }
+
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      query = query.eq(key, value); // Apply additional filters
+    });
+  }
+
+  if (orderBy) {
+    query = query.order(orderBy, { ascending: false }); // Apply sorting
+  }
+
+  const { data, error } = await query;
+
+  return { data, error };
+};
+
+// Get records for events
+export const getEvents = async (table: string, userId: string | null = null, type: string | null = null, filters?: object, orderBy?: string) => {
+  let query = supabase.from(table).select(`
+      *,
+      users:org_id (*)
+  `);
+
+  if (userId !== null) {
+    query = query.eq('org_id', userId);
+  }
+
+  if (type !== null) {
+    query = query.eq('event_type', type); // Filter by type
+  }
+
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      query = query.eq(key, value); // Apply additional filters
+    });
+  }
+
+  if (orderBy) {
+    query = query.order(orderBy, { ascending: false }); // Apply sorting
+  }
+
+  const { data, error } = await query;
 
   return { data, error };
 };

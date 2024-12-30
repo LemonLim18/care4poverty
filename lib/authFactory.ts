@@ -6,15 +6,25 @@ import { useState } from 'react';
 
 // Define an interface for the user registration data
 interface UserRegistrationData {
-  id?: string, // This should be replaced with the user ID from your authentication context after signup
-  email: string, // Use email from the registration data
-  fullName: string, // Change to match the column name in Supabase
-  birthDate: string, // Change to match the column name in Supabase
-  icNumber: string, // Change to match the column name in Supabase
-  telephoneNumber: string, // Change to match the column name in Supabase
-  homeAddress: string, // Change to match the column name in Supabase
-  category?: string | null, // Set to null or appropriate value if needed, as it is not part of the registration data
-  created_at?: Date, // Set to the current timestamp
+  id: string,
+  email: string,
+  fullName: string,
+  icNumber: string,
+  idProof: File | null,
+  telephoneNumber: string,
+  profilePicture: File | null,
+  role: string,
+  // Role-specific fields
+  organizationName?: string,
+  registrationNumber?: string,
+  bankAccount?: string,
+  orgAddress?: string,
+  website?: string,
+  registrationCert?: File | null,
+  homeAddress?: string,
+  incomeStatement?: File | null,
+  medicalReport?: File | null,
+  created_at?: Date,
   updated_at?: Date
 }
 
@@ -47,41 +57,149 @@ export const signUp = async (email: string, password: string): Promise<AuthRespo
 
 // Register User Function
 export const registerUser = async (data: UserRegistrationData) => {
-  // Prepare the user data to insert into the users table
-  console.log("Auth Data: ", data)
-
-  const userData = {
-    id: data.id, // This should be replaced with the user ID from your authentication context after signup
-    email: data.email, // Use email from the registration data
-    full_name: data.fullName, // Change to match the column name in Supabase
-    birth_date: data.birthDate, // Change to match the column name in Supabase
-    ic_number: data.icNumber, // Change to match the column name in Supabase
-    telephone_number: data.telephoneNumber, // Change to match the column name in Supabase
-    home_address: data.homeAddress, // Change to match the column name in Supabase
-    category: "Donator", // Set to null or appropriate value if needed, as it is not part of the registration data
-    created_at: new Date().toISOString(), // Set to the current timestamp
-    updated_at: new Date().toISOString() // Set to the current timestamp
+  // Prepare base user data
+  const baseUserData = {
+    id: data.id,
+    email: data.email,
+    full_name: data.fullName,
+    ic_number: data.icNumber,
+    id_proof: '',
+    profile_picture: '',
+    telephone_number: data.telephoneNumber,
+    role: data.role,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   };
-  console.log("before api call")
-  // Insert the user data into the users table
-//   const { data: userDataResponse,  error: insertError } = await supabase
-    //   .from('users') // Replace 'users' with the actual name of your table
-    //   .insert([userData]);
 
-  const { data: userDataResponse, error: insertError } = await createRecord("users", userData);
-  console.log("after api call: ", userData)
-  // Check for insertion errors
-  if (insertError) {
-      console.log('Error posting data: ', insertError);
-      return;
+  // idProof is the pdf data type
+  if (data.idProof) {
+    const idUploadResult = await uploadFile(data.idProof);
+    if (idUploadResult.data) {
+      console.log("ID Proof: ", idUploadResult.data);
+      baseUserData.id_proof = idUploadResult.data.file_url; // Store the file URL
+    } else {
+      console.error("Failed to push the ID proof", idUploadResult.error);
+    }
   }
 
-  // Return the inserted user data and null error
-  console.log("Data posted successfully")
-  return {
-      data: userDataResponse,
-      error: null,
+  // profile Picture is the png data type
+  if (data.profilePicture) {
+    const profileUploadResult = await uploadFile(data.profilePicture);
+    if (profileUploadResult.data) {
+      console.log("Profile Picture: ", profileUploadResult.data);
+      baseUserData.profile_picture = profileUploadResult.data.file_url; // Store the file URL
+    } else {
+      console.error("Failed to push the Profile Picture", profileUploadResult.error);
+    }
+  }
+
+  // Initialize role-specific fields
+  let roleSpecificData: any = {};
+
+  if (data.role === 'charity-admin') {
+    roleSpecificData = {
+      organization_name: data.organizationName,
+      organization_address: data.orgAddress,
+      registration_number: data.registrationNumber,
+      registration_cert: '', // Placeholder for the uploaded file URL
+      bank_account: data.bankAccount,
+      website: data.website,
+    };
+
+    // Upload registration certificate if provided
+    if (data.registrationCert) {
+      const certUploadResult = await uploadFile(data.registrationCert);
+      if (certUploadResult.data) {
+        console.log("Registration Certificate: ", certUploadResult.data);
+        roleSpecificData.registration_cert = certUploadResult.data.file_url; // Store the file URL
+      } else {
+        console.error("Failed to push the certification", certUploadResult.error);
+      }
+    }
+  } else {
+    roleSpecificData = {
+      home_address: data.homeAddress,
+      income_statement: '', // Placeholder for the uploaded file URL
+      medical_report: '', // Placeholder for the uploaded file URL
+    };
+
+    // Upload income statement if provided
+    if (data.incomeStatement) {
+      const incomeUploadResult = await uploadFile(data.incomeStatement);
+      if (incomeUploadResult.data) {
+        console.log("Income Upload: ", incomeUploadResult.data);
+        roleSpecificData.income_statement = incomeUploadResult.data.file_url; // Store the file URL
+      }else{
+        console.error("Failed to push the incomeStatement");
+      }
+    }
+
+    // Upload medical report if provided
+    if (data.role === 'recipient' && data.medicalReport) {
+      const medicalUploadResult = await uploadFile(data.medicalReport);
+      // medicalUploadResult.data here refers to the file url
+      if (medicalUploadResult.data) {
+        console.log("Medical Reload: ", medicalUploadResult.data);
+        roleSpecificData.medical_report = medicalUploadResult.data.file_url; // Store the file URL
+        console.error("Failed to push the medicalStatement");
+      }
+    }
+  }
+
+  // Combine base user data with role-specific data
+  const userData = {
+    ...baseUserData,
+    ...roleSpecificData,
   };
+
+  console.log("before api call:", userData);
+  const { data: userDataResponse, error: insertError } = await createRecord("users", userData);
+
+  if (insertError) {
+    console.log('Error posting data: ', insertError);
+    return {
+      success: false,
+      message: insertError.message || 'Failed to create user record'
+    };
+  }
+
+  console.log("Data posted successfully");
+  return {
+    success: true,
+    data: userDataResponse
+  };
+};
+
+export const uploadFile = async(file: File) => {
+  const bucketName = file.type === 'application/pdf' ? 'documents' : 'photos';
+  
+  const filePath = `users/${file.name}`;
+
+  // Upload file to storage bucket
+  const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file);
+
+  if (error) {
+    console.log('Fail to upload to: ',filePath,' with ', error.message);
+    return { data: null, error }; // Return an object with null data and the error
+  }
+
+  // Get public URL of the file
+  // const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(`public/${file.name}`);
+  const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+  const fileUrl = publicUrlData.publicUrl;
+  console.log("The file url: ", fileUrl);
+
+  // Insert file metadata into the database
+  // const { data: dbData, error: dbError } = await supabase
+  //   .from('users')
+  //   .insert([{ file_name: file.name }]);
+
+  // if (dbError) {
+  //   console.log('Database insert failed:', dbError.message);
+  //   return { data: null, error: dbError }; // Return an object with null data and the database error
+  // }
+
+  return { data: { file_url: fileUrl }, error: null }; // Return the file URL
 };
 
 // Sign In Function
@@ -114,6 +232,7 @@ export const signIn = async (email: string, password: string): Promise<AuthRespo
 // Sign Out Function
 export const signOut = async (): Promise<void> => {
     await supabase.auth.signOut();
+    sessionStorage.clear(); // Clear session storage
 };
 
 // Get Current User Function
@@ -161,4 +280,62 @@ export const handlePasswordReset = async (email: string) => {
 
     console.log("Password reset email sent to:", email);
     return { success: true, data };
+};
+
+export const signInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: `http://localhost:3000/auth/checkUser`, // Redirect to a temporary endpoint to check user existence
+        },
+    });
+
+    if (error) {
+        console.error('Google login error:', error.message);
+        return { data: null, error }; // Return null data and the error
+    }
+
+    console.log('Login successful:', data);
+    return { data, error: null }; // Return data and null error
+};
+
+// New function to check user existence and redirect accordingly
+export const checkUserAndRedirect = async () => {
+    const { data: { user }, error } = await supabase.auth.getUser(); // Get the currently logged-in user
+
+    if (error) {
+        console.error('Error fetching user:', error.message);
+        return; // Handle the error appropriately
+    }
+
+    if (!user) {
+        console.error('No user found after login.');
+        return; // Handle the case where no user is found
+    }
+
+    // Check if the user exists in the database
+    const { data: userData, error: fetchError } = await supabase
+        .from('users') // Replace 'users' with your actual table name
+        .select('*')
+        .eq('email', user.email) // Check for the user's email
+      .single(); // Get a single record
+
+    // Redirect based on whether the user exists
+    if (!userData) {
+        // User does not exist, redirect to registration
+        window.location.href = '/auth/register'; // Redirect to registration page
+    } else {
+        //
+        if (userData) {
+          sessionStorage.setItem('user', JSON.stringify(userData)); // Store user data
+          console.log('User data stored in session storage:', userData);
+        } else {
+          console.error("User data is undefined.");
+        }
+        // User exists, redirect to dashboard
+        setTimeout(() => {
+          console.log("Redirected to dashboard page")
+          window.location.href = '/dashboard'; // Redirect to dashboard
+        }, 1800);
+    }
 };
