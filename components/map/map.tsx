@@ -5,9 +5,9 @@ import 'leaflet/dist/leaflet.css';
 // Define a custom icon
 const customIcon = L.icon({
     iconUrl: '/images/location.png',
-    iconSize: [50, 50],
-    iconAnchor: [25, 50],
-    popupAnchor: [-3, -76],
+    iconSize: [30, 30],
+    iconAnchor: [25, 20],
+    popupAnchor: [-10, -20],
 });
 
 interface MapProps {
@@ -58,7 +58,7 @@ export default function Map({ locationText }: MapProps) {
                     }
                 }
             } else {
-                alert('Location not found');
+                console.log('Location not found');
             }
         };
 

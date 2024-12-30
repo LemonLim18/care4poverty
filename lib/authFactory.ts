@@ -338,3 +338,23 @@ export const checkUserAndRedirect = async () => {
         }, 1800);
     }
 };
+
+export const uploadEventPhoto = async(file: File) => {
+  const bucketName = 'photos'; // Use the 'photos' bucket
+  const filePath = `event/${file.name}`; // Use the 'event/' path
+
+  // Upload file to storage bucket
+  const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file);
+
+  if (error) {
+    console.log('Fail to upload to: ', filePath, ' with ', error.message);
+    return { data: null, error }; // Return an object with null data and the error
+  }
+
+  // Get public URL of the file
+  const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+  const fileUrl = publicUrlData.publicUrl;
+  console.log("The file url: ", fileUrl);
+
+  return { data: { file_url: fileUrl }, error: null }; // Return the file URL
+};

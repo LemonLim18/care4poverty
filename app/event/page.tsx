@@ -209,9 +209,9 @@ const EventPage = () => {
                             <div>
                                 <div className="mt-1 mb-2 flex">
                                     <h2 className="font-roboto text-lg sm:text-xl md:text-2xl">My Events</h2>
-                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto">
+                                    <a href="/create-event" className="bg-blue-500 transition-colors duration-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto">
                                         Create New Event
-                                    </button>
+                                    </a>
                                 </div>
 
                                 <div>
