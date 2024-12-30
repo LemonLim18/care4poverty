@@ -197,7 +197,7 @@ const RegisterPage = () => {
                         setSharedInfo({...sharedInfo, role: e.target.value});
                     }}
                     required
-                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg focus:text-black flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
+                    className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg focus:text-black flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] focus:outline-none transition-all duration-150 ease-in-out`}
                     style={{color: selectedRole ? '#7D7D7D' : '#0C8CE9'}}
                 >
                     <option value="">Select Role</option>
@@ -256,7 +256,7 @@ const RegisterPage = () => {
                                 Organization Description
                                 <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
                             </Label>
-                            <textarea
+                            <Textarea
                                 id="organizationDescription"
                                 name="organizationDescription"
                                 value={roleSpecificInfo.organizationDescription}
@@ -265,7 +265,24 @@ const RegisterPage = () => {
                                     organizationDescription: e.target.value
                                 })}
                                 required
-                                className="h-[129px] w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
+                                className="h-[136px] w-96 text-sm px-4 py-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black transition-colors duration-150 ease-in-out"
+                            />
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label htmlFor="orgAddress" className="text-base font-medium">
+                                Organization Address
+                                <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
+                            </Label>
+                            <Textarea
+                                id="orgAddress"
+                                value={roleSpecificInfo.orgAddress}
+                                onChange={(e) => setRoleSpecificInfo({
+                                    ...roleSpecificInfo,
+                                    orgAddress: e.target.value
+                                })}
+                                required
+                                className="h-[136px] w-96 text-sm px-4 py-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black transition-colors duration-150 ease-in-out"
                             />
                         </div>
 
@@ -337,25 +354,8 @@ const RegisterPage = () => {
                                 className="hidden"
                             />
                             <label htmlFor="registrationCert" className={`h-11 w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
-                                <span className={`mx-auto ${roleSpecificInfo.registrationCert ? 'text-[#7D7D7D] hover:font-bold transition-all duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.registrationCert ? roleSpecificInfo.registrationCert.name : 'Choose File'}</span>
+                                <span className={`mx-auto ${roleSpecificInfo.registrationCert ? 'text-[#7D7D7D] hover:font-bold' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.registrationCert ? roleSpecificInfo.registrationCert.name : 'Choose File'}</span>
                             </label>
-                        </div>
-
-                        <div className="space-y-1">
-                            <Label htmlFor="orgAddress" className="text-base font-medium">
-                                Organization Address
-                                <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
-                            </Label>
-                            <Textarea
-                                id="orgAddress"
-                                value={roleSpecificInfo.orgAddress}
-                                onChange={(e) => setRoleSpecificInfo({
-                                    ...roleSpecificInfo,
-                                    orgAddress: e.target.value
-                                })}
-                                required
-                                className={`h-[129px] w-96 text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
-                            />
                         </div>
                     </div>
                 );
@@ -377,7 +377,7 @@ const RegisterPage = () => {
                                     homeAddress: e.target.value
                                 })}
                                 required
-                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
+                                className="h-[136px] w-96 text-sm px-4 py-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black transition-colors duration-150 ease-in-out"
                             />
                         </div>
                         <div className="space-y-1">
@@ -420,7 +420,7 @@ const RegisterPage = () => {
                                     homeAddress: e.target.value
                                 })}
                                 required
-                                className={`h-[135px] ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}
+                                className="h-[136px] w-96 text-sm px-4 py-4 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                             />
                         </div>
                         <div className="space-y-1">
@@ -440,7 +440,7 @@ const RegisterPage = () => {
                                 className="hidden"
                             />
                             <label htmlFor="incomeStatement" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
-                                <span className={`mx-auto ${roleSpecificInfo.incomeStatement ? 'text-[#7D7D7D] hover:font-bold transition-all duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.incomeStatement ? roleSpecificInfo.incomeStatement.name : 'Choose File'}</span>
+                                <span className={`mx-auto ${roleSpecificInfo.incomeStatement ? 'text-[#7D7D7D] hover:font-bold' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.incomeStatement ? roleSpecificInfo.incomeStatement.name : 'Choose File'}</span>
                             </label>
                         </div>
 
@@ -461,7 +461,7 @@ const RegisterPage = () => {
                                 className="hidden"
                             />
                             <label htmlFor="medicalReport" className={`h-11 ${selectedRole ? 'w-96' : 'w-[808px]'} text-sm px-4 py-1 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black cursor-pointer flex items-center justify-between hover:font-bold hover:border-[#0C8CE9] transition-all duration-150 ease-in-out`}>
-                                <span className={`mx-auto ${roleSpecificInfo.medicalReport ? 'text-[#7D7D7D] hover:font-bold transition-all duration-150 ease-in-out' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.medicalReport ? roleSpecificInfo.medicalReport.name : 'Choose File'}</span>
+                                <span className={`mx-auto ${roleSpecificInfo.medicalReport ? 'text-[#7D7D7D] hover:font-bold' : 'text-[#0C8CE9]'}`}>{roleSpecificInfo.medicalReport ? roleSpecificInfo.medicalReport.name : 'Choose File'}</span>
                             </label>
                         </div>
                     </div>
@@ -479,7 +479,7 @@ const RegisterPage = () => {
                 ...sharedInfo,
                 ...roleSpecificInfo,
                 telephoneNumber: sharedInfo.phoneNumber,
-                id: sharedInfo.id || '' // Provide empty string as fallback
+                id: sharedInfo.id || '', // Provide empty string as fallback
             };
             
             const response = await registerUser(userData);
@@ -510,7 +510,7 @@ const RegisterPage = () => {
             <h1 className="font-giorgio font-bold text-5xl text-center mt-20">Let's get you started</h1>
             <span className="text-center font-medium text-lg text-[#8B8B8B] mt-2">Enter the details to get going</span>
             <h1 className="absolute top-0 right-0 m-12 text-base">
-                Already registered ? <span onClick={() => router.push('/auth/login')} className="ml-5 text-[#0C8CE9] hover:font-bold hover:underline cursor-pointer"> Login</span>
+                Already registered ? <span onClick={() => router.push('/auth/login')} className="ml-5 text-[#0C8CE9] hover:font-bold cursor-pointer"> Login</span>
             </h1>
             <form onSubmit={handleSubmit} className="w-full max-w-6xl">
                 <div className={`grid ${selectedRole ? 'md:grid-cols-2' : 'grid-cols-1'} gap-4`}>

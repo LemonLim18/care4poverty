@@ -16,6 +16,8 @@ interface UserRegistrationData {
   role: string,
   // Role-specific fields
   organizationName?: string,
+  organizationDescription?: string,
+  organizationDistrict?: string,
   registrationNumber?: string,
   bankAccount?: string,
   orgAddress?: string,
@@ -100,6 +102,8 @@ export const registerUser = async (data: UserRegistrationData) => {
     roleSpecificData = {
       organization_name: data.organizationName,
       organization_address: data.orgAddress,
+      organization_description: data.organizationDescription,
+      organization_district: data.organizationDistrict,
       registration_number: data.registrationNumber,
       registration_cert: '', // Placeholder for the uploaded file URL
       bank_account: data.bankAccount,
@@ -232,6 +236,7 @@ export const signIn = async (email: string, password: string): Promise<AuthRespo
 // Sign Out Function
 export const signOut = async (): Promise<void> => {
     await supabase.auth.signOut();
+    sessionStorage.clear(); // Clear session storage
 };
 
 // Get Current User Function

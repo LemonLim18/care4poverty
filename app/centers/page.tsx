@@ -143,7 +143,7 @@ const CharityDetailedPage = () => {
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/donate">{userRole === 'beneficiary' ? 'Request' : userRole === 'donor'? 'Donate' : '...'}</BreadcrumbLink>
+                                <BreadcrumbLink href={userRole ==="beneficiary" ? '/request' : '/donate'}>{userRole === 'beneficiary' ? 'Request' : userRole === 'donor'? 'Donate' : '...'}</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem className="font-bold text-black">{loading? '...' : charityData?.organization_name}</BreadcrumbItem>
@@ -153,10 +153,11 @@ const CharityDetailedPage = () => {
                 <div className="mt-7 mb-7">
                     {charityData ? (
                         <>
-                            <div className="w-full flex space-x-20">
+                            <div className="w-full flex items-center flex-col-reverse lg:flex-row lg:space-x-20">
+                                {/* Upper Left */}
                                 {/* <Carousel className="bg-red-500 min-w-[450px] max-h-[270px] rounded-3xl mt-4 "> */}
-                                <Carousel className="min-w-[450px] max-h-[270px] rounded-3xl mt-4 ">
-                                    <CarouselContent className="ml-0 bg-blue-200 min-w-[450px] max-h-[270px] rounded-3xl overflow-hidden">
+                                <Carousel className="max-w-[75%] mt-10 lg:mt-4 lg:min-w-[450px] max-h-[270px] rounded-3xl">
+                                    <CarouselContent className="ml-0 bg-blue-200 w-full lg:min-w-[450px] max-h-[270px] rounded-3xl overflow-hidden">
                                         <Image
                                             src={charityData.profile_picture}
                                             alt={charityData.organization_name}
@@ -164,15 +165,17 @@ const CharityDetailedPage = () => {
                                             height={400}
                                             priority
                                             draggable={false}
-                                            className="object-cover justify-center h-full"
+                                            className="object-cover justify-center w-full h-full"
                                         />
                                     </CarouselContent>
                                     <CarouselPrevious className="border-2 border-black bg-[#F5F9FE] hover:bg-white cursor-pointer transform -translate-y-1/2" />
                                     <CarouselNext className="border-2 border-black bg-[#F5F9FE] hover:bg-white hover:cursor-pointer transform -translate-y-1/2" />
                                 </Carousel>
+
+                                {/* Upper right */}
                                 <section className="w-full flex flex-col justify-center ">
-                                    <p className="text-left px-4 mb-1 font-roboto text-sm font-light">Posted 40 mins ago</p>
-                                    <div className="w-full px-4 flex justify-between items-center">
+                                    <p className="text-left md:px-4 mb-1 font-roboto text-sm font-light">Posted 40 mins ago</p>
+                                    <div className="w-full md:px-4 flex justify-between items-center">
                                         <h1 className="font-giorgio font-bold text-5xl">{charityData.organization_name}</h1>
                                         <Button 
                                             className="bg-[#0077B6] hover:bg-[#038BD4] rounded-lg"
@@ -181,31 +184,31 @@ const CharityDetailedPage = () => {
                                             {userRole === 'beneficiary' ? 'I want to request' : 'I want to donate'}
                                         </Button>
                                     </div>
-                                    <div className="flex flex-col justify-center items-start gap-y-3 mt-6 px-4">
+                                    <div className="flex flex-col justify-center items-start gap-y-3 mt-6 md:px-4">
                                         {/* <p className="flex gap-x-2 font-roboto"><MapPin className="text-white fill-[#0077B6]"/>{charityData.organization_district}</p> */}
                                         <p className="flex items-center gap-x-2 text-sm font-roboto font-light"><MapPin className="text-white fill-[#0077B6]"/>{charityData.organization_address}</p>
                                         <p className="flex items-center gap-x-2 text-sm font-roboto font-light"><Phone className="text-white fill-[#0077B6]"/>{charityData.telephone_number}</p>
                                         <p className="flex items-center gap-x-2 text-sm font-roboto font-light"><AtSign className="w-5 h-5 text-[#0077B6]"/>{charityData.email}</p>
                                     </div>
                                     {/* Items Needed */}
-                                    <div className="mt-4 px-4">
+                                    <div className="mt-4 md:px-4">
                                         <p className="text-lg font-roboto font-bold">{userRole === 'beneficiary' ? 'Items Provided' : 'Items Needed'}</p>
                                         <div className="flex mt-2 gap-x-1">
-                                            <Badge className="py-1 w-[110px] flex justify-center bg-[#8A71E7] hover:bg-[#7a5ce4] font-roboto font-light text-white hover:scale-105 cursor-default">Dress</Badge>
+                                            <Badge className="py-1 w-[100px] md:w-[110px] flex justify-center bg-[#8A71E7] hover:bg-[#7a5ce4] font-roboto font-light text-white hover:scale-105 cursor-default">Dress</Badge>
                                             <span className="text-3xl flex items-center">·</span>
-                                            <Badge className="py-1 w-[110px] flex justify-center bg-[#DCE02D] hover:bg-[#ced133] font-roboto font-light text-black hover:scale-105 cursor-default">Rice</Badge>
+                                            <Badge className="py-1 w-[95px] md:w-[110px] flex justify-center bg-[#DCE02D] hover:bg-[#ced133] font-roboto font-light text-black hover:scale-105 cursor-default">Rice</Badge>
                                             <span className="text-3xl flex items-center">·</span>
-                                            <Badge className="py-1 w-[110px] flex justify-center bg-[#c53c2a] hover:bg-[#a73a2b] font-roboto font-light text-white hover:scale-105 cursor-default">Canned Product</Badge>
+                                            <Badge className="py-1 w-[110px] md:w-[110px] flex justify-center bg-[#c53c2a] hover:bg-[#a73a2b] font-roboto font-light text-white hover:scale-105 cursor-default">Canned Product</Badge>
                                             <span className="text-3xl flex items-center">·</span>
-                                            <Badge className="py-1 w-[110px] flex justify-center bg-[#39AF01] hover:bg-[#458527] font-roboto font-light text-white hover:scale-105 cursor-default">Food Oil</Badge>
+                                            <Badge className="py-1 w-[95px] md:w-[110px] flex justify-center bg-[#39AF01] hover:bg-[#458527] font-roboto font-light text-white hover:scale-105 cursor-default">Food Oil</Badge>
                                         </div>
                                     </div>
                                 </section>
                             </div>
                             
-                            <p className="mt-10 text-lg font-roboto font-bold">Description</p>
+                            <p className="mt-10 text-center lg:text-left text-lg font-roboto font-bold">Description</p>
                             {/* <div className="h-[230px] mr-8 pr-6 overflow-y-auto scrollbar-thin scrollbar-thumb-white scrollbar-track-cyan-600"> */}
-                            <div className="h-full mr-8 pr-6 overflow-y-auto scrollbar-thin scrollbar-thumb-white scrollbar-track-cyan-600">
+                            <div className="h-full w-full text-justify lg:text-left mr-8 pr-6 overflow-y-auto scrollbar-thin scrollbar-thumb-white scrollbar-track-cyan-600">
                                 {groupSentences.map((group, index) => (
                                     <p key={index} className="mt-2 font-roboto font-light">
                                         {group}
