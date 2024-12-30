@@ -480,11 +480,6 @@ const RegisterPage = () => {
                 ...roleSpecificInfo,
                 telephoneNumber: sharedInfo.phoneNumber,
                 id: sharedInfo.id || '', // Provide empty string as fallback
-                // Add organization details for charity-admin role
-                ...(sharedInfo.role === 'charity-admin' && {
-                    organization_description: roleSpecificInfo.organizationDescription,
-                    organization_district: roleSpecificInfo.organizationDistrict
-                })
             };
             
             const response = await registerUser(userData);
