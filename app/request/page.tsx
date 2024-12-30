@@ -12,14 +12,20 @@ import { Separator } from "@/components/ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';  // Add this import at the top of your file
-import { RotateCw, Map, MapPin, MapPinned, MapPinCheckInside, BookImage, ChartPie, IdCard, Phone, Mail, PanelsTopLeft } from "lucide-react";
+import { LocateFixed, RotateCw, Map, MapPin, MapPinned, MapPinCheckInside, BookImage, ChartPie, IdCard, Phone, Mail, PanelsTopLeft } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { getAllRecords, getRecordById, getRecordsByField } from '@/lib/supabaseAPI';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { getLatLong, getTopKNearestCharities } from '@/lib/knn'; // Adjust the import path as necessary
 
 import Image5 from '@/public/images/charity_center/charity_center5.jpeg';
 import { Input } from '@/components/ui/input';
+import { ClipLoader } from 'react-spinners';
+import { useGeolocated } from 'react-geolocated';
+
+// import { getLatLong } from '@/lib/distance';
 
 const RequestPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
@@ -29,7 +35,15 @@ const RequestPage = () => {
     const [loading, setLoading] = useState(true);
     const [events, setEvents] = useState<any[]>([]);
     const [locationFilter, setLocationFilter] = useState("");
-    
+
+    // For nearest charity center
+    const [userLocation, setUserLocation] = useState<{latitude: number; longitude: number} | null>(null);
+    const [userLocationName, setUserLocationName] = useState<string | null>(null);
+    const [nearestCharities, setNearestCharities] = useState<any>([]);
+    const [isLocating, setIsLocating] = useState(false);
+    const [isLocatingLoading, setIsLocatingLoading] = useState(false);
+
+
     useEffect(() => {
         // window.scrollTo(0, 0);
         const fetchUser = async () => {
@@ -42,13 +56,13 @@ const RequestPage = () => {
             } else {
                 setUser(currentUser);
             }
-            console.log("Current User: ", currentUser?.id);
+            // console.log("Current User: ", currentUser?.id);
             const storedUserData = sessionStorage.getItem('user');
-            console.log("Stored User Data: ", storedUserData);
+            // console.log("Stored User Data: ", storedUserData);
             if (storedUserData && storedUserData !== "null" && storedUserData !== "undefined") {
                 const parsedUserData = JSON.parse(storedUserData);
                 setUserData(parsedUserData);
-                console.log("User Session Storage: ", parsedUserData);
+                // console.log("User Session Storage: ", parsedUserData);
             } else {
                 try {
                     
@@ -59,7 +73,7 @@ const RequestPage = () => {
                     }
                     setUserData(userFetchData || null);
                     sessionStorage.setItem('user', JSON.stringify(userData));
-                    console.log('User Data fetched from server:', userFetchData);
+                    // console.log('User Data fetched from server:', userFetchData);
                 } catch (error) {
                     console.error('Unexpected error fetching user data:', error);
                 }
@@ -74,7 +88,7 @@ const RequestPage = () => {
             if (storedUserData) {
                 const parsedUserData = JSON.parse(storedUserData);
                 setUserData(parsedUserData);
-                console.log("Session Storage: ", parsedUserData);
+                // console.log("Session Storage: ", parsedUserData);
             } else {
                 console.log('No user data found in session storage');
             }
@@ -88,7 +102,7 @@ const RequestPage = () => {
             if (storedCharityData) {
                 const parsedCharityData = JSON.parse(storedCharityData);
                 setCharityData(parsedCharityData);
-                console.log('Charity Data loaded from session storage:', parsedCharityData);
+                // console.log('Charity Data loaded from session storage:', parsedCharityData);
             } else {
                 // Fetch charity data if session storage is empty
                 try {
@@ -110,6 +124,62 @@ const RequestPage = () => {
         fetchCharity();
     }, []);
 
+
+    const handleGetCurrentLocation = async () => {
+        setIsLocatingLoading(true);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setUserLocation({ latitude, longitude });
+                    console.log(`Lim's Current Location: Latitude: ${latitude}, Longitude: ${longitude}`);
+
+                    // Get the nearest charities based on the user's location
+                    const updatedCharityCenters = await Promise.all(
+                        charityData.map(async (charity) => {
+                            const { organization_address } = charity; // Adjust this field based on your charityData structure
+                            const location = await getLatLong(organization_address);
+
+                            if (location) {
+                                const { latitude: orgLat, longitude: orgLon } = location;
+                                return {
+                                    ...charity,
+                                    latitude: orgLat,
+                                    longitude: orgLon,
+                                };
+                            } else {
+                                console.warn(`Could not retrieve location for address: ${organization_address}`);
+                                return {
+                                    ...charity,
+                                    latitude: null,
+                                    longitude: null,
+                                };
+                            }
+                        })
+                    );
+
+                    // Find the nearest charities
+                    // the last parameter decides how many nearest charities we want to display
+                    const nearestCharityData = getTopKNearestCharities(updatedCharityCenters, { latitude, longitude }, 3);
+                    setNearestCharities(nearestCharityData); // Update the state with nearest charities
+                    setIsLocating(true); // To switch from filteredCharityData to nearestCharities
+                    setIsLocatingLoading(false); // To stop the loading animation
+                },
+                (error) => {
+                    console.error('Error getting location:', error);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+        }
+        console.log("Nearest Charities: ", nearestCharities);
+    };
+
     // Handle the location filter change
     const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("Location Filter: ", event.target.value);
@@ -127,12 +197,22 @@ const RequestPage = () => {
         return districtMatch || nameMatch; // Return true if either condition matches
     });
 
-    console.log("Filtered Charity Data: ", filteredCharityData);
+    // console.log("Filtered Charity Data: ", filteredCharityData);
     
     const handleRefresh = () => {
         // clear the input
         setLocationFilter("");
     }
+
+    // useEffect(() => {   
+    //     // Get the user's location
+    //     const getUserLocation = async () => {
+    //         const userLocation = await getLatLong("Komtar Tower, 10450 George Town, Penang, Malaysia.");
+    //         console.log("User Location: ", userLocation);
+    //     };
+
+    //     getUserLocation();
+    // }, []);
 
     const handleLogout = async () => {
         await signOut();
@@ -183,12 +263,20 @@ const RequestPage = () => {
                                 onChange={handleLocationChange} // Handle the input change
                             />
                         </div>
-                        <Button className="mr-0 sm:mr-10 bg-[#0077B6] hover:bg-[#038BD4] text-white"onClick={handleRefresh}>
-                            <RotateCw/>
-                            <span className="hidden sm:block font-roboto">Refresh</span>
-                        </Button>
+                        <div className="mr-2 sm:mr-10 flex gap-x-2">
+                            <Button className="bg-[#0077B6] hover:bg-[#038BD4] text-white" onClick={handleRefresh}>
+                                <RotateCw/>
+                                <span className="hidden sm:block font-roboto">Refresh</span>
+                            </Button>
+                            <Button className="text-white" onClick={handleGetCurrentLocation}>
+                                <div className="flex items-center">{isLocatingLoading? <ClipLoader size={16} color={"white"} />: <LocateFixed/>}</div>
+                                <span className="hidden sm:block font-roboto">{isLocatingLoading? 'Locating' : 'Locate Me'}</span>
+                            </Button>
+                        </div>
                     </div>
                 </div>
+
+                {/* <p className="font-roboto mb-7">Your current location: {userLocationName}</p> */}
 
                 {/* Subtitle */}
                 <div className="mb-2 flex">
@@ -217,44 +305,80 @@ const RequestPage = () => {
                         // Place near you
                         <div className="flex gap-4 mt-2 w-full ">
                             {/* {charityData.map((charityCenter, index) => ( */} {/* Display all the charity centers*/}
-                            {filteredCharityData.length === 0 ? ( // Check if there are no charity centers
-                                <div className="text-center w-full">
-                                    <p className="mt-8 text-lg text-gray-700 font-roboto">No available center</p>
-                                </div>
-                            ) : (filteredCharityData.map((charityCenter, index) => (
-                                <Link 
-                                    key={index}
-                                    href={{pathname: "/centers", query: {id: charityCenter?.id}}}    // Link to the charity center page
-                                    passHref //passHref ensures that the link is passed as well to the child component, such that when click the Card, it will also trigger the redirection
-                                >
-                                    <Card
-                                        className="mr-10 min-w-[300px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
+                            {isLocating ? ( // Check if the "Locate Me" button has been clicked
+                                nearestCharities.length === 0 ? ( // Check if there are no nearest charities
+                                    <div className="text-center w-full">
+                                        <p className="mt-8 text-lg text-gray-700 font-roboto">No nearby charities found.</p>
+                                    </div>
+                                ) : (nearestCharities.map((charityCenter: any, index: number) => (
+                                    <Link 
+                                        key={index}
+                                        href={{ pathname: "/centers", query: { id: charityCenter?.id } }} // Link to the charity center page
+                                        passHref
                                     >
-                                        <CardContent className="flex flex-col">
-                                            <div className="relative">
-                                                <Image
-                                                    src={charityCenter.profile_picture}
-                                                    alt="charity image"
-                                                    width={600}
-                                                    height={400}
-                                                    draggable
-                                                    priority
-                                                    className="h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
-                                                />
-                                                <div className="absolute bottom-0 left-0 flex flex-col items-center justify-center py-3 w-full bg-[#002154] opacity-85 text-white">
-                                                    <p className="my-1 font-roboto font-semibold text-center">
-                                                        {charityCenter.organization_name}
-                                                    </p>
-                                                    <p className="my-1 font-roboto font-semibold text-sm">
-                                                        <span className="font-roboto text-[#0084ff]">0.5KM</span>
-                                                         &middot; {charityCenter.organization_district}
-                                                    </p>
+                                        <Card className="mr-10 min-w-[300px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden">
+                                            <CardContent className="flex flex-col">
+                                                <div className="relative">
+                                                    <Image
+                                                        src={charityCenter.profile_picture}
+                                                        alt="charity image"
+                                                        width={600}
+                                                        height={400}
+                                                        draggable
+                                                        priority
+                                                        className="h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
+                                                    />
+                                                    <div className="absolute bottom-0 left-0 flex flex-col items-center justify-center py-3 w-full bg-[#002154] opacity-85 text-white">
+                                                        <p className="my-1 font-roboto font-semibold text-center">
+                                                            {charityCenter.organization_name}
+                                                        </p>
+                                                        <p className="my-1 font-roboto font-semibold text-sm">
+                                                            <span className="font-roboto text-[#0084ff]">{charityCenter.distance.toFixed(1)} KM </span>
+                                                            &middot; {charityCenter.organization_district}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                </Link>
-                            )))}
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                )))
+                            ) : ( // If "Locate Me" has not been clicked, show filteredCharityData
+                                filteredCharityData.length === 0 ? ( // Check if there are no filtered charities
+                                    <div className="text-center w-full">
+                                        <p className="mt-8 text-lg text-gray-700 font-roboto">No available center</p>
+                                    </div>
+                                ) : (filteredCharityData.map((charityCenter, index) => (
+                                    <Link 
+                                        key={index}
+                                        href={{ pathname: "/centers", query: { id: charityCenter?.id } }} // Link to the charity center page
+                                        passHref
+                                    >
+                                        <Card className="mr-10 min-w-[300px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden">
+                                            <CardContent className="flex flex-col">
+                                                <div className="relative">
+                                                    <Image
+                                                        src={charityCenter.profile_picture}
+                                                        alt="charity image"
+                                                        width={600}
+                                                        height={400}
+                                                        draggable
+                                                        priority
+                                                        className="h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
+                                                    />
+                                                    <div className="absolute bottom-0 left-0 flex flex-col items-center justify-center py-3 w-full bg-[#002154] opacity-85 text-white">
+                                                        <p className="my-1 font-roboto font-semibold text-center">
+                                                            {charityCenter.organization_name}
+                                                        </p>
+                                                        <p className="my-1 font-roboto font-semibold text-sm">
+                                                            <span className="font-roboto text-[#0084ff]">&lt; 6.0KM</span> &middot; {charityCenter.organization_district}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                )))
+                            )}
                         </div>
                     )}
                 </div>
@@ -283,68 +407,45 @@ const RequestPage = () => {
                     ) : (
                         // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
                         // Explore other places
-                        <div className="flex gap-4 mt-2 w-full ">
-                            {/* <Card
-                                // className="mr-10 min-w-[300px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
-                                className="mr-10 min-w-[500px] max-h-[250px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
-                                onClick={() => {}}
-                            >
-                                <CardContent className="flex flex-col h-full">
-                                    <div className="relative h-full">
-                                        <Image
-                                            src={Image5.src}
-                                            alt="charity image"
-                                            width={600}
-                                            height={400}
-                                            draggable
-                                            priority
-                                            onClick={(e) => e.preventDefault()}
-                                            className="h-full  rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
-                                        />
-                                        <div className="h-[43%] absolute bottom-0 left-0 flex items-center py-3 gap-x-6 w-full bg-[#A9D2FC] opacity-95 text-black">
-                                            <div className="flex items-center py-3 h-full">
-                                                <div className="h-4/5 w-[4px] ml-6 mr-3 rounded-md bg-black"></div>
-                                                <p className="my-1 font-roboto text-left font-semibold leading-tight">P.B.A Senior Citizens Home</p>
-                                            </div>
-                                            <p className="my-1 font-roboto text-left text-sm font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit ...</p>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card> */}
-
-                            {/* {charityData.map((charityCenter, index) => ( */} {/* Display all the charity centers */}
+                        <div className="flex gap-4 mt-2 w-full h-full">
                             {filteredCharityData.length === 0 ? ( // Check if there are no charity centers
                                 <div className="text-center w-full">
                                     <p className="mt-8 text-lg text-gray-700 font-roboto">No available center</p>
                                 </div>
                             ) : (filteredCharityData.map((charityCenter, index) => (
-                            
-                            <Card
-                                key={index}
-                                className="mr-10 min-w-[500px] max-h-[250px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
-                                onClick={() => {}}
-                            >
-                                <CardContent className="flex flex-col h-full">
-                                    <div className="relative h-full">
-                                        <Image
-                                            src={charityCenter.profile_picture}
-                                            alt={`${charityCenter.organization_name} image`}
-                                            width={600}
-                                            height={400}
-                                            draggable
-                                            priority
-                                            className="h-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
-                                        />
-                                        <div className="h-[43%] absolute bottom-0 left-0 flex items-center py-3 gap-x-6 w-full bg-[#A9D2FC] opacity-95 text-black">
-                                            <div className="flex items-center py-3 h-full min-w-[150px]">
-                                                <div className="h-4/5 w-[4px] ml-6 mr-3 rounded-md bg-black"></div>
-                                                <p className="my-1 font-roboto text-left font-semibold leading-tight">{charityCenter.organization_name}</p>
+                                <Link 
+                                    className="h-full "
+                                    key={index}
+                                    href={{pathname: "/centers", query: {id: charityCenter?.id}}}    // Link to the charity center page
+                                    passHref //passHref ensures that the link is passed as well to the child component, such that when click the Card, it will also trigger the redirection
+                                >
+                                    <Card
+                                      key={index}
+                                      className="mr-10 min-w-[500px] h-full max-h-[250px] cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
+                                      onClick={() => {}}
+                                    >
+                                        <CardContent className="flex flex-col">
+                                            <div className="relative min-h-[250px]">
+                                                <Image
+                                                    src={charityCenter.profile_picture}
+                                                    alt="charity image"
+                                                    width={600}
+                                                    height={400}
+                                                    draggable
+                                                    priority
+                                                    className="h-64 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
+                                                />
+                                                <div className="h-full max-h-[50%] absolute bottom-0 left-0 flex items-center py-3 gap-x-6 w-full bg-[#A9D2FC] opacity-95 text-black">
+                                                      <div className="flex items-center py-3 h-full min-w-[150px]">
+                                                          <div className="h-4/5 w-[4px] ml-6 mr-3 rounded-md bg-black"></div>
+                                                          <p className="my-1 font-roboto text-left font-semibold leading-tight">{charityCenter.organization_name}</p>
+                                                      </div>
+                                                      <p className="my-1 mr-3 font-roboto text-left text-sm font-light overflow-hidden text-ellipsis line-clamp-2">{charityCenter.organization_description}</p>
+                                                  </div>
                                             </div>
-                                            <p className="my-1 mr-3 font-roboto text-left text-sm font-light overflow-hidden text-ellipsis line-clamp-2">{charityCenter.organization_description}</p>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
                         )))}
                         </div>
                     )}

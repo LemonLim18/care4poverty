@@ -13,6 +13,7 @@ import { Archive, Home, LayoutDashboard, Settings, User, LogOut, BarChart, Packa
 import logoPng from "@/public/images/logo.png";
 import { UserType } from  "@/datatypes/types";
 import { useRouter } from 'next/navigation';
+import { ClipLoader } from 'react-spinners';
 
 // Define the prop types
 interface SideBarProps {
@@ -42,7 +43,7 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                     <Avatar className="h-24 w-24">
                         {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
                         <AvatarImage src={userData?.profile_picture} />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback><ClipLoader size={25}></ClipLoader></AvatarFallback>
                     </Avatar>
                     <h2 className="font-giorgio text-2xl text-white font-bold tracking-wide">
                         {userData?.role === 'charity-admin' ? userData?.organization_name : userData?.full_name}</h2>
@@ -64,7 +65,21 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                         </button>
                         )}
 
-                         {/* Your Donation */}
+                        {/* Dashboard */}
+                        {userData?.role === 'charity-admin' && (
+                            <button
+                                onClick={() => navigateToPage('/dashboard')}
+                                className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <LayoutDashboard size={18} />
+                                    <span className="font-roboto text-sm">Dashboard</span>
+                                </div>
+                                <ChevronRight size={18} />
+                            </button>
+                        )}
+
+                         {/* Donor Dashboard */}
                         {userData?.role === 'donor' && (
                             <button 
                                 onClick={() => navigateToPage('/donorDashboard')}
@@ -78,7 +93,7 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                             </button>
                         )}
     
-                         {/* Your Request */}
+                         {/* Beneficiary Dashboard */}
                         {userData?.role === 'beneficiary' && (
                             <button 
                                 onClick={() => navigateToPage('/beneficiaryDashboard')}
@@ -95,20 +110,6 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                         {/* Section Breaker */}
                         <h4 className="font-roboto text-[#D2D2D2] text-xsm mt-5 mx-2">Home</h4>
                         
-                        {/* Dashboard */}
-                        {userData?.role === 'charity-admin' && (
-                            <button
-                                onClick={() => navigateToPage('/dashboard')}
-                                className="flex items-center justify-between w-full p-2 text-white hover:bg-[#038BD4] rounded-lg"
-                            >
-                                <div className="flex items-center gap-2">
-                                    <LayoutDashboard size={18} />
-                                    <span className="font-roboto text-sm">Dashboard</span>
-                                </div>
-                                <ChevronRight size={18} />
-                            </button>
-                        )}
-
                         {/* ADMIN: REQUEST */}
                         {userData?.role === 'charity-admin' && (
                             <button 

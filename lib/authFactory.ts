@@ -232,6 +232,7 @@ export const signIn = async (email: string, password: string): Promise<AuthRespo
 // Sign Out Function
 export const signOut = async (): Promise<void> => {
     await supabase.auth.signOut();
+    sessionStorage.clear(); // Clear session storage
 };
 
 // Get Current User Function
