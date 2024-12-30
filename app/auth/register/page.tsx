@@ -497,7 +497,7 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4 font-roboto">
+        <div className="flex flex-col items-center justify-center min-h-screen p-4 font-roboto bg-cover bg-center" style={{ backgroundImage: 'url(/images/background.png)' }}>
             <div className="absolute top-0 left-0 m-5"><Link href="/">
             <Image
                 src="/images/logo.png"
