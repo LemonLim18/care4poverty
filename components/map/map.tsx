@@ -5,9 +5,9 @@ import 'leaflet/dist/leaflet.css';
 // Define a custom icon
 const customIcon = L.icon({
     iconUrl: '/images/location.png',
-    iconSize: [50, 50],
-    iconAnchor: [25, 50],
-    popupAnchor: [-3, -76],
+    iconSize: [30, 30],
+    iconAnchor: [25, 20],
+    popupAnchor: [-10, -20],
 });
 
 interface MapProps {
@@ -21,28 +21,28 @@ export default function Map({ locationText }: MapProps) {
     useEffect(() => {
         // Function to initialize the map
         const initializeMap = async () => {
-            try {
-                // Check if the map is already initialized
-                if (!mapRef.current) {
-                    // Create the map instance
-                    mapRef.current = L.map('map').setView([0, 0], 13); // Default location
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    }).addTo(mapRef.current);
-                }
+            // Check if the map is already initialized
+            if (!mapRef.current) {
+                // Create the map instance
+                mapRef.current = L.map('map').setView([0, 0], 13); // Default location
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                }).addTo(mapRef.current);
+            }
 
-                // Fetch the geocode data
-                const geocodeResponse = await fetch(
-                    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationText)}`
-                );
-                const geocodeData = await geocodeResponse.json();
+            // Fetch the geocode data
+            const geocodeResponse = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationText)}`
+            );
+            const geocodeData = await geocodeResponse.json();
 
-                if (geocodeData.length > 0) {
-                    const { lat, lon } = geocodeData[0];
-                    const latitude = parseFloat(lat);
-                    const longitude = parseFloat(lon);
+            if (geocodeData.length > 0) {
+                const { lat, lon } = geocodeData[0];
+                const latitude = parseFloat(lat);
+                const longitude = parseFloat(lon);
 
-                    // Update the map view and marker
+                // Ensure mapRef.current is not null before updating the view
+                if (mapRef.current) {
                     mapRef.current.setView([latitude, longitude], 13);
 
                     if (marker) {
@@ -56,11 +56,9 @@ export default function Map({ locationText }: MapProps) {
                             .openPopup();
                         setMarker(newMarker);
                     }
-                } else {
-                    alert('Location not found');
                 }
-            } catch (error) {
-                console.error('Error fetching or geocoding location:', error);
+            } else {
+                console.log('Location not found');
             }
         };
 
