@@ -357,10 +357,3 @@ its corresponding value: name of the local file[])  */
 .scrollbar-hidden::-webkit-scrollbar {
     display: none; /* For Chrome, Safari, and Opera */
 }
-
-.bg-custom {
-    background-image: url('/images/your-image.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
