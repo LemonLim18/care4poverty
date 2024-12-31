@@ -23,9 +23,6 @@ import { getLatLong, getTopKNearestCharities } from '@/lib/knn'; // Adjust the i
 import Image5 from '@/public/images/charity_center/charity_center5.jpeg';
 import { Input } from '@/components/ui/input';
 import { ClipLoader } from 'react-spinners';
-import { useGeolocated } from 'react-geolocated';
-
-// import { getLatLong } from '@/lib/distance';
 
 const RequestPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
@@ -233,7 +230,7 @@ const RequestPage = () => {
 
             {/* Main Content */}
             {/* <main className="h-full w-full overflow-x-hidden flex flex-col mt-8 mx-5 md:mx-10"> */}
-            <main className="h-full w-full overflow-x-hidden flex flex-col mt-8 mb-8 ml-5 md:ml-16">
+            <main className="h-full w-full overflow-x-hidden flex flex-col mb-8 mt-8 md:ml-10 ml-5 md:mr-10 mr-5">
                 <div className="flex items-center gap-2">
                     <Breadcrumb>
                         <BreadcrumbList>
