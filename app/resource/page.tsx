@@ -7,11 +7,6 @@ import { useRouter } from 'next/navigation';
 import { UserType } from '@/datatypes/types';
 import { getUser, signOut } from '@/lib/authFactory';
 import { toast } from 'react-toastify';
-import { Package, Truck, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
-import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
 import { getAllRecords, getRecordById, getRecordsByField } from "@/lib/supabaseAPI";
 // later need to get the all resources from a specified organization
 import ResourceList from "@/components/resource/resourceList";
@@ -124,10 +119,10 @@ const ResourcePage = () => {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem className="ml-6">
-                                <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                                <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
-                            <BreadcrumbItem>Resources</BreadcrumbItem>
+                            <BreadcrumbItem className="font-bold text-black">Resources</BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>

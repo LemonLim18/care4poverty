@@ -8,7 +8,7 @@ with open('itemList.json', 'r') as file:
     resource_mapping = json.load(file)
 
 # Enter the resource code to generate the barcode
-resource_code = '20013'  # Example: 10002 represents Maggie in Foods
+resource_code = '20014'  # Example: 10002 represents Maggie in Foods
 
 # Validate the resource code
 if resource_code not in resource_mapping:
@@ -17,7 +17,7 @@ if resource_code not in resource_mapping:
 # Generate and save the barcode
 # Use resource name and replace spaces with underscores for the filename
 # Create the ../image folder if it doesn't exist
-output_folder = '../image'
+output_folder = 'barcode_image'
 os.makedirs(output_folder, exist_ok=True)
 
 # Generate the filename with the path

@@ -82,8 +82,23 @@ const LoginPage = () => {
         }
 
         if (userData) {
+          const userRole = userData.role;
           sessionStorage.setItem('user', JSON.stringify(userData)); // Store user data
           console.log('User data stored in session storage:', userData);
+          
+          setTimeout(() => {
+            console.log("User Role: ", userRole);
+            if(userRole === 'charity-admin') {
+              console.log("Charity Admin");
+              router.push('/dashboard'); 
+            } else if (userRole === 'donor') {
+              console.log("Donor");
+              router.push('/donorDashboard'); 
+            } else if (userRole === 'beneficiary') {
+              console.log("Beneficiary");
+              router.push('/beneficiaryDashboard'); 
+            }
+          }, 1800);
         } else {
           console.error("User data is undefined.");
         }
@@ -91,9 +106,7 @@ const LoginPage = () => {
         console.error("User ID is undefined.");
       }
 
-      setTimeout(() => {
-        router.push('/dashboard'); // Redirect to the dashboard after successful registration
-      }, 1800);
+      
     }
   };
 
@@ -127,81 +140,85 @@ const LoginPage = () => {
                 Back
               </button>
             </p>  */}
-            <p className="flex relative right-[-5px] justify-end bg-white w-full mt-6 mb-6 "> 
-              <button className="flex text-black hover:underline font-roboto text-[17px] gap-2" onClick={() => router.push('/auth/signup') }>
-              <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <title>i</title>
-                <g id="Complete">
-                  <g id="user-add">
-                    <g>
-                      <path d="M17,21V19a4,4,0,0,0-4-4H5a4,4,0,0,0-4,4v2" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                      <circle cx="9" cy="7" r="4" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                      <line x1="17" y1="11" x2="23" y2="11" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                      <line x1="20" y1="8" x2="20" y2="14" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+            <p className="flex relative justify-end bg-white w-full mt-6 mb-6">
+              <button className="flex gap-4 text-[#0C8CE9] hover:font-bold cursor-pointer transition-all duration-150 ease-in-out" onClick={() => router.push('/auth/signup') }>
+                <svg 
+                  width="24px" 
+                  height="24px" 
+                  viewBox="0 0 24 24" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#5f6368"
+                >
+                  <title>I am a sign up icon :)</title>
+                  <g id="Complete">
+                    <g id="user-add">
+                      <g>
+                        <path d="M17,21V19a4,4,0,0,0-4-4H5a4,4,0,0,0-4,4v2" fill="none" stroke="#5f6368" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <circle cx="9" cy="7" r="4" fill="none" stroke="#5f6368" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <line x1="17" y1="11" x2="23" y2="11" fill="none" stroke="#5f6368" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        <line x1="20" y1="8" x2="20" y2="14" fill="none" stroke="#5f6368" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                      </g>
                     </g>
                   </g>
-                </g>
-              </svg>
-                Signup
+                </svg>
+                <span>Sign Up</span>
               </button>
             </p> 
             {/* </div> */}
-            <div className='flex justify-center mb-4 w-full'>
-              <a href="/">
-                <Image 
-                  src={logoPng}
-                  alt="Logo Png"
-                  className="w-[15rem]"
-                />
-              </a>
+            <div onClick = {() => router.push('/')} className="flex justify-center mb-4 w-full cursor-pointer">
+              <Image 
+                src={logoPng}
+                alt="Logo Png"
+                className="w-[15rem]"
+              />
             </div>
             {/* <CardTitle className="text-center">Login</CardTitle> */}
-            <form onSubmit={handleSubmit} className="space-y-4 w-full">
+            <form onSubmit={handleSubmit} className="space-y-5 w-full">
               <Input
                 type="email"
-                placeholder="Username/Email"
+                placeholder="Username / Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-gray-400 rounded-sm"
+                className="h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] rounded-lg transition-all duration-150 ease-in-out"
               />
-              <div className="relative">
+              <div className="relative group">
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="border-gray-400 rounded-sm pr-10"
+                  className={`h-11 px-4 border-2 border-custom-border-blue hover:border-[#0C8CE9] text-[#7D7D7D] focus:text-black focus:border-[#0C8CE9] bg-[#F5F9FE] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] group-hover:border-[#0C8CE9] rounded-lg transition-all duration-150 ease-in-out ${showPassword ? 'text-black' : 'text-[#7D7D7D]'} transition-colors duration-150`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className={`absolute right-2 top-1/2 -translate-y-1/2 ${showPassword ? 'text-[#0C8CE9]' : 'text-[#7D7D7D]'} hover:text-[#0C8CE9]`}
                 >
                   {showPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   )}
                 </button>
               </div>
-              <Button type="submit" disabled={loading} className='bg-[#0077B6] hover:bg-[#00689F] font-inter px-6'>
-                {loading ? 'Loading...' : 'Sign In'}
+              <Button type="submit" disabled={loading} className='h-11 bg-[#0077B6] hover:bg-[#00689F] font-roboto font-regular px-6'>
+                {loading ? 'Loading...' : 'Login'}
               </Button>
             </form>
             {/* group div for additional actions */}
             <div className="bg-white text-[0.9rem] flex flex-col items-start mt-6 mb-4 w-full space-y-1">
-                <button className="text-[#535353] hover:underline hover:text-gray-800 font-roboto" onClick={() => setDialogOpen(true) }>
-                  Forgot password?
+                <button className="text-[#535353] hover:text-[#0C8CE9] hover:font-bold font-roboto" onClick={() => setDialogOpen(true) }>
+                  Forgot password ?
                 </button>
-                <button className="text-[#535353] hover:underline hover:text-gray-800 font-roboto" onClick={() => router.push('/auth/signup')}>
-                  Register new account?
+                <button className="text-[#535353] hover:text-[#0C8CE9] hover:font-bold font-roboto" onClick={() => router.push('/auth/signup')}>
+                  Register new account ?
                 </button>
             </div>
 
@@ -215,7 +232,7 @@ const LoginPage = () => {
               <Image 
                   src={googleIcon}
                   alt="Google Logo Png"
-                  className="flex-shrink-0 relative left-[-35px] md:left-[-13%] [@media(min-width:980px)]:left-[-20%] [@media(min-width:1000px)]:left-[-35px]  h-[40px] w-[40px]"
+                  className="flex-shrink-0 relative left-[-35px] md:left-[-13%] [@media(min-width:980px)]:left-[-20%] [@media(min-width:1000px)]:left-[-35px] h-[30px] w-[30px] bg-white rounded-sm ml-1"
               />
               {/* [@media(min-height:730px)]:my-6  */}
               <span className="flex-1">
@@ -224,9 +241,9 @@ const LoginPage = () => {
             </Button>
 
             <p className="mb-32 text-[0.9rem] text-center">
-              By clicking continue, you agree to the <span className="underline">
+              By clicking continue, you agree to the <span className="hover:text-[#0C8CE9] underline">
                 <a href="#">Terms and Service</a>
-              </span> and <span className="underline">
+              </span> and <span className="hover:text-[#0C8CE9] underline">
                 <a href="#">Privacy and Policy</a>
               </span>
             </p>

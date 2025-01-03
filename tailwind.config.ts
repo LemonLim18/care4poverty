@@ -9,7 +9,14 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		utilities: {
+			'.print-color-adjust-exact': {
+			  colorAdjust: 'exact', // Deprecated
+			  printColorAdjust: 'exact', // Standard
+			},
+		},
   		colors: {
+			'custom-border-blue': 'rgba(12, 140, 233, 0.3)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -108,6 +115,10 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+	require("tailwindcss-animate"),
+	require("tailwind-scrollbar"),
+	require("tailwind-scrollbar-hide"),
+],
 };
 export default config;
