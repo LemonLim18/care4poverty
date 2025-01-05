@@ -13,37 +13,37 @@ import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTool
 import { Card, CardTitle, CardDescription, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import Image from "next/image";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/components/ui/pagination';
+import { getItems } from '@/lib/supabaseAPI';
+import { Skeleton } from '@/components/ui/skeleton';
+import Head from 'next/head';
 
 // Define a User type based on your application structure
 type User = {
     email?: string;
 };  
 
-const chartDataOverview = [
-    { month: "January", fund: 186, items: 80 },
-    { month: "February", fund: 305, items: 200 },
-    { month: "March", fund: 237, items: 120 },
-    { month: "April", fund: 73, items: 190 },
-    { month: "May", fund: 209, items: 130 },
-    { month: "June", fund: 214, items: 140 },
-  ]
-   
-const chartConfigOverview = {
-    fund: {
-      label: "Fund",
-      color: "#2563eb",
-    },
-    items: {
-      label: "Items",
-      color: "#60a5fa",
-    },
-} satisfies ChartConfig;
+interface RequestItem {
+    request_amount: number;
+    resource_category: string;
+}
 
 const YourRequest = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
-    
+    const [loading, setLoading] = useState(true);
+    const [items, setItems] = useState<any[]>([]);
+    const [wearableItemsCount, setWearableItemsCount] = useState(0);
+    const [foodCount, setFoodCount] = useState(0);
+    const [drinksCount, setDrinksCount] = useState(0);
+    const [healthSuppliesCount, setHealthSuppliesCount] = useState(0);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
+
     useEffect(() => {
         // Check if window is defined (client-side)
         if (typeof window !== 'undefined') {
@@ -81,6 +81,32 @@ const YourRequest = () => {
             router.push('/auth/login'); // Redirect to login page after logout
         }, 1000);
     };
+
+    const handleCardClick = (organizationId: string) => {
+        if (userData?.id) {
+            router.push(`/beneficiaryRequest?organizationId=${organizationId}`);
+        }
+    };
+
+    const chartDataOverview = [
+        { month: "January", fund: 186, items: 80 },
+        { month: "February", fund: 305, items: 200 },
+        { month: "March", fund: 237, items: 120 },
+        { month: "April", fund: 73, items: 190 },
+        { month: "May", fund: 209, items: 130 },
+        { month: "June", fund: 214, items: 140 },
+      ]
+       
+    const chartConfigOverview = {
+        fund: {
+          label: "Fund",
+          color: "#2563eb",
+        },
+        items: {
+          label: "Items",
+          color: "#60a5fa",
+        },
+    } satisfies ChartConfig;
 
     const chartConfig = {
         views: {
@@ -235,8 +261,80 @@ const YourRequest = () => {
         },
     } satisfies ChartConfig;
 
+    useEffect(() => {
+        const fetchItems = async () => {
+            setLoading(true);
+            try {
+                const { data, error } = await getItems('request', userData?.id, null, 'accepted');
+                if (error) {
+                    throw new Error(error.message);
+                }
+                if (data) {
+                    setItems(data);
+                    console.log("Fetched items: ", data);
+                } else {
+                    console.log("No items found.");
+                }
+            } catch (error) {
+                console.error('Error fetching items:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchItems();
+    }, []);
+
+    useEffect(() => {
+        // Calculate category counts
+        const categoryCounts = items.reduce((acc, item) => {
+            item.request_items.forEach((requestItem: RequestItem) => {
+                if (requestItem.request_amount > 0) {
+                    const category = requestItem.resource_category;
+                    if (!acc[category]) {
+                        acc[category] = 0;
+                    }
+                    acc[category] += requestItem.request_amount;
+                }
+            });
+            return acc;
+        }, {});
+    
+        // Function to animate count
+        const animateCount = (target: number, setState: React.Dispatch<React.SetStateAction<number>>) => {
+            let currentCount = 0;
+            const increment = Math.ceil(target / 50);
+            const interval = setInterval(() => {
+                currentCount += increment;
+                if (currentCount >= target) {
+                    currentCount = target;
+                    clearInterval(interval);
+                }
+                setState(currentCount);
+            }, 10);
+        };
+
+        animateCount(categoryCounts['Wearable Items'] || 0, setWearableItemsCount);
+        animateCount(categoryCounts['Foods'] || 0, setFoodCount);
+        animateCount(categoryCounts['Drinks'] || 0, setDrinksCount);
+        animateCount(categoryCounts['Health Supplies'] || 0, setHealthSuppliesCount);
+    
+    }, [items]);
+
+    const truncateText = (text: string, wordLimit: number) => {
+        const words = text.split(' ');
+        if (words.length > wordLimit) {
+            return words.slice(0, wordLimit).join(' ') + ' ...';
+        }
+        return text;
+    };
+
     return (
         <div className="h-screen flex">
+            <Head>
+                <link rel="preload" href="/images/localCharity.jpg" as="image" />
+            </Head>
+
             <SideBarComponent 
                 userData={userData || undefined}
                 onLogout={handleLogout}
@@ -262,7 +360,7 @@ const YourRequest = () => {
                 </div>
 
                 {/* first colume */}
-                <div className="mt-1 mb-2 mr-10 md:mr-0 md:flex">
+                <div className="mt-1 mb-2 mr-10 md:mr-10 md:flex">
                     <div className='md:w-2/3 md:mr-4 mb-5 flex flex-col'>
                         <Card className='p-5 flex-1'>
                             <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Recently Requested Items</h2>
@@ -276,7 +374,7 @@ const YourRequest = () => {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="flex flex-col justify-center items-center">
-                                            <p className='font-giorgio text-5xl font-bold'>20</p>
+                                            <p className='font-giorgio text-5xl font-bold'>{wearableItemsCount}</p>
                                             <p className='font-roboto text-md mt-1 mb-5'>Wearable Items</p>
                                         </div>
                                     </CardContent>
@@ -289,7 +387,7 @@ const YourRequest = () => {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="flex flex-col justify-center items-center">
-                                            <p className='font-giorgio text-5xl font-bold'>6</p>
+                                            <p className='font-giorgio text-5xl font-bold'>{foodCount}</p>
                                             <p className='font-roboto text-md mt-1 mb-5'>Food</p>
                                         </div>
                                     </CardContent>
@@ -302,7 +400,7 @@ const YourRequest = () => {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="flex flex-col justify-center items-center">
-                                            <p className='font-giorgio text-5xl font-bold'>10</p>
+                                            <p className='font-giorgio text-5xl font-bold'>{drinksCount}</p>
                                             <p className='font-roboto text-md mt-1 mb-5'>Drinks</p>
                                         </div>
                                     </CardContent>
@@ -315,7 +413,7 @@ const YourRequest = () => {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="flex flex-col justify-center items-center">
-                                            <p className='font-giorgio text-5xl font-bold'>14</p>
+                                            <p className='font-giorgio text-5xl font-bold'>{healthSuppliesCount}</p>
                                             <p className='font-roboto text-md mt-1 mb-5'>Health supplies</p>
                                         </div>
                                     </CardContent>
@@ -352,69 +450,99 @@ const YourRequest = () => {
                 {/* second colume */}
                 <div className="mt-1 mb-2 mr-10 md:mr-0 md:flex md:flex-col">
                     <div className="mt-7 flex">
-                        <h2 className="font-giorgio font-bold text-2xl sm:text-3xl md:text-4xl">Organizations Requested</h2>
+                        <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl">Organizations Requested</h2>
                     </div>
-                    <div className='mt-5 grid grid-cols-1 md:grid-cols-3 gap-4'>
-                        {[...Array(6)].map((_, index) => (
-                            <Card 
-                                key={index} 
-                                className='relative cursor-pointer overflow-hidden'
-                            >
-                                <Image 
-                                    src="/images/localCharity.jpg" 
-                                    alt="Donor Image" 
-                                    height={600}
-                                    width={500}
-                                    className="w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
-                                />
-                                
-                                <div 
-                                    className="absolute h-1/2 inset-0 z-10 bg-white bg-opacity-80"
-                                    style={{ top: '50%' }}
-                                >
-                                    <div className="m-4">
-                                        <h2 className="font-roboto text-lg font-bold sm:text-2xl md:text-2xl">Glasses to the Rescue</h2>
-                                        <p className="font-roboto text-sm font-bold sm:text-sm md:text-sm">
-                                            Location:
-                                        </p>
-                                        <p className="font-roboto text-sm sm:text-sm md:text-sm">
-                                            Penang Times Square, Jalan Dato Keramat, 10150 George Town, Penang, Malaysia.
-                                        </p>
+                    {loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {Array.from({ length: 6 }).map((_, index) => (
+                                <div key={index}>
+                                    <Skeleton className="mb-2 h-48 w-full rounded-t-lg" />
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-[250px] mb-2" />
+                                        <Skeleton className="h-4 w-[200px] mb-2" />
                                     </div>
                                 </div>
-                            </Card>
-                        ))}
-                    </div>
+                            ))} 
+                        </div>
+                    ) : (
+                        <div className='mt-5 grid grid-cols-1 md:grid-cols-3 gap-4'>
+                            {currentItems.map((item) => (
+                                <div key={item.request_id}>
+                                    <Card 
+                                        className="relative cursor-pointer overflow-hidden"
+                                        style={{ width: '100%', height: 250 }}
+                                        onClick={() => handleCardClick(item.organization_id)}
+                                    >
+                                        <Image 
+                                            src={item.users.profile_picture || '/images/localCharity.png'}
+                                            alt="Donor Image" 
+                                            height={600}
+                                            width={600}
+                                            draggable={false}
+                                            onClick={(e) => e.preventDefault()}
+                                            style={{ width: '100%', height: '100%' }}
+                                            className="w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
+                                        />
+
+                                        <div
+                                            className="absolute h-1/2 inset-0 z-10 bg-white bg-opacity-80"
+                                            style={{ top: '50%' }}
+                                        >
+                                            <div className="m-4">
+                                                <h2 className="font-roboto text-lg font-bold sm:text-xl md:text-xl">{item.users.organization_name}</h2>
+                                                <p className="font-roboto text-sm font-bold sm:text-sm md:text-sm">
+                                                    Location:
+                                                </p>
+                                                <p className="font-roboto text-sm sm:text-sm md:text-sm">
+                                                    {truncateText(item.users.organization_address, 10)}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="absolute top-0 left-0 z-10 bg-white bg-opacity-80 p-1">
+                                            <p className="font-roboto text-sm sm:text-sm md:text-sm">
+                                                {new Date(item.request_date).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                            </p>
+                                        </div>
+                                    </Card>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
                     <div className="mt-3">
                         <Pagination>
                             <PaginationContent>
                                 <PaginationItem>
-                                    <PaginationPrevious href="#" />
+                                    <PaginationPrevious 
+                                        href="#" 
+                                        onClick={() => setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)} 
+                                    />
                                 </PaginationItem>
+                                {Array.from({ length: Math.ceil(items.length / itemsPerPage) }).map((_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink 
+                                            href="#" 
+                                            isActive={currentPage === index + 1} 
+                                            onClick={() => setCurrentPage(index + 1)}
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ))}
                                 <PaginationItem>
-                                    <PaginationLink href="#" isActive>1</PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">
-                                        2
-                                    </PaginationLink>
-                                 </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">3</PaginationLink>
-                                </PaginationItem>
-                                    <PaginationItem>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationNext href="#" />
+                                    <PaginationNext 
+                                        href="#" 
+                                        onClick={() => setCurrentPage(currentPage < Math.ceil(items.length / itemsPerPage) ? currentPage + 1 : currentPage)} 
+                                    />
                                 </PaginationItem>
                             </PaginationContent>
                         </Pagination>
                     </div>
-                </div>
 
                 <div className="mt-7 flex">
-                    <h2 className="font-giorgio font-bold text-2xl sm:text-3xl md:text-4xl">Insights and Analysis</h2>
+                    <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl">Insights and Analysis</h2>
                 </div>
                 {/* third colume */}
                 <div className="mt-1 mb-2 mr-10 md:mr-0 md:flex">
@@ -551,7 +679,7 @@ const YourRequest = () => {
                 
                 <div className="mt-1 mb-2 mr-10 md:mr-0 md:flex md:flex-col">
                     <div className="mt-7 flex">
-                        <h2 className="font-giorgio font-bold text-2xl sm:text-3xl md:text-4xl">Recommended for you</h2>
+                        <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl">Recommended for you</h2>
                     </div>
                     <div className='mt-5 mb-5 grid grid-cols-1 md:grid-cols-3 gap-4'>
                         {[...Array(3)].map((_, index) => (

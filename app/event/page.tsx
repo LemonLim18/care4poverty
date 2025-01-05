@@ -273,7 +273,7 @@ const EventPage = () => {
                                                                         </Avatar>
                                                                     </div>
                                                                     <div className="flex flex-col text-left">
-                                                                        <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                                        <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
                                                                     </div>
                                                                 </div>
                                                             </CardContent>
@@ -434,7 +434,7 @@ const EventPage = () => {
                                                             </Avatar>
                                                         </div>
                                                         <div className="flex flex-col text-left">
-                                                            <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                            <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
                                                         </div>
                                                     </div>
                                                 </CardContent>
@@ -603,7 +603,7 @@ const EventPage = () => {
                                                                 </Avatar>
                                                             </div>
                                                             <div className="flex flex-col text-left">
-                                                                <h1 className="font-roboto text-sm">{eventsCategory.users.full_name}</h1>
+                                                                <h1 className="font-roboto text-sm">{eventsCategory.users.organization_name}</h1>
                                                             </div>
                                                         </div>
                                             </CardContent>
@@ -678,7 +678,7 @@ const EventPage = () => {
                                                                         </Avatar>
                                                                     </div>
                                                                     <div className="flex flex-col text-left">
-                                                                        <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                                        <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
                                                                     </div>
                                                                 </div>
                                                             </CardContent>
@@ -840,7 +840,7 @@ const EventPage = () => {
                                                              </Avatar>
                                                          </div>
                                                          <div className="flex flex-col text-left">
-                                                             <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                             <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
                                                          </div>
                                                      </div>
                                                 </CardContent>

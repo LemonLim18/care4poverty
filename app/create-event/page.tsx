@@ -189,7 +189,7 @@ const CreateEventPage = () => {
                     </div>
                     
                     <form onSubmit={handleSubmit} className="w-full max-w-6xl">
-                        <Card className="w-full p-5">
+                        <Card className="w-full p-5 mb-5">
                             <div className="flex flex-col md:flex-row">
                             <div className="flex flex-col md:w-1/2 w-full p-2">
                                     <div className="mb-5">
@@ -329,10 +329,16 @@ const CreateEventPage = () => {
                                     <Map locationText={mapLocation} />
                                 </div>
                             </div>
-                            <div className="flex justify-center">
+                            <div className="flex grid grid-cols-2">
+                                <Button 
+                                    onClick={() => window.history.back()}
+                                    className="mx-auto mt-2 h-11 w-32 bg-gray-500 hover:bg-gray-600 rounded-lg text-base "
+                                >
+                                    Back
+                                </Button>
                                 <Button 
                                     type="submit"
-                                    className="mr-6 mt-2 h-11 w-32 bg-[#0077B6] hover:bg-[#00689F] rounded-lg text-base"
+                                    className="mx-auto mt-2 h-11 w-32 bg-[#0077B6] hover:bg-[#00689F] rounded-lg text-base"
                                 >
                                     Create Event
                                 </Button>

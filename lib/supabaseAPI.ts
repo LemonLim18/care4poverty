@@ -120,3 +120,26 @@ export const getEvents = async (table: string, userId: string | null = null, typ
 
   return { data, error };
 };
+
+export const getItems = async (table: string, userId: string | null = null, orgID: string | null = null, status: string | null = null) => {
+  let query = supabase.from(table).select(`
+      *,
+      users:organization_id (*)
+  `);
+
+  if (userId !== null) {
+    query = query.eq('beneficiary_id', userId);
+  }
+
+  if (orgID !== null) {
+    query = query.eq('organization_id', orgID);
+  }
+
+  if (status !== null) {
+    query = query.eq('status', status);
+  }
+
+  const { data, error } = await query;
+
+  return { data, error };
+}
