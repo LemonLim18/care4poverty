@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import SideBarComponent from "@/components/dashboard/sideBar"; // Adjust the import path
+import SideBarComponent from "@/components/dashboard/sideBar";
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { UserType } from '@/datatypes/types';
@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from '@/components/ui/card';
-import Link from 'next/link';  // Add this import at the top of your file
+import Link from 'next/link';
 import { Select, SelectItem, SelectLabel, SelectGroup, SelectContent, SelectValue, SelectTrigger } from '@/components/ui/select';
 import { MapPin, BookImage, ChartPie, IdCard, Phone, Mail, PanelsTopLeft } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
@@ -351,7 +351,7 @@ const EventPage = () => {
                                                                 <div className="flex mb-1">
                                                                     <PanelsTopLeft className='ml-3 mr-3'/>
                                                                     <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
-                                                                        <h1 className="font-roboto text-sm">{event.users.website}</h1>
+                                                                        <h1 className="font-roboto text-sm">Website</h1>
                                                                     </Link>
                                                                 </div>
                                                             </div>
@@ -513,7 +513,7 @@ const EventPage = () => {
                                                     <div className="flex mb-1">
                                                         <PanelsTopLeft className='ml-3 mr-3'/>
                                                         <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
-                                                            <h1 className="font-roboto text-sm">{event.users.website}</h1>
+                                                            <h1 className="font-roboto text-sm">Website</h1>
                                                         </Link>
                                                     </div>
                                                 </div>
@@ -757,7 +757,7 @@ const EventPage = () => {
                                                                 <div className="flex mb-1">
                                                                     <PanelsTopLeft className='ml-3 mr-3'/>
                                                                     <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
-                                                                        <h1 className="font-roboto text-sm">{event.users.website}</h1>
+                                                                        <h1 className="font-roboto text-sm">Website</h1>
                                                                     </Link>
                                                                 </div>
                                                             </div>
@@ -921,7 +921,7 @@ const EventPage = () => {
                                                     <div className="flex mb-1">
                                                         <PanelsTopLeft className='ml-3 mr-3'/>
                                                         <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
-                                                            <h1 className="font-roboto text-sm">{event.users.website}</h1>
+                                                            <h1 className="font-roboto text-sm">Website</h1>
                                                         </Link>
                                                     </div>
                                                 </div>

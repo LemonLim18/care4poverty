@@ -38,11 +38,11 @@ const SideBarComponent: React.FC<SideBarProps> = ({
                     <Image
                       src={logoPng}
                       alt="Care4Poverty logo"
-                      className="w-36"
+                      className="w-36 "
                     />
                     <Avatar className="h-24 w-24">
                         {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-                        <AvatarImage src={userData?.profile_picture} />
+                        <AvatarImage src={userData?.profile_picture} className='object-cover'/>
                         <AvatarFallback><ClipLoader size={25}></ClipLoader></AvatarFallback>
                     </Avatar>
                     <h2 className="font-giorgio text-2xl text-white font-bold tracking-wide">

@@ -10,11 +10,12 @@ import { getUser, signOut } from '@/lib/authFactory';
 import { toast } from 'react-toastify';
 import { Breadcrumb, BreadcrumbSeparator, BreadcrumbLink, BreadcrumbItem, BreadcrumbList } from '@/components/ui/breadcrumb';
 import { getItems } from '@/lib/supabaseAPI';
-import { Calendar, Truck, Phone, Mail, UserPen } from 'lucide-react';
+import { Calendar, Truck, Phone, Mail, UserPen, BadgeInfo, Check, Clock, X } from 'lucide-react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Head from 'next/head';
+import { Button } from '@/components/ui/button';
 
 const Map = dynamic(() => import('@/components/map/map'), { ssr: false });
 
@@ -32,7 +33,6 @@ const beneficiaryRequest = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const organizationId = searchParams.get('organizationId');
-    console.log("Organization ID: ", organizationId);
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState<any[]>([]);
 
@@ -126,17 +126,27 @@ const beneficiaryRequest = () => {
                     </Breadcrumb>
                 </div>
 
-                <div className="mt-7 mb-7">
+                <div className="mt-7 mb-7 flex items-center justify-between">
                     <h1 className="font-giorgio font-bold text-4xl sm:text-5xl md:text-6xl">
                         {items[0]?.users?.organization_name || 'Organization Name Not Available'}
                     </h1>
+
+                    <div className="mt-3">
+                        <Button
+                            className='bg-[#0077B6] hover:bg-[#026194] px-6'
+                            onClick={() => router.back()}
+                        >
+                            Back
+                        </Button>
+                    </div>
+
                 </div>
 
                 <div className="flex flex-col">
                     <div className="flex-col md:flex-row flex">
                         <div 
                             className="w-full md:w-1/2 md:p-2 p-1"
-                            style={{ height: 265 }}
+                            style={{ height: 327 }}
                         >
                             <Image
                                 src={items[0]?.users?.profile_picture || '/images/background.png'}
@@ -190,6 +200,18 @@ const beneficiaryRequest = () => {
                                         {items[0]?.users?.full_name}
                                     </p>
                                 </div>
+                                <div className="p-2 flex items-center">
+                                    <BadgeInfo className='mr-2'/>
+                                    <p className="font-bold text-sm sm:text-sm md:text-lg mr-2"> Request status:</p>
+                                    <div className={`p-2 rounded-md items-center flex ${items[0]?.status === 'accepted' ? 'bg-green-500' : items[0]?.status === 'pending' ? 'bg-gray-500' : items[0]?.status === 'rejected' ? 'bg-red-500' : ''}`}>
+                                        {items[0]?.status === 'accepted' && <Check className='mr-2' />}
+                                        {items[0]?.status === 'pending' && <Clock className='mr-2' />}
+                                        {items[0]?.status === 'rejected' && <X className='mr-2' />}
+                                        <p className="text-sm item-center">
+                                            {items[0]?.status === 'accepted' ? 'Accepted' : items[0]?.status === 'pending' ? 'Pending' : items[0]?.status === 'rejected' ? 'Rejected' : ''}
+                                        </p>
+                                    </div>
+                                </div>
                             </Card>
                         </div>
                     </div>
@@ -198,12 +220,12 @@ const beneficiaryRequest = () => {
                         <p className="font-bold text-xl sm:text-xl md:text-2xl mr-2 mb-1">Requested Items: </p>
                         <div className="rounded-md border">
                             <Table>
-                                <TableHeader>
+                                <TableHeader style={{ backgroundColor: '#3597ff'}}>
                                     <TableRow>
-                                        <TableHead>Resource Name</TableHead>
-                                        <TableHead>Requested Amount</TableHead>
-                                        <TableHead>Available Amount</TableHead>
-                                        <TableHead>Category</TableHead>
+                                        <TableHead className='text-white'>Resource Name</TableHead>
+                                        <TableHead className='text-white'>Requested Amount</TableHead>
+                                        <TableHead className='text-white'>Available Amount</TableHead>
+                                        <TableHead className='text-white'>Category</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
