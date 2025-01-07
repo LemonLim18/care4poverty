@@ -198,6 +198,7 @@ const YourRequest = () => {
             setLoading(true);
             try {
                 const { data, error } = await getItems('request', userData?.id, null, 'accepted');
+                console.log("Beneficiary ID: ", userData?.id);
                 if (error) {
                     throw new Error(error.message);
                 }
@@ -273,7 +274,7 @@ const YourRequest = () => {
             />
 
             {/* Main Content */}
-            <main className="h-screen w-screen flex flex-col mt-8 md:ml-10 ml-5 md:mr-10 mr-5">
+            <main className="h-screen w-screen flex flex-col mt-8 md:ml-10 ml-5 md:mr-10 mr-5 mb-5">
                 <div className="flex items-center gap-2">
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -292,7 +293,7 @@ const YourRequest = () => {
                 </div>
 
                 {/* first colume */}
-                <div className="mt-1 mb-2 mr-10 md:mr-10 md:flex">
+                <div className="mt-1 mb-2 md:flex">
                     <div className='md:w-2/3 md:mr-4 mb-5 flex flex-col'>
                         <Card className='p-5 flex-1'>
                             <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Recently Requested Items</h2>
@@ -380,7 +381,7 @@ const YourRequest = () => {
                 </div>
 
                 {/* second colume */}
-                <div className="mt-1 mb-2 mr-10 md:mr-0 md:flex md:flex-col">
+                <div className="mt-1 mb-2 md:flex md:flex-col">
                     <div className="mt-7 flex">
                         <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl">Organizations Requested</h2>
                     </div>
@@ -477,7 +478,7 @@ const YourRequest = () => {
                     <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl">Insights and Analysis</h2>
                 </div>
                 {/* third colume */}
-                <div className="mt-1 mb-2 mr-10 md:mr-0 md:flex">
+                <div className="mt-1 mb-2 md:flex">
                     {/* pie chart */}
                     <div className='md:w-1/3 flex flex-col p-1'>
                         <Card className="flex flex-col">
