@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import SideBarComponent from "@/components/dashboard/sideBar"; // Adjust the import path
+import SideBarComponent from "@/components/dashboard/sideBar";
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { UserType } from '@/datatypes/types';
@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from '@/components/ui/card';
-import Link from 'next/link';  // Add this import at the top of your file
+import Link from 'next/link';
 import { Select, SelectItem, SelectLabel, SelectGroup, SelectContent, SelectValue, SelectTrigger } from '@/components/ui/select';
 import { MapPin, BookImage, ChartPie, IdCard, Phone, Mail, PanelsTopLeft } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
@@ -209,9 +209,9 @@ const EventPage = () => {
                             <div>
                                 <div className="mt-1 mb-2 flex">
                                     <h2 className="font-roboto text-lg sm:text-xl md:text-2xl">My Events</h2>
-                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto">
+                                    <a href="/create-event" className="bg-blue-500 transition-colors duration-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto">
                                         Create New Event
-                                    </button>
+                                    </a>
                                 </div>
 
                                 <div>
@@ -273,7 +273,7 @@ const EventPage = () => {
                                                                         </Avatar>
                                                                     </div>
                                                                     <div className="flex flex-col text-left">
-                                                                        <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                                        <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
                                                                     </div>
                                                                 </div>
                                                             </CardContent>
@@ -351,7 +351,7 @@ const EventPage = () => {
                                                                 <div className="flex mb-1">
                                                                     <PanelsTopLeft className='ml-3 mr-3'/>
                                                                     <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
-                                                                        <h1 className="font-roboto text-sm">{event.users.website}</h1>
+                                                                        <h1 className="font-roboto text-sm">Website</h1>
                                                                     </Link>
                                                                 </div>
                                                             </div>
@@ -434,7 +434,7 @@ const EventPage = () => {
                                                             </Avatar>
                                                         </div>
                                                         <div className="flex flex-col text-left">
-                                                            <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                            <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
                                                         </div>
                                                     </div>
                                                 </CardContent>
@@ -513,7 +513,7 @@ const EventPage = () => {
                                                     <div className="flex mb-1">
                                                         <PanelsTopLeft className='ml-3 mr-3'/>
                                                         <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
-                                                            <h1 className="font-roboto text-sm">{event.users.website}</h1>
+                                                            <h1 className="font-roboto text-sm">Website</h1>
                                                         </Link>
                                                     </div>
                                                 </div>
@@ -603,7 +603,7 @@ const EventPage = () => {
                                                                 </Avatar>
                                                             </div>
                                                             <div className="flex flex-col text-left">
-                                                                <h1 className="font-roboto text-sm">{eventsCategory.users.full_name}</h1>
+                                                                <h1 className="font-roboto text-sm">{eventsCategory.users.organization_name}</h1>
                                                             </div>
                                                         </div>
                                             </CardContent>
@@ -678,7 +678,7 @@ const EventPage = () => {
                                                                         </Avatar>
                                                                     </div>
                                                                     <div className="flex flex-col text-left">
-                                                                        <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                                        <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
                                                                     </div>
                                                                 </div>
                                                             </CardContent>
@@ -757,7 +757,7 @@ const EventPage = () => {
                                                                 <div className="flex mb-1">
                                                                     <PanelsTopLeft className='ml-3 mr-3'/>
                                                                     <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
-                                                                        <h1 className="font-roboto text-sm">{event.users.website}</h1>
+                                                                        <h1 className="font-roboto text-sm">Website</h1>
                                                                     </Link>
                                                                 </div>
                                                             </div>
@@ -840,7 +840,7 @@ const EventPage = () => {
                                                              </Avatar>
                                                          </div>
                                                          <div className="flex flex-col text-left">
-                                                             <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                             <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
                                                          </div>
                                                      </div>
                                                 </CardContent>
@@ -921,7 +921,7 @@ const EventPage = () => {
                                                     <div className="flex mb-1">
                                                         <PanelsTopLeft className='ml-3 mr-3'/>
                                                         <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
-                                                            <h1 className="font-roboto text-sm">{event.users.website}</h1>
+                                                            <h1 className="font-roboto text-sm">Website</h1>
                                                         </Link>
                                                     </div>
                                                 </div>

@@ -96,6 +96,8 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, scan
                         <option value="" className="text-gray-500">Select a category</option>
                         <option value="Foods">Foods</option>
                         <option value="Wearable Items">Wearable Items</option>
+                        <option value="Drinks">Drinks</option>
+                        <option value="Health Supplies">Health Supplies</option>
                     </select>
                 </div>
             </div>

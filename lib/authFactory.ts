@@ -16,6 +16,8 @@ interface UserRegistrationData {
   role: string,
   // Role-specific fields
   organizationName?: string,
+  organizationDescription?: string,
+  organizationDistrict?: string,
   registrationNumber?: string,
   bankAccount?: string,
   orgAddress?: string,
@@ -100,6 +102,8 @@ export const registerUser = async (data: UserRegistrationData) => {
     roleSpecificData = {
       organization_name: data.organizationName,
       organization_address: data.orgAddress,
+      organization_description: data.organizationDescription,
+      organization_district: data.organizationDistrict,
       registration_number: data.registrationNumber,
       registration_cert: '', // Placeholder for the uploaded file URL
       bank_account: data.bankAccount,
@@ -335,7 +339,35 @@ export const checkUserAndRedirect = async () => {
         // User exists, redirect to dashboard
         setTimeout(() => {
           console.log("Redirected to dashboard page")
-          window.location.href = '/dashboard'; // Redirect to dashboard
+          if (userData?.role === 'charity-admin') {
+            window.location.href = '/dashboard';
+          } else if (userData?.role === 'donor') {
+            window.location.href = '/donorDashboard';
+          } else if (userData?.role === 'beneficiary') {
+            window.location.href = '/beneficiaryDashboard';
+          } else {
+            console.error('User role not found!');
+          }
         }, 1800);
     }
+};
+
+export const uploadEventPhoto = async(file: File) => {
+  const bucketName = 'photos'; // Use the 'photos' bucket
+  const filePath = `event/${file.name}`; // Use the 'event/' path
+
+  // Upload file to storage bucket
+  const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file);
+
+  if (error) {
+    console.log('Fail to upload to: ', filePath, ' with ', error.message);
+    return { data: null, error }; // Return an object with null data and the error
+  }
+
+  // Get public URL of the file
+  const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+  const fileUrl = publicUrlData.publicUrl;
+  console.log("The file url: ", fileUrl);
+
+  return { data: { file_url: fileUrl }, error: null }; // Return the file URL
 };
