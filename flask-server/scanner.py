@@ -6,12 +6,15 @@ import threading
 # from flask_socketio import SocketIO
 
 def scan_barcode_and_save(is_scanning):
+    # 0 is the default camera index; 1 is the external camera index
+    camera_index = 1
     # Load the item mapping from a JSON file
     with open('itemList.json', 'r') as file:
         resource_mapping = json.load(file)
 
     # Initialize the webcam
-    cap = cv2.VideoCapture(0)
+    # cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(camera_index)
 
     # Open a JSON file to save scanned barcode data
     while is_scanning:
@@ -66,7 +69,6 @@ def scan_barcode_and_save(is_scanning):
         # Display the frame
         cv2.imshow('Barcode Scanner', frame)
         # Exit the loop when 'ESC' is pressed
-        21
 
     # Release the webcam and close all OpenCV windows
     cap.release()
