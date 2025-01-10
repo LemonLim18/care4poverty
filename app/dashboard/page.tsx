@@ -13,188 +13,41 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartStyle, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Button } from "@/components/ui/button";
+import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PieSectorDataItem } from 'recharts/types/polar/Pie';
-import { Link, PanelsTopLeft, Mail, Phone, IdCard, TrendingUp } from "lucide-react";
+import { TrendingUp, IdCard, Phone, Mail, PanelsTopLeft } from "lucide-react";
 import image from "../../public/images/donation.jpeg"
-import image2 from "../../public/images/dummy/avatar.jpg"
-import Image from 'next/image'; // Ensure this import is present
+import Image from 'next/image';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { typeData, barData, chartData, chartConfigType, chartConfigBar, chartConfig } from "./data/data";
+import { getDonor, getEvents } from '@/lib/supabaseAPI';
 
-const typeData = [
-    { month: "january", donation: 186, fund: 120, fill: "var(--color-january)" },
-    { month: "february", donation: 305, fund: 150, fill: "var(--color-february)" },
-    { month: "march", donation: 237, fund: 180, fill: "var(--color-march)" },
-    { month: "april", donation: 173, fund: 130, fill: "var(--color-april)" },
-    { month: "may", donation: 209, fund: 160, fill: "var(--color-may)" },
-]
+interface DonationType {
+  donor_id: string;
+  users: {
+    full_name: string;
+    profile_picture: string;
+  };
+}
 
-const barData = [
-    { month: "january", donation: 186, fund: 120 },
-    { month: "february", donation: 305, fund: 150 },
-    { month: "march", donation: 237, fund: 180 },
-    { month: "april", donation: 173, fund: 130 },
-    { month: "may", donation: 209, fund: 160 },
-]
-
-const chartConfigType = {
-    month: {
-      label: "Month",
-    },
-    donation: {
-      label: "Donation",
-    },
-    fund: {
-      label: "Fund",
-    },
-    january: {
-      label: "January",
-      color: "hsl(var(--chart-1))",
-    },
-    february: {
-      label: "February",
-      color: "hsl(var(--chart-2))",
-    },
-    march: {
-      label: "March",
-      color: "hsl(var(--chart-3))",
-    },
-    april: {
-      label: "April",
-      color: "hsl(var(--chart-4))",
-    },
-    may: {
-      label: "May",
-      color: "hsl(var(--chart-5))",
-    },
-    june: {
-      label: "June",
-      color: "hsl(var(--chart-6))",
-    },
-} satisfies ChartConfig;
-
-const chartConfigBar = {
-    donation: {
-      label: "Donation",
-    },
-    fund: {
-      label: "Fund",
-    },
-} satisfies ChartConfig;
-
-const chartData = [
-    { date: "2024-04-01", donation: 222, fund: 150 },
-    { date: "2024-04-02", donation: 97, fund: 180 },
-    { date: "2024-04-03", donation: 167, fund: 120 },
-    { date: "2024-04-04", donation: 242, fund: 260 },
-    { date: "2024-04-05", donation: 373, fund: 290 },
-    { date: "2024-04-06", donation: 301, fund: 340 },
-    { date: "2024-04-07", donation: 245, fund: 180 },
-    { date: "2024-04-08", donation: 409, fund: 320 },
-    { date: "2024-04-09", donation: 59, fund: 110 },
-    { date: "2024-04-10", donation: 261, fund: 190 },
-    { date: "2024-04-11", donation: 327, fund: 350 },
-    { date: "2024-04-12", donation: 292, fund: 210 },
-    { date: "2024-04-13", donation: 342, fund: 380 },
-    { date: "2024-04-14", donation: 137, fund: 220 },
-    { date: "2024-04-15", donation: 120, fund: 170 },
-    { date: "2024-04-16", donation: 138, fund: 190 },
-    { date: "2024-04-17", donation: 446, fund: 360 },
-    { date: "2024-04-18", donation: 364, fund: 410 },
-    { date: "2024-04-19", donation: 243, fund: 180 },
-    { date: "2024-04-20", donation: 89, fund: 150 },
-    { date: "2024-04-21", donation: 137, fund: 200 },
-    { date: "2024-04-22", donation: 224, fund: 170 },
-    { date: "2024-04-23", donation: 138, fund: 230 },
-    { date: "2024-04-24", donation: 387, fund: 290 },
-    { date: "2024-04-25", donation: 215, fund: 250 },
-    { date: "2024-04-26", donation: 75, fund: 130 },
-    { date: "2024-04-27", donation: 383, fund: 420 },
-    { date: "2024-04-28", donation: 122, fund: 180 },
-    { date: "2024-04-29", donation: 315, fund: 240 },
-    { date: "2024-04-30", donation: 454, fund: 380 },
-    { date: "2024-05-01", donation: 165, fund: 220 },
-    { date: "2024-05-02", donation: 293, fund: 310 },
-    { date: "2024-05-03", donation: 247, fund: 190 },
-    { date: "2024-05-04", donation: 385, fund: 420 },
-    { date: "2024-05-05", donation: 481, fund: 390 },
-    { date: "2024-05-06", donation: 498, fund: 520 },
-    { date: "2024-05-07", donation: 388, fund: 300 },
-    { date: "2024-05-08", donation: 149, fund: 210 },
-    { date: "2024-05-09", donation: 227, fund: 180 },
-    { date: "2024-05-10", donation: 293, fund: 330 },
-    { date: "2024-05-11", donation: 335, fund: 270 },
-    { date: "2024-05-12", donation: 197, fund: 240 },
-    { date: "2024-05-13", donation: 197, fund: 160 },
-    { date: "2024-05-14", donation: 448, fund: 490 },
-    { date: "2024-05-15", donation: 473, fund: 380 },
-    { date: "2024-05-16", donation: 338, fund: 400 },
-    { date: "2024-05-17", donation: 499, fund: 420 },
-    { date: "2024-05-18", donation: 315, fund: 350 },
-    { date: "2024-05-19", donation: 235, fund: 180 },
-    { date: "2024-05-20", donation: 177, fund: 230 },
-    { date: "2024-05-21", donation: 82, fund: 140 },
-    { date: "2024-05-22", donation: 81, fund: 120 },
-    { date: "2024-05-23", donation: 252, fund: 290 },
-    { date: "2024-05-24", donation: 294, fund: 220 },
-    { date: "2024-05-25", donation: 201, fund: 250 },
-    { date: "2024-05-26", donation: 213, fund: 170 },
-    { date: "2024-05-27", donation: 420, fund: 460 },
-    { date: "2024-05-28", donation: 233, fund: 190 },
-    { date: "2024-05-29", donation: 78, fund: 130 },
-    { date: "2024-05-30", donation: 340, fund: 280 },
-    { date: "2024-05-31", donation: 178, fund: 230 },
-    { date: "2024-06-01", donation: 178, fund: 200 },
-    { date: "2024-06-02", donation: 470, fund: 410 },
-    { date: "2024-06-03", donation: 103, fund: 160 },
-    { date: "2024-06-04", donation: 439, fund: 380 },
-    { date: "2024-06-05", donation: 88, fund: 140 },
-    { date: "2024-06-06", donation: 294, fund: 250 },
-    { date: "2024-06-07", donation: 323, fund: 370 },
-    { date: "2024-06-08", donation: 385, fund: 320 },
-    { date: "2024-06-09", donation: 438, fund: 480 },
-    { date: "2024-06-10", donation: 155, fund: 200 },
-    { date: "2024-06-11", donation: 92, fund: 150 },
-    { date: "2024-06-12", donation: 492, fund: 420 },
-    { date: "2024-06-13", donation: 81, fund: 130 },
-    { date: "2024-06-14", donation: 426, fund: 380 },
-    { date: "2024-06-15", donation: 307, fund: 350 },
-    { date: "2024-06-16", donation: 371, fund: 310 },
-    { date: "2024-06-17", donation: 475, fund: 520 },
-    { date: "2024-06-18", donation: 107, fund: 170 },
-    { date: "2024-06-19", donation: 341, fund: 290 },
-    { date: "2024-06-20", donation: 408, fund: 450 },
-    { date: "2024-06-21", donation: 169, fund: 210 },
-    { date: "2024-06-22", donation: 317, fund: 270 },
-    { date: "2024-06-23", donation: 480, fund: 530 },
-    { date: "2024-06-24", donation: 132, fund: 180 },
-    { date: "2024-06-25", donation: 141, fund: 190 },
-    { date: "2024-06-26", donation: 434, fund: 380 },
-    { date: "2024-06-27", donation: 448, fund: 490 },
-    { date: "2024-06-28", donation: 149, fund: 200 },
-    { date: "2024-06-29", donation: 103, fund: 160 },
-    { date: "2024-06-30", donation: 446, fund: 400 },
-]
-
-const chartConfig = {
-    date: {
-      label: "Date",
-    },
-    donation: {
-      label: "donation",
-      color: "hsl(var(--chart-1))",
-    },
-    fund: {
-      label: "Fund",
-      color: "hsl(var(--chart-2))",
-    },
-} satisfies ChartConfig;
-  
+const Map = dynamic(() => import('@/components/map/map'), { ssr: false });
 
 const DashboardPage = () => {
-    const [userData, setUserData] = useState<UserType | null>(null);
-    const [user, setUser] = useState<User | null>(null);
-    const [userId, setUserId] = useState<string | null>(null);
-    const [donationCount, setDonationCount] = useState<number>(0);
+    const [userData, setUserData] = useState<UserType | null>();
+    const [userId, setUserId] = useState<string | null>();
+    const [loading, setLoading] = useState(true);
+    const [donation, setDonation] = useState<any[]>([]);
+    const [donationCount, setDonationCount] = useState(0);
+    const [uniqueDonor, setUniqueDonor] = useState<Record<string, number>>({});
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
+
     const router = useRouter();
     const [timeRange, setTimeRange] = useState("30d")
     const id = "pie-interactive"
@@ -209,59 +62,57 @@ const DashboardPage = () => {
     useEffect(() => {        
         const fetchUser = async () => {
             const currentUser: User | null = await getUser();
-            console.log("Current User: ", currentUser);
+            console.log("Current User: ", currentUser); // Log to see if user is fetched
             if (!currentUser) {
                 toast.error('User not found! Redirecting to login...', {
                     autoClose: 1350,
                 });
                 router.push('/auth/login');
             } else {
-                setUser(currentUser);
                 setUserId(currentUser.id);
                 // Fetch user data after getting the current user
                 fetchUserData(currentUser.id);
             }
         };
 
+        fetchUser();
+        
         const fetchUserData = async (userId: string) => {
-            const { data: userData, error: fetchError } = await getRecordById('users', userId);
+            const { data: user, error: fetchError } = await getRecordById('users', userId);
+            console.log("Fetched User Data: ", user);
             if (fetchError) {
                 console.error('Error fetching user data:', fetchError.message);
                 return;
             }
-            if (userData) {
-                sessionStorage.setItem('user', JSON.stringify(userData)); // Store user data
-                setUserData(userData); // Set user data in state
-                console.log('User data stored in session storage:', userData);
+            if (user) {
+                sessionStorage.setItem('user', JSON.stringify(user)); // Store user data
+                setUserData(user); // Set user data in state
+                console.log('User data stored in session storage:', user);
             } else {
                 console.error("User data is undefined.");
             }
         }; 
 
-        fetchUser();
-
-        // Check if window is defined (client-side)
         if (typeof window !== 'undefined') {
             const storedUserData = sessionStorage.getItem('user');
             if (storedUserData) {
                 const parsedUserData = JSON.parse(storedUserData);
                 setUserData(parsedUserData);
-                console.log("Session Storage: ", parsedUserData);
+                // console.log("Session Storage: ", parsedUserData);
             } else {   
                 console.log('No user data found in session storage');
             }
         }
 
-        // Donation count animation
         let count = 0;
-        const targetCount = 353;
+        const targetCount = donationCount;
         const interval = setInterval(() => {
             count += 1;
             setDonationCount(count);
             if (count >= targetCount) {
                 clearInterval(interval);
             }
-        }, 10);
+        }, 1);
 
         return () => clearInterval(interval);
     }, []);
@@ -280,7 +131,6 @@ const DashboardPage = () => {
         return date >= startDate
     })
     
-
     const handleLogout = async () => {
         await signOut();
         sessionStorage.clear(); // Clear session storage
@@ -292,9 +142,76 @@ const DashboardPage = () => {
         }, 1000);
     };
 
-    // const handleTest = async () => {
-        // console.log("Show the session storage: ", user); 
-    // }
+    useEffect(() => {
+        fetch();
+    }, []);
+
+    const fetch = async () => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const currentUser: User | null = await getUser();
+                const { data: donationData, error: donationError } = await getDonor('donation', currentUser?.id);
+                if (donationError) throw new Error(donationError.message);
+                if (donationData) {
+                    setDonation(donationData);
+                    setDonationCount(donationData.length);
+                    countDonation(donationData);
+                    console.log("Fetched donation: ", donationData);
+                    console.log("Number of donations: ", donationData.length);
+                } else {
+                    console.log("No donation found.");
+                }
+            } catch (error) {
+                console.error('Error fetching donation:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchData();
+    };
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            setLoading(true);
+            try {
+                const { data, error } = await getEvents('events', null, null, {}, 'event_date');
+                if (error) {
+                    throw new Error(error.message);
+                }
+                if (data) {
+                    setEvents(data);
+                    console.log("Fetched Events: ", data);
+                } else {
+                    console.log("No events found.");
+                }
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEvents();
+    }, []);
+
+    const countDonation = (donations: any[]) => {
+        const donorCounts: Record<string, number> = {};
+        donations.forEach((donation) => {
+            const donorId = donation.donor_id;
+            donorCounts[donorId] = (donorCounts[donorId] || 0) + 1;
+        });
+
+        const sortedDonorCounts = Object.entries(donorCounts)
+            .sort(([, countA], [, countB]) => countB - countA)
+            .reduce<Record<string, number>>((acc, [donorId, count]) => {
+                acc[donorId] = count;
+                return acc;
+            }, {});
+
+        setUniqueDonor(sortedDonorCounts);
+    };
 
     return (
         <div className="h-screen flex">
@@ -334,24 +251,26 @@ const DashboardPage = () => {
                 <div className="mt-4 mb-4 flex flex-col">
                     <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl mb-3">Top Contributors</h2>
                     <div className=" gap-4">
-                        <div className='flex p-4 grid grid-cols-2 md:grid-cols-4'>
-                            {[...Array(4)].map((_, index) => (
-                                <div key={index} className='flex'>
-                                    <Avatar className='h-12 w-12'>
-                                        <AvatarImage 
-                                            src="https://github.com/shadcn.png" 
-                                            alt="avatar" 
-                                            className='object-cover'
-                                        />
-                                        <AvatarFallback>H</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-col ml-3">
-                                        <h1 className="font-roboto font-bold text-xl sm:text-xl md:text-xl">John Doe</h1>
-                                        <h1 className="font-roboto text-sm sm:text-sm md:text-sm">100 donations</h1>
+                        <div className='flex grid grid-cols-1 md:grid-cols-3'>
+                            {Object.entries(uniqueDonor).map(([donorId, count], index) => {
+                                const donationMap: Record<string, DonationType> = Object.fromEntries(donation.map(d => [d.donor_id, d]));
+                                return (
+                                    <div key={donorId} className='flex p-3'>
+                                        <Avatar className='h-12 w-12'>
+                                            <AvatarImage 
+                                                src={donationMap[donorId].users.profile_picture} 
+                                                alt="avatar"
+                                                className='object-cover'
+                                            />
+                                            <AvatarFallback>H</AvatarFallback>
+                                        </Avatar>
+                                        <div className="flex flex-col ml-3">
+                                            <h1 className="font-roboto font-bold text-xl sm:text-xl md:text-xl">{donationMap[donorId].users.full_name}</h1>
+                                            <h1 className="font-roboto text-sm sm:text-sm md:text-sm">{count} donations</h1>
+                                        </div>
                                     </div>
-                                    
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
@@ -687,40 +606,154 @@ const DashboardPage = () => {
                 </div>
                 
                 <h2 className="font-giorgio font-bold text-4xl sm:text-4xl md:text-5xl mb-3">Latest News</h2>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                    {[...Array(3)].map((_, index) => (
-                        <div
-                            className="cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden mb-5"
-                            key={index}
-                        >
-                        <div className="flex flex-col">
-                            <div>
-                                <Image
-                                    src="/images/localCharity.jpg"
-                                    alt="event"
-                                    width={600}
-                                    height={500}
-                                    priority
-                                    draggable={false}
-                                    onClick={(e) => e.preventDefault()}
-                                    className="h-48 w-full object-cover transition-transform duration-200 hover:scale-110"
-                                />
-                            </div>
-                            <div className="m-4 flex flex-col justify-between items-center">
-                                <div>
-                                    <a href="https://www.charityConnectGlobal.org" className="font-roboto text-sm text-gray-500" target="_blank" rel="noopener noreferrer">
-                                        www.charityConnectGlobal.org
-                                    </a>
-                                    <p className="font-roboto text-xl font-semibold mt-2">Charity Connect Global</p>
-                                    <p className="font-roboto text-sm">
-                                        A centralized platform connecting donors and charities worldwide, enabling seamless contributions 
-                                        to impactful causes.
-                                    </p>
+                <div>
+                    { loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {Array.from({ length: 3 }).map((_, index) => (
+                                <div key={index}>
+                                    <Skeleton className="mb-2 h-48 w-full rounded-t-lg" />
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-[250px] mb-2" />
+                                        <Skeleton className="h-4 w-[200px] mb-2" />
+                                    </div>
                                 </div>
-                                </div>
-                            </div>
+                            ))} 
                         </div>
-                    ))}
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {events.slice(0, 3).map((event) => (
+                                <div key={event.event_id}>
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+                                            <Card
+                                                className="cursor-pointer hover:bg-blue-100 transition-colors duration-200 overflow-hidden"
+                                                onClick={() => {}}
+                                            >
+                                                <CardContent className="flex flex-col p-0">
+                                                    <div className="relative">
+                                                        <Image
+                                                            src={event.event_photos[0]}
+                                                            alt="event"
+                                                            width={600}
+                                                            height={500}
+                                                            priority
+                                                            draggable={false}
+                                                            onClick={(e) => e.preventDefault()}
+                                                            className="h-48 w-full rounded-t-lg object-cover transition-transform duration-200 hover:scale-110"
+                                                        />
+                                                        <div className="absolute top-0 left-0 bg-black bg-opacity-50 text-white p-2">
+                                                            <span>{event.event_location}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="m-4 flex justify-between items-center">
+                                                        <div>
+                                                            <p className="font-roboto text-sm text-gray-500 mb-2">{event.event_date}</p>
+                                                            <span className="font-roboto text-xl font-semibold">{event.event_title}</span>
+                                                            <p className="font-roboto text-sm">{event.event_summary}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex items-center mb-5">
+                                                        <div className=" ml-3 mr-2">
+                                                            <Avatar>
+                                                                <AvatarImage 
+                                                                    src={event.users.profile_picture} 
+                                                                    alt="avatar" 
+                                                                    className='object-cover w-12 h-12'
+                                                                />
+                                                                <AvatarFallback>H</AvatarFallback>
+                                                            </Avatar>
+                                                        </div>
+                                                        <div className="flex flex-col text-left">
+                                                            <h1 className="font-roboto text-sm">{event.users.organization_name}</h1>
+                                                        </div>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        </DialogTrigger>
+                                        <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar-hidden">
+                                            <DialogHeader>
+                                                <DialogTitle className='text-2xl'>{event.event_title}</DialogTitle>
+                                            </DialogHeader>
+                                            <DialogDescription className='text-sm'>{event.event_description}</DialogDescription>
+                                            <div className="">
+                                                <h1 className="font-roboto font-bold">Date:</h1>
+                                                <h1 className="font-roboto">{event.event_date}</h1>
+
+                                                <h1 className="font-roboto font-bold mt-4">Location:</h1>
+                                                <h1 className="font-roboto">{event.event_location}</h1>
+
+                                                <Map locationText={event.event_location} />
+
+                                                <Link href={event.event_url} passHref target="_blank">
+                                                    <Button className='bg-blue-600 mt-5'>Click here for more details</Button>
+                                                </Link>
+
+                                                <div className="mt-4">
+                                                    <Carousel>
+                                                        <CarouselContent>
+                                                            {event.event_photos.map((photo: string, index: number) => (
+                                                                <Image
+                                                                    key={index}
+                                                                    src={photo}
+                                                                    alt={`event photo ${index + 1}`}
+                                                                    width={600}
+                                                                    height={600}
+                                                                    priority
+                                                                    draggable={false}
+                                                                    onClick={(e) => e.preventDefault()}
+                                                                    className="object-cover w-full h-autojustify-center"
+                                                                />
+                                                            ))}
+                                                        </CarouselContent>
+                                                        <CarouselNext className="absolute top-1/2 right-1 transform -translate-y-1/2" />
+                                                        <CarouselPrevious className="absolute top-1/2 left-1 transform -translate-y-1/2" />
+                                                    </Carousel>
+                                                </div>
+                                            </div>
+
+                                            <Separator className="mt-4"/>
+                                            
+                                            <h1 className="font-roboto font-bold text-xl mt-4">Organization:</h1>
+                                            <h1 className="font-roboto">{event.users.organization_name}</h1>
+                                            <div className="flex items-center mb-5">
+                                                <div className="ml-3 mr-5">
+                                                    <Avatar className='h-24 w-24'>
+                                                        <AvatarImage 
+                                                            src={event.users.profile_picture} 
+                                                            alt="avatar" 
+                                                            className='object-cover'
+                                                        />
+                                                        <AvatarFallback>H</AvatarFallback>
+                                                    </Avatar>
+                                                </div>
+                                                <div className="flex flex-col text-left">
+                                                    <div className="flex mb-1">
+                                                        <IdCard className='ml-3 mr-3' />
+                                                        <h1 className="font-roboto text-sm">{event.users.full_name}</h1>
+                                                    </div>
+                                                    <div className="flex mb-1">
+                                                        <Phone className='ml-3 mr-3'/>
+                                                        <h1 className="font-roboto text-sm">{event.users.telephone_number}</h1>
+                                                    </div>
+                                                    <div className="flex mb-1">
+                                                        <Mail className='ml-3 mr-3'/>
+                                                        <h1 className="font-roboto text-sm">{event.users.email}</h1>
+                                                    </div>
+                                                    <div className="flex mb-1">
+                                                        <PanelsTopLeft className='ml-3 mr-3'/>
+                                                        <Link href={event.users.website} passHref target="_blank" className='cursor-pointer hover:underline'>
+                                                            <h1 className="font-roboto text-sm">Website</h1>
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </main>
         </div>

@@ -10,7 +10,7 @@ import { getUser, signOut } from '@/lib/authFactory';
 import { toast } from 'react-toastify';
 import { Breadcrumb, BreadcrumbSeparator, BreadcrumbLink, BreadcrumbItem, BreadcrumbList } from '@/components/ui/breadcrumb';
 import { getDonation } from '@/lib/supabaseAPI';
-import { Calendar, Truck, Phone, Mail, UserPen, BadgeInfo, Check, Clock, X } from 'lucide-react';
+import { Calendar, Truck, Phone, Mail, UserPen } from 'lucide-react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -18,14 +18,6 @@ import Head from 'next/head';
 import { Button } from '@/components/ui/button';
 
 const Map = dynamic(() => import('@/components/map/map'), { ssr: false });
-
-interface RequestItem {
-    id: number;
-    resource_name: string;
-    request_amount: number;
-    resource_amount: number;
-    resource_category: string;
-}
 
 const donorDonation = () => {
     const [userData, setUserData] = useState<UserType | null>(null);

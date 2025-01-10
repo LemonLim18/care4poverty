@@ -162,3 +162,18 @@ export const getDonation = async (table: string, userId: string | null = null, o
 
   return { data, error };
 }
+
+export const getDonor = async (table: string, userId: string | null = null) => {
+  let query = supabase.from(table).select(`
+      *,
+      users:donor_id (*)
+  `);
+
+  if (userId !== null) {
+    query = query.eq('org_id', userId);
+  }
+    
+  const { data, error } = await query;
+
+  return { data, error };
+}
