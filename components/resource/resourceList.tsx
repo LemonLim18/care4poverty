@@ -1,6 +1,6 @@
 import ResourceBar from '@/components/resource/resourceBar'; // Adjust the import path
 import ResourceBarSkeleton from '@/components/resource/ResourceBarSkeleton'; // Import the skeleton
-import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils, PencilLine } from 'lucide-react';
+import { Apple, Croissant, Drumstick, Beef, Salad, Shirt, Utensils, PencilLine, Coffee, Cross } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; 
 import { useEffect, useState } from 'react';
@@ -19,7 +19,9 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
     const filteredResources = resources.filter(resource => {
         if (activeTab === 'All') return true;
         if (activeTab === 'Foods') return resource.resource_category === 'Foods';
-        if (activeTab === 'Wearable Items') return resource.resource_category !== 'Foods';
+        if (activeTab === 'Wearable Items') return resource.resource_category === 'Wearable Items';
+        if (activeTab === 'Drinks') return resource.resource_category === 'Drinks';
+        if (activeTab === 'Health Supplies') return resource.resource_category === 'Health Supplies';
         return true;
     });
 
@@ -48,6 +50,12 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
                             <TabsTrigger className="font-bold" value="Wearable Items">
                                 Wearable Items
                             </TabsTrigger>
+                            <TabsTrigger className="font-bold" value="Drinks">
+                                Drinks
+                            </TabsTrigger>
+                            <TabsTrigger className="font-bold" value="Health Supplies">
+                                Health Supplies
+                            </TabsTrigger>
                         </TabsList>
                         <TabsContent value="All"> 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 px-6 py-2">
@@ -57,11 +65,11 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
                                         <ResourceBarSkeleton key={index} />
                                     ))
                                 ) : (
-                                    resources.map((resource, index) => (
+                                    filteredResources.map((resource, index) => (
                                         <ResourceBar 
                                             key={index}
                                             index={index}
-                                            icon={resource.resource_category === "Foods" ? Utensils : Shirt } // Map icon names to actual components
+                                            icon={resource.resource_category === "Foods" ? Utensils : resource.resource_category === "Drinks" ? Coffee : resource.resource_category === "Health Supplies" ? Cross : Shirt } // Map icon names to actual components
                                             name={resource.resource_name}
                                             category={resource.resource_category}
                                             number={resource.resource_amount}
@@ -108,6 +116,42 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
                                 ))
                             }
                             </div>  
+                        </TabsContent>
+                        <TabsContent value="Drinks">
+                            <div className="grid grid-cols-1 gap-x-4 gap-y-4 px-6 py-2">
+                            {
+                                resources.filter(resource => resource.resource_category === "Drinks").map((resource, index) => (
+                                    <ResourceBar 
+                                        key={index}
+                                        index={index}
+                                        icon={ Coffee } // Map icon names to actual components
+                                        name={resource.resource_name}
+                                        category={resource.resource_category}
+                                        number={resource.resource_amount}
+                                        // Do not show the action when the resource bars are used for listing
+                                        showActions={false}
+                                    />
+                                ))
+                            }
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="Health Supplies">
+                            <div className="grid grid-cols-1 gap-x-4 gap-y-4 px-6 py-2">
+                            {
+                                resources.filter(resource => resource.resource_category === "Health Supplies").map((resource, index) => (
+                                    <ResourceBar 
+                                        key={index}
+                                        index={index}
+                                        icon={ Cross } // Map icon names to actual components
+                                        name={resource.resource_name}
+                                        category={resource.resource_category}
+                                        number={resource.resource_amount}
+                                        // Do not show the action when the resource bars are used for listing
+                                        showActions={false}
+                                    />
+                                ))
+                            }
+                            </div>
                         </TabsContent>
                     </Tabs>
                 </>

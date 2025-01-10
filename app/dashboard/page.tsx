@@ -255,8 +255,8 @@ const DashboardPage = () => {
                             {Object.entries(uniqueDonor).map(([donorId, count], index) => {
                                 const donationMap: Record<string, DonationType> = Object.fromEntries(donation.map(d => [d.donor_id, d]));
                                 return (
-                                    <div key={donorId} className='flex p-3'>
-                                        <Avatar className='h-12 w-12'>
+                                    <div key={donorId} className='flex p-3 items-center'>
+                                        <Avatar className='h-20 w-20'>
                                             <AvatarImage 
                                                 src={donationMap[donorId].users.profile_picture} 
                                                 alt="avatar"
