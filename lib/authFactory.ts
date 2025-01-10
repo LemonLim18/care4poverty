@@ -339,7 +339,15 @@ export const checkUserAndRedirect = async () => {
         // User exists, redirect to dashboard
         setTimeout(() => {
           console.log("Redirected to dashboard page")
-          window.location.href = '/dashboard'; // Redirect to dashboard
+          if (userData?.role === 'charity-admin') {
+            window.location.href = '/dashboard';
+          } else if (userData?.role === 'donor') {
+            window.location.href = '/donorDashboard';
+          } else if (userData?.role === 'beneficiary') {
+            window.location.href = '/beneficiaryDashboard';
+          } else {
+            console.error('User role not found!');
+          }
         }, 1800);
     }
 };
