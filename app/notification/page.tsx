@@ -18,12 +18,11 @@ import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerDescription, DrawerTitle, DrawerHeader, DrawerClose, DrawerFooter } from '@/components/ui/drawer';
 import { supabase } from '@/lib/supabaseClient';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getNotifications } from '@/lib/supabaseAPI';
+import { getNotifications, updateNotification } from '@/lib/supabaseAPI';
 
 const NotificationPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
     const [user, setUser] = useState<User | null>(null);
-    const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [notifications, setNotifications] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -58,12 +57,13 @@ const NotificationPage = () => {
     }, []); // Only run once on mount
 
     useEffect(() => {
+        if (!userData) {
+            return;
+        }
         const fetchNotifications = async () => {
             setLoading(true);
-            const storedUserData = sessionStorage.getItem('user');
-            const parsedUserData = storedUserData ? JSON.parse(storedUserData) : null; // Parse the user data
             try {
-                const { data, error } = await getNotifications('notifications', parsedUserData?.id, {}, 'notis_timestamp');
+                const { data, error } = await getNotifications('notifications', userData?.id, {}, 'notis_timestamp');
                 if (error) {
                     throw new Error(error.message);
                 }
@@ -81,8 +81,33 @@ const NotificationPage = () => {
         };
 
         fetchNotifications();
-    }, []);
-    
+    }, [userData]);
+
+    const markAsRead = async (id: string) => {
+        const notis = {
+            notis_status: 'read'
+        };
+
+        console.log("Notification to be updated: ", notifications.find((notification) => notification.notis_id === id));
+        console.log("Notification ID: ", id);
+        const { error } = await updateNotification('notifications', id, notis);
+        if (error) {
+            console.error('Error updating notification status:', error);
+        } else {
+            console.log('Notification updated successfully:', notis);
+            toast.success('Notification marked as read', {
+                autoClose: 1250,
+            });
+
+            setNotifications((prevNotifications) =>
+                prevNotifications.map((notification) =>
+                    notification.notis_id === id
+                        ? { ...notification, notis_status: 'read' }
+                        : notification
+                )
+            );
+        }
+    };
 
     const handleLogout = async () => {
         await signOut();
@@ -155,10 +180,16 @@ const NotificationPage = () => {
                                                                 </Avatar>
                                                             </div>
                                                         </div>
-                                                        <div className="flex flex-col text-left">
-                                                            <h1 className="font-roboto font-bold text-xl">{notification.users.full_name}</h1>
-                                                            <p className='font-roboto text-sm text-gray-500 mb-2'>{new Date(notification.notis_timestamp).toISOString().split('T')[0]}</p>
-                                                            <p className="font-roboto text-sm">{notification.notis_title}</p>
+                                                        <div className='w-full'>
+                                                            <div className="flex justify-between items-center w-auto">
+                                                                <h1 className="font-roboto font-bold text-xl text-left">
+                                                                    {notification.users.full_name}
+                                                                </h1>
+                                                                <p className="font-roboto text-sm text-gray-500 mb-2 text-right">
+                                                                    {new Date(notification.notis_timestamp).toISOString().split('T')[0]}
+                                                                </p>
+                                                            </div>
+                                                            <p className="font-roboto text-sm text-left">Message: {notification.notis_title}</p>
                                                         </div>
                                                     </button>
                                                 </DrawerTrigger>
@@ -170,12 +201,12 @@ const NotificationPage = () => {
                                                     <DrawerContent>
                                                         <div className="mx-auto max-w-sm">
                                                             <DrawerHeader>
-                                                                <DrawerTitle className="font-roboto font-bold text-3xl">{notification.notis_title}</DrawerTitle>
-                                                                <DrawerDescription className="font-roboto text-2x1">{notification.notis_description}</DrawerDescription>
-                                                                <p className="font-roboto text-sm text-gray-500">{notification.notis_timestamp}</p>
+                                                                <DrawerTitle className="font-roboto font-bold text-2xl">Notification Detail</DrawerTitle>
+                                                                <DrawerDescription className="font-roboto text-md">{notification.notis_description}</DrawerDescription>
+                                                                <p className="font-roboto text-sm text-gray-500">{new Date(notification.notis_timestamp).toISOString().split('T')[0]}</p>
                                                             </DrawerHeader>
-                                                            <div className="flex items-center">
-                                                                <div className=" ml-4 mr-2">
+                                                            <div className="flex">
+                                                                <div className=" ml-4 mr-2 mt-3">
                                                                     <Avatar>
                                                                         <AvatarImage 
                                                                             src={notification.users.profile_picture} 
@@ -186,11 +217,13 @@ const NotificationPage = () => {
                                                                     </Avatar>
                                                                 </div>
                                                                 <div className="flex flex-col text-left mt-5 mb-5 w-2/3">
-                                                                    <h1 className="font-roboto font-bold text-xl">{notification.users.full_name}</h1>
+                                                                    <h1 className="font-roboto text-sm">: {notification.notis_title}</h1>
                                                                 </div>
                                                             </div>
                                                             <DrawerFooter>
-                                                                <Button>Mark as read</Button>
+                                                                {notification.notis_status === 'unread' && (
+                                                                    <Button onClick={() => markAsRead(notification.notis_id)}>Mark as read</Button>
+                                                                )}
                                                                 <DrawerClose asChild>
                                                                     <Button variant="outline">Cancel</Button>
                                                                 </DrawerClose>
@@ -206,7 +239,7 @@ const NotificationPage = () => {
                         </div>   
                     </div>
 
-                    <div className="md:block w-1/3">
+                    <div className="hidden md:block w-1/3">
                         <Image
                             src={sideImage1.src} 
                             alt='image'

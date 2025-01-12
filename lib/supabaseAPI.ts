@@ -66,7 +66,7 @@ export const getRecordsByField = async (table: string, field: string, value: any
 };
 
 // Get records for notifications
-export const getNotifications = async (table: string, userId?: string, filters?: object, orderBy?: string) => {
+export const getNotifications = async (table: string, userId?: string, filters?: object, orderBy?: string, isRead?: string) => {
   let query = supabase.from(table).select(`
       *,
       users:other_id (full_name, profile_picture)
@@ -86,9 +86,22 @@ export const getNotifications = async (table: string, userId?: string, filters?:
     query = query.order(orderBy, { ascending: false }); // Apply sorting
   }
 
+  if (isRead !== undefined) {
+    query = query.eq('notis_status', isRead);
+  }
+
   const { data, error } = await query;
 
   return { data, error };
+};
+
+export const updateNotification = async (table: string, id: string, data: Partial<DataRecord>) => {
+  const { data: responseData, error } = await supabase
+    .from(table)
+    .update(data)
+    .eq('notis_id', id);
+
+  return { data: responseData, error };
 };
 
 // Get records for events

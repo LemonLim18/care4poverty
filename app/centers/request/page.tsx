@@ -15,7 +15,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Minus, CirclePlus, Trash, Trash2 } from "lucide-react";
+import { Plus, Minus, CirclePlus, Trash, Utensils, PencilLine, Coffee, Cross } from "lucide-react";
 import { NumberValueToken } from 'html2canvas/dist/types/css/syntax/tokenizer';
 
 interface RequestResource {
@@ -57,6 +57,12 @@ const RequestPage = () => {
     const wearableBgColors = ['bg-purple-500', 'bg-green-500', 'bg-orange-500'];
     const wearableTxtColors = ['outline-purple-700', 'outline-green-700', 'outline-orange-700'];
     const wearableOutlines = ['outline-purple-700', 'outline-green-700', 'outline-orange-700'];
+    const drinksBgColors = ['bg-pink-500', 'bg-cyan-500', 'bg-teal-500'];
+    const drinksTxtColors = ['outline-pink-700', 'outline-cyan-700', 'outline-teal-700'];
+    const drinksOutlines = ['outline-pink-700', 'outline-cyan-700', 'outline-teal-700'];
+    const healthSuppliesBgColors = ['bg-indigo-500', 'bg-lime-500', 'bg-amber-500'];
+    const healthSuppliesTxtColors = ['outline-indigo-700', 'outline-lime-700', 'outline-amber-700'];
+    const healthSuppliesOutlines = ['outline-indigo-700', 'outline-lime-700', 'outline-amber-700'];
 
     const colorIndex=0;
 
@@ -224,7 +230,7 @@ const RequestPage = () => {
             delivery_method: selectedDeliveryMethod,
             pickup_location: pickupLocation,
             terms_agreed: isTermsAgreed,
-            status: 'pending',
+            status: 'Pending',
             request_date: new Date().toISOString().split('T')[0], // Extract only the date part
         };
 
@@ -241,6 +247,24 @@ const RequestPage = () => {
             // setTimeout(() => {
             //     window.location.reload();
             // }, 1500);
+        }
+
+        const notification = {
+            notis_title: `Hai there, I have requested some items from your organization.`,
+            notis_description: `You have a new request for ${requestResources.map(item => item.resource_name).join(', ')}. Feel free to check it out! The delivery method is ${selectedDeliveryMethod === 'pickUp' ? 'pick-up' : 'drop-off'}.`,
+            other_id: recipientId,
+            user_id: charityId,
+            notis_timestamp: new Date().toISOString().split('T')[0],
+            notis_status: 'unread',
+        }
+
+        console.log("Notification: ", notification);
+
+        const { data: NotificationResponse, error: notificationError } = await createRecord('notifications', notification);
+        if(notificationError) {
+            console.error('Error inserting notification:', notificationError);
+        } else {
+            console.log('Notification sent:', NotificationResponse);
         }
     }
 
@@ -295,16 +319,23 @@ const RequestPage = () => {
                                 {requestResources.map((resource, index) => (
                                     <div key={index} className={`mt-2 flex w-full items-center justify-between p-4 bg-white border shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl`}>
                                         <div className="flex items-center space-x-4">
-                                            <div className={`flex items-center justify-center w-12 h-12  rounded-full ${resource.resource_category === "Foods"? `${foodTxtColors[index % foodTxtColors.length]} ${foodBgColors[index % foodBgColors.length]} ${foodOutlines[index % foodOutlines.length]}` : resource.resource_category === "Wearable Items"? `${wearableTxtColors[index % wearableTxtColors.length]} ${wearableOutlines[index % wearableOutlines.length]} ${wearableBgColors[index % wearableBgColors.length] }` : 'bg-blue-100'}`}>
+                                            <div className={`flex items-center justify-center w-12 h-12  rounded-full 
+                                                ${resource.resource_category === "Foods"? `${foodTxtColors[index % foodTxtColors.length]} ${foodBgColors[index % foodBgColors.length]} ${foodOutlines[index % foodOutlines.length]}` : 
+                                                resource.resource_category === "Wearable Items"? `${wearableTxtColors[index % wearableTxtColors.length]} ${wearableOutlines[index % wearableOutlines.length]} ${wearableBgColors[index % wearableBgColors.length] }` : 
+                                                resource.resource_category === "Drinks"? `${drinksTxtColors[index % drinksTxtColors.length]} ${drinksBgColors[index % drinksBgColors.length]} ${drinksOutlines[index % drinksOutlines.length]}` : 
+                                                resource.resource_category === "Health Supplies"? `${healthSuppliesTxtColors[index % healthSuppliesTxtColors.length]} ${healthSuppliesBgColors[index % healthSuppliesBgColors.length]} ${healthSuppliesOutlines[index % healthSuppliesOutlines.length]}` : 'bg-blue-100'}`}>
                                                 {resource.resource_category === 'Foods' ? (
                                                     <FaAppleAlt className={` w-12 h-6`} />
                                                 ) : resource.resource_category === 'Wearable Items' ? (
                                                     <FaTshirt className={` w-12 h-6`} />
+                                                ) : resource.resource_category === 'Drinks' ? (
+                                                    <Coffee className={`w-12 h-6`} />
+                                                ) : resource.resource_category === 'Health Supplies' ? (
+                                                    <Cross className={`w-12 h-6`} />
                                                 ) : (
                                                     <FaPlus className="text-blue-500 w-12 h-6" />
                                                 )}
                                             </div>
-                                            {/* Name and Category */}
                                             {/* Name and Category */}
                                             <div className="pr-6">
                                                 <h3 className="text-md font-semibold text-gray-800">{resource.resource_name}</h3>
