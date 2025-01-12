@@ -24,6 +24,7 @@ interface RequestResource {
     resource_category: string;
     resource_amount: number;
     request_amount: number;
+    item_requestStatus: string;
 }
 
 interface RequestResponseProps {
@@ -105,6 +106,7 @@ const RequestPage = () => {
                     resource_category: resource.resource_category,
                     resource_amount: resource.resource_amount,
                     request_amount: 0, // Add the new key with a value of 0
+                    item_requestStatus: 'Pending',
                 })) || [];
                 console.log("Request Fetch Resources: ", requestFetchResources);
                 setRequestResources(requestFetchResources); // Ensure it's not undefined
@@ -114,7 +116,7 @@ const RequestPage = () => {
     }, [charityId]);
 
     useEffect(() => {
-        console.log("Request Resources: ", requestResources);
+        console.log("After adding the field, the request data with status:", requestResources);
     }, [requestResources]); 
 
     useEffect(() => {
@@ -224,7 +226,7 @@ const RequestPage = () => {
             delivery_method: selectedDeliveryMethod,
             pickup_location: pickupLocation,
             terms_agreed: isTermsAgreed,
-            status: 'pending',
+            status: 'Pending',
             request_date: new Date().toISOString().split('T')[0], // Extract only the date part
         };
 
@@ -238,9 +240,9 @@ const RequestPage = () => {
         } else {
             toast.success('Request submitted successfully!', {autoClose: 1500});
             console.log('Request submitted:', RequestResponse);
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 1500);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
         }
     }
 

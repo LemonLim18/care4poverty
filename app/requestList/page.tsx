@@ -8,7 +8,7 @@ import { UserType } from  "@/datatypes/types";
 import { getUser, signOut } from '../../lib/authFactory'; // Adjust the import path
 import { toast } from 'react-toastify'; // For notifications
 import { getRecordById, getRecordsByField } from '@/lib/supabaseAPI';
-import { Pencil, Printer, Download } from "lucide-react";
+import { Pencil, Printer, Download, Eye } from "lucide-react";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -39,15 +39,21 @@ import {
 import "app/globals.css"
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { cp } from 'fs';
 
+type RequestList = {
+    resource_name: string;
+    request_amount: number;
+    resource_amount: number;
+    resource_category: string;
+    item_requestStatus: string;
+}
 
 type RequestType = {
     request_id: string;
     organization_id?: string;
     beneficiary_name: string;
-    item_name: string;
-    item_category: string;
-    item_no: number;
+    request_items: RequestList[];
     request_date: string;
     status: string;
 }
@@ -57,6 +63,7 @@ const RequestPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
     const [availableInventory, setAvailableInventory] = useState<Record<string, number>>({});
     const [requestData, setRequestData] = useState<RequestType[] | null>(null);
+    const [beneficiaryData, setBeneficiaryData] = useState<any>(null);
     const [user, setUser] = useState<User | null>(null);
     const [userId, setUserId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -70,17 +77,32 @@ const RequestPage = () => {
         setSearchQuery(event.target.value);
     };
 
+    // // Filtered request data based on search query
+    // const filteredRequestData = requestData?.filter((request) => {
+    //     return (
+    //         request.request_date.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //         request.beneficiary_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //         request.item_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //         request.item_category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //         request.item_no.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //         request.status.toLowerCase().includes(searchQuery.toLowerCase())
+    //     );
+    // }) || []; // Return an empty array if requestData is null
+
     // Filtered request data based on search query
     const filteredRequestData = requestData?.filter((request) => {
-        return (
-            request.request_date.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            request.beneficiary_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            request.item_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            request.item_category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            request.item_no.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-            request.status.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }) || []; // Return an empty array if requestData is null
+      const matchesTopLevel =
+        request.request_date.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        request.beneficiary_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        request.status.toLowerCase().includes(searchQuery.toLowerCase());
+    
+      const matchesItems = request.request_items?.some((item) =>
+        item.resource_name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    
+      return matchesTopLevel || matchesItems;
+    });
+    
 
     // Function to compute statistics
     const computeStatistics = (requestData: RequestType[], availableInventory: Record<string, number>) => {
@@ -101,9 +123,11 @@ const RequestPage = () => {
 
         // 1. Count occurrences of each item
         const itemCounts = requestData.reduce((acc, request) => {
-            if (request.item_name) {
-                acc[request.item_name] = (acc[request.item_name] || 0) + 1;
-            }
+            request.request_items?.forEach(item => {
+                if (item.resource_name) {
+                    acc[item.resource_name] = (acc[item.resource_name] || 0) + 1;
+                }
+            });
             return acc;
         }, {} as Record<string, number>);
 
@@ -332,14 +356,35 @@ const RequestPage = () => {
                 console.error('Error fetching resource data:', fetchResourceError.message);
                 return;
             }
-            if (requestData) {
-                sessionStorage.setItem('request', JSON.stringify(requestData)); // Store request data
-                // sessionStorage.setItem('resource', JSON.stringify(resourceData)); // Store resource data
-                setRequestData(requestData); // Set request data in state
-                console.log('Request data stored in session storage:', requestData);
-            } else {
-                console.error("Request data is undefined.");
-            } 
+            
+
+            const beneficiaryIds = requestData?.map(request => request.beneficiary_id).filter(Boolean) || [];
+            console.log("Beneficiary IDs: ", beneficiaryIds);
+            // Make API calls for each beneficiary ID
+            const beneficiaryPromises = beneficiaryIds?.map(id => getRecordsByField('users', 'id', id));
+
+            // Wait for all API calls to complete
+            const responses = await Promise.all(beneficiaryPromises);            
+            const beneficiariesBefore = responses.map(response => response.data).filter(data => data !== null);
+            const beneficiaries = beneficiariesBefore.map(beneficiary => beneficiary[0]);
+            console.log("Beneficiary Data: ", beneficiaries);
+
+            
+            // if (fetchBeneficiaryError) {
+            //     console.error('Error fetching beneficiary data:', fetchBeneficiaryError.message);
+            //     setLoading(false);
+            //     return;
+            // }
+
+            // Combine request data with beneficiary data
+            const combinedRequestData = requestData?.map(request => {
+              // Find the beneficiary by matching the id
+              const beneficiaryRefData = beneficiaries?.find(b => b.id === request.beneficiary_id);
+              return {
+                ...request,
+                beneficiary_name: beneficiaryRefData.full_name, // Add beneficiary name to request data
+              };
+            });
             if (resourceData) {
                 const formattedInventory = resourceData.reduce((acc, item) => {
                     acc[item.name] = item.availableCount; // Adjust 'availableCount' to the correct property name
@@ -347,12 +392,30 @@ const RequestPage = () => {
                 }, {} as Record<string, number>);
 
                 setAvailableInventory(formattedInventory); // Set resource data in state
-                console.log('Resource data in useState variable: ', formattedInventory);
             }
+            if (combinedRequestData) {
+              sessionStorage.setItem('request', JSON.stringify(combinedRequestData)); // Store request data
+              // sessionStorage.setItem('resource', JSON.stringify(resourceData)); // Store resource data
+              setRequestData(combinedRequestData); // Set request data in state
+              console.log('Request data stored in session storage:', combinedRequestData);
+            } else {
+              console.error("Request data is undefined.");
+            } 
             setLoading(false)
         };
         fetchUser();
     }, []);
+
+    useEffect(() => {
+      if (!filteredRequestData) return;
+      console.log("Filtered Request Data: ", filteredRequestData);
+      filteredRequestData?.forEach((request) => {
+        console.log("Request Item: ", request.request_items); // Check the structure of each item
+        request.request_items?.forEach((item) => {
+          console.log("Item Name: ", item.resource_name);
+        });
+      });
+    }, [filteredRequestData]);
 
     
     const handleLogout = async () => {
@@ -420,7 +483,7 @@ const RequestPage = () => {
                           />
                           <div className="flex">
                               <Button 
-                                className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] border rounded-none border-custom-border-blue border-2 mr-[-2px] group border-l-0" 
+                                className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] rounded-none border-custom-border-blue border-2 mr-[-2px] group border-l-0" 
                                 onClick={() => {
                                         console.log('Save as PDF')
                                         exportToPDF();
@@ -428,14 +491,14 @@ const RequestPage = () => {
                                     <div className="text-[#5D7EAE] hover:text-[#F5F9FE] group-hover:text-[#F5F9FE]"><FaRegFilePdf/></div>      
                                     
                               </Button>
-                              <Button className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] border rounded-none border-custom-border-blue border-2 mr-[-2px] group" 
+                              <Button className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] rounded-none border-custom-border-blue border-2 mr-[-2px] group" 
                                 onClick={() => {
                                         console.log('Print')
                                         printTable();
                                         }}>
                                     <div className="text-[#5D7EAE] hover:text-[#F5F9FE] group-hover:text-[#F5F9FE]"><Printer/></div>      
                               </Button>
-                              <Button className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] border rounded-l-none rounded-br-none border-custom-border-blue border-2 group" 
+                              <Button className="w-[10px] bg-[#F5F9FE] hover:bg-[#038BD4] rounded-l-none rounded-br-none border-custom-border-blue border-2 group" 
                                 onClick={() => {
                                         console.log('Download')
                                         downloadCSV();
@@ -458,11 +521,11 @@ const RequestPage = () => {
                                             <th className="py-3 w-[125px] border-r">Date</th>
                                             <th className="py-3 w-[124px] border-r">Beneficiary</th>
                                             <th className="py-3 w-[200px] border-r">Item Name</th>
-                                            <th className="py-3 w-[200px] border-r">Item Category</th>
-                                            <th className="py-3 w-[200px] border-r">Item No</th>
-                                            <th className="py-3 w-[200px] border-r">Status</th>
+                                            {/* <th className="py-3 w-[200px] border-r">Item Category</th> */}
+                                            {/* <th className="py-3 w-[200px] border-r">Item No</th> */}
+                                            <th className="py-3 w-[100px] border-r">Status</th>
                                             {/* This is the edit column */}
-                                            <th className="py-3 w-[32px] border-r"></th>
+                                            <th className="py-3 w-[40px] border-r"></th>
                                             {/* <th className="py-3 border-r"> </th> */}
                                         </tr>
                                     </thead>
@@ -497,9 +560,9 @@ const RequestPage = () => {
                                             </th>
                                           </tr>
                                         ))
-                                      ) : filteredRequestData.length > 0 ? (
+                                      ) : filteredRequestData && filteredRequestData.length > 0 ? (
                                         // Render filtered data rows when available
-                                        filteredRequestData.map((request, index) => (
+                                        filteredRequestData?.map((request, index) => (
                                           <tr
                                             key={index}
                                             className="text-sm text-center border-b border-slate-200 hover:bg-slate-50"
@@ -508,9 +571,15 @@ const RequestPage = () => {
                                               {new Date(request.request_date).toISOString().split("T")[0]}
                                             </td>
                                             <td className="py-3 px-1 border-r">{request.beneficiary_name}</td>
-                                            <td className="py-3 px-4 border-r">{request.item_name}</td>
-                                            <td className="py-3 px-4 border-r">{request.item_category}</td>
-                                            <td className="py-3 px-4 border-r">{request.item_no}</td>
+                                            <td className="py-3 px-4 border-r">
+                                              {request.request_items?.map((item, index) => (
+                                                <span key={index}>
+                                                  {item.resource_name}{index < request.request_items.length - 1 ? ', ' : ''}
+                                                </span>
+                                              ))}
+                                            </td>
+                                            {/* <td className="py-3 px-4 border-r">{request.item_category}</td> */}
+                                            {/* <td className="py-3 px-4 border-r">{request.item_no}</td> */}
                                             <td className="py-3 px-4 border-r">
                                               <Button
                                                 className={`px-5 ${
@@ -524,8 +593,11 @@ const RequestPage = () => {
                                             </td>
                                             {/* EDIT BUTTON */}
                                             <th className="py-3">
-                                              <Button className="w-1 p-4 bg-[#0077B6] hover:bg-[#038BD4]">
-                                                <Pencil />
+                                              <Button 
+                                                className="w-1 p-4 bg-[#0077B6] hover:bg-[#038BD4]"
+                                                title="View Request"
+                                              >
+                                                <Eye />
                                               </Button>
                                             </th>
                                           </tr>
