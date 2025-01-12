@@ -7,9 +7,10 @@ interface ResourceInputBarProps {
     onAddResource: (name: string, category: string, number: number) => void;
     scannedInput?: {barcode: number, category: string, item_name: string};
     className?: string; // Optional className prop for additional styling
+    userID: string;
 }
 
-const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, scannedInput, className }) => {
+const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, scannedInput, className, userID }) => {
     // Manually Key In
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
@@ -29,6 +30,7 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, scan
         event.preventDefault();
         if (name && category && number >= 1) {
             const resourceData = {
+                organization_id: userID,
                 resource_name: name,
                 resource_category: category,
                 resource_amount: number,
@@ -117,7 +119,7 @@ const ResourceInputBar: React.FC<ResourceInputBarProps> = ({ onAddResource, scan
                     onClick={handleSubmit} 
                     className="px-[26px] py-1 bg-[#038BD4] text-white rounded-md hover:bg-[#0077B6] transition-colors duration-300"
                 >
-                    Add Resource
+                    Add
                 </button>
             </div>
         </div>

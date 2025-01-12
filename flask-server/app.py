@@ -70,8 +70,10 @@ def scan_barcode_and_stream():
         global is_scanning, cap
         print("Scanning started")
         try:
+            # 0 is the default camera index; 1 is the external camera index
+            camera_index = 1
             # Initialize the webcam
-            cap = cv2.VideoCapture(0)
+            cap = cv2.VideoCapture(camera_index)
             with open('itemList.json', 'r') as file:
                 resource_mapping = json.load(file)
 

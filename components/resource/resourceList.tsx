@@ -10,9 +10,10 @@ import { useRouter } from 'next/navigation';
 interface ResourceListProps {
     loading: boolean;
     resources: any[];
+    userID: string;
 }
 
-const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
+const ResourceList: React.FC<ResourceListProps> = ({ loading, resources, userID }) => {
     const [showModify, setShowModify] = useState(false);
     const [activeTab, setActiveTab] = useState('All'); // State to manage the active tab
 
@@ -32,7 +33,7 @@ const ResourceList: React.FC<ResourceListProps> = ({ loading, resources }) => {
     return (
         <>
             {showModify ? (
-                <ResourceModify loading={loading} resources={resources} />
+                <ResourceModify loading={loading} resources={resources} userID={userID} />
             ) : (
                 <>
                     <div className="w-full flex justify-end mt-3">

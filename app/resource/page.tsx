@@ -72,7 +72,7 @@ const ResourcePage = () => {
             if (storedUserData) {
                 const parsedUserData = JSON.parse(storedUserData);
                 setUserData(parsedUserData);
-                console.log("Session Storage: ", parsedUserData);
+                // console.log("Session Storage: ", parsedUserData);
             } else {   
                 console.log('No user data found in session storage');
             }
@@ -81,8 +81,12 @@ const ResourcePage = () => {
 
     useEffect(() => {
         const fetchResources = async () => {
+            if (!userId) return; // Ensure userId is available before fetching resources
+
             try {
-                const { data, error } = await getAllRecords('resources'); // Fetch all records from the 'resources' table
+                const organizationId = userId;
+                console.log("Organization ID: ", organizationId);
+                const { data, error } = await getRecordsByField('resources', 'organization_id', organizationId); // Fetch all records from the 'resources' table
                 console.log("Resources fetched: ", data);
                 if (error) {
                     throw new Error('Error fetching resources: ' + error.message);
@@ -96,7 +100,7 @@ const ResourcePage = () => {
         };
 
         fetchResources();
-    }, []); // Re-fetch when the location changes
+    }, [userId]); // Re-fetch when the location changes
 
     const handleLogout = async () => {
         await signOut();
@@ -132,7 +136,7 @@ const ResourcePage = () => {
                     <h1 className="ml-6 font-giorgio font-bold text-4xl sm:text-5xl md:text-6xl">My Resources</h1>
                    
                     {/* For listing the resources */}
-                    <ResourceList loading={loading} resources={resources} />                    
+                    <ResourceList loading={loading} resources={resources} userID ={userId || ''} />                    
                 </div>
             </main>
         </div>

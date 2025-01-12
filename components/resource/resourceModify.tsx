@@ -19,9 +19,10 @@ import axios from 'axios';
 interface ResourceListProps {
     loading: boolean;
     resources: any[];
+    userID: string;
 }
 
-const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => {
+const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources, userID }) => {
     const [showList, setShowList] = useState(false);
     const [resourceList, setResourceList] = useState(resources);
     const [localResourceAmounts, setLocalResourceAmounts] = useState<number[]>([]); // Local state for resource amounts
@@ -202,7 +203,7 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
     return (
         <>
             {showList ? (
-                <ResourceList loading={loading} resources={resourceList} />
+                <ResourceList loading={loading} resources={resourceList} userID={userID} />
             ) : ( 
                 <>  
                     <div className="w-full flex justify-between mt-8">
@@ -240,7 +241,7 @@ const ResourceModify: React.FC<ResourceListProps> = ({ loading, resources }) => 
                     </div>
                     <div className="grid grid-cols-1 gap-x-4 gap-y-4 p-6">
                         {/* Add the input bar at the top */}
-                        <ResourceInputBar scannedInput={scannedData} onAddResource={handleAddResource} /> 
+                        <ResourceInputBar scannedInput={scannedData} onAddResource={handleAddResource} userID={userID}/> 
                         {loading ? (
                             // Show skeletons while loading
                             Array.from({ length: 10 }).map((_, index) => (
