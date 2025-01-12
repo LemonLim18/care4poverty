@@ -132,7 +132,7 @@ const ResourcePage = () => {
                     <h1 className="ml-6 font-giorgio font-bold text-4xl sm:text-5xl md:text-6xl">My Resources</h1>
                    
                     {/* For listing the resources */}
-                    <ResourceList loading={loading} resources={resources} />                    
+                    <ResourceList loading={loading} resources={resources} userID ={userId || ''} />                    
                 </div>
             </main>
         </div>
