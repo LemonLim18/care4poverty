@@ -757,7 +757,7 @@ const RequestPage = () => {
                                                         // Format the output
                                                         return Object.entries(groupedItems).map(([category, items], index, arr) => (
                                                           <div className="mt-1" key={category}>
-                                                            <strong>{category}:</strong>
+                                                            <div className="text-gray-500 font-roboto text-italic"><strong>{category}:</strong></div>
                                                             <div>{items.join(", ")}</div>
                                                             {/* Conditionally render <hr> if it's not the last item */}
                                                             {index < arr.length - 1 && <hr className="border-blue-300 my-2" />}
