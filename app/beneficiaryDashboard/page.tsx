@@ -197,7 +197,7 @@ const YourRequest = () => {
         const fetchItems = async () => {
             setLoading(true);
             try {
-                const { data, error } = await getItems('request', userData?.id, null, 'accepted');
+                const { data, error } = await getItems('request', userData?.id, null, 'completed');
                 console.log("Beneficiary ID: ", userData?.id);
                 if (error) {
                     throw new Error(error.message);

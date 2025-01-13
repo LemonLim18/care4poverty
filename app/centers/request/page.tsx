@@ -226,7 +226,7 @@ const RequestPage = () => {
             delivery_method: selectedDeliveryMethod,
             pickup_location: pickupLocation,
             terms_agreed: isTermsAgreed,
-            status: 'Pending',
+            status: 'Incomplete',
             request_date: new Date().toISOString().split('T')[0], // Extract only the date part
         };
 

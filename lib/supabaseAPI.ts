@@ -36,6 +36,16 @@ export const updateRecord = async (table: string, id: string, data: Partial<Data
   return { data: responseData, error };
 };
 
+export const updateRecordAnyType = async (table: string, id: number, data: Partial<DataRecord>) => {
+  const { data: responseData, error } = await supabase
+    .from(table)
+    .update(data)
+    .eq('request_id', id)
+    .select();
+
+  return { data: responseData, error };
+};
+
 // Delete a record by ID from a specified table
 export const deleteRecord = async (table: string, id: string) => {
   const { data, error } = await supabase

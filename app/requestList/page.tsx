@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'; // For redirection
 import { UserType } from  "@/datatypes/types";
 import { getUser, signOut } from '../../lib/authFactory'; // Adjust the import path
 import { toast } from 'react-toastify'; // For notifications
-import { getRecordById, getRecordsByField } from '@/lib/supabaseAPI';
+import { getRecordById, getRecordsByField, updateRecord, updateRecordAnyType } from '@/lib/supabaseAPI';
 import { Pencil, Printer, Download, Eye } from "lucide-react";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -40,6 +40,14 @@ import "app/globals.css"
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { cp } from 'fs';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 type RequestList = {
     resource_name: string;
@@ -50,11 +58,13 @@ type RequestList = {
 }
 
 type RequestType = {
-    request_id: string;
+    request_id: number;
     organization_id?: string;
     beneficiary_name: string;
     request_items: RequestList[];
     request_date: string;
+    delivery_method: string;
+    pickup_location: string;
     status: string;
 }
 
@@ -71,6 +81,8 @@ const RequestPage = () => {
     
     // Used for storing the search input
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedRequest, setSelectedRequest] = useState<RequestType | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Function to handle search input change
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,6 +119,7 @@ const RequestPage = () => {
     // Function to compute statistics
     const computeStatistics = (requestData: RequestType[], availableInventory: Record<string, number>) => {
         // Check if requestData is valid
+        console.log("Now checking available Inventory: ", availableInventory);
         if (!Array.isArray(requestData) || requestData.length === 0) {
             return {
                 mostPreferredItem: null,
@@ -114,6 +127,7 @@ const RequestPage = () => {
                 leastPreferredItem: null,
                 leastPreferredItemCount: 0,
                 lackingItems: [],
+                lackingItemsByCategory: [],
                 mostFrequentUser: null,
                 mostFrequentUserCount: 0,
                 leastFrequentUser: null,
@@ -146,15 +160,21 @@ const RequestPage = () => {
         // 4. Lacking items
         const lackingItems = Object.keys(itemCounts).map(item => {
             const requestedCount = itemCounts[item];
+            // console.log("Requested Count: ", requestedCount);
             const availableCount = availableInventory[item] || 0; // Get available count from inventory
-            const lackingCount = requestedCount > availableCount ? requestedCount - availableCount : 0;
+            // console.log("Available Count: ", availableCount);
+            
+            const lackingCount = requestedCount > availableCount ?  requestedCount - availableCount : 0;
     
             return {
                 name: item,
                 available: `${availableCount}/${requestedCount}`, // Format as x/y
-                lacking: lackingCount > 0 ? lackingCount : null // Only include if lacking
+                lacking: lackingCount > 0 ? lackingCount : null, // Only include if lacking
+                category: requestData.find(request => request.request_items?.some(i => i.resource_name === item))?.request_items?.find(i => i.resource_name === item)?.resource_category || null,
             };
         }).filter(item => item.lacking !== null); // Filter out items that are not lacking
+
+        console.log("Lacking Items: ", lackingItems);
 
         // 5. Count occurrences of each user
         const userRequests = requestData.reduce((acc, request) => {
@@ -357,7 +377,7 @@ const RequestPage = () => {
                 return;
             }
             
-
+            // console.log("Check the available amount: ", resourceData);
             const beneficiaryIds = requestData?.map(request => request.beneficiary_id).filter(Boolean) || [];
             console.log("Beneficiary IDs: ", beneficiaryIds);
             // Make API calls for each beneficiary ID
@@ -385,14 +405,18 @@ const RequestPage = () => {
                 beneficiary_name: beneficiaryRefData.full_name, // Add beneficiary name to request data
               };
             });
+
+            console.log("Check the resource data before formattedInventory: ", resourceData);
             if (resourceData) {
                 const formattedInventory = resourceData.reduce((acc, item) => {
-                    acc[item.name] = item.availableCount; // Adjust 'availableCount' to the correct property name
+                    acc[item.resource_name] = item.resource_amount; // Adjust 'availableCount' to the correct property name
                     return acc;
                 }, {} as Record<string, number>);
 
+                console.log("Formatted Inventory: ", formattedInventory);
                 setAvailableInventory(formattedInventory); // Set resource data in state
-            }
+            } 
+
             if (combinedRequestData) {
               sessionStorage.setItem('request', JSON.stringify(combinedRequestData)); // Store request data
               // sessionStorage.setItem('resource', JSON.stringify(resourceData)); // Store resource data
@@ -406,16 +430,16 @@ const RequestPage = () => {
         fetchUser();
     }, []);
 
-    useEffect(() => {
-      if (!filteredRequestData) return;
-      console.log("Filtered Request Data: ", filteredRequestData);
-      filteredRequestData?.forEach((request) => {
-        console.log("Request Item: ", request.request_items); // Check the structure of each item
-        request.request_items?.forEach((item) => {
-          console.log("Item Name: ", item.resource_name);
-        });
-      });
-    }, [filteredRequestData]);
+    // useEffect(() => {
+    //   if (!filteredRequestData) return;
+    //   console.log("Filtered Request Data: ", filteredRequestData);
+    //   filteredRequestData?.forEach((request) => {
+    //     console.log("Request Item: ", request.request_items); // Check the structure of each item
+    //     request.request_items?.forEach((item) => {
+    //       console.log("Item Name: ", item.resource_name);
+    //     });
+    //   });
+    // }, [filteredRequestData]);
 
     
     const handleLogout = async () => {
@@ -431,6 +455,70 @@ const RequestPage = () => {
     // const handleTest = async () => {
         // console.log("Show the session storage: ", user); 
     // }
+
+    const handleAccept = (itemIndex: number) => {
+        if (selectedRequest) {
+            const updatedItems = [...selectedRequest.request_items];
+            updatedItems[itemIndex].item_requestStatus = 'Accepted'; // Update status to Accepted
+            setSelectedRequest({ ...selectedRequest, request_items: updatedItems }); // Update the selected request
+
+            // Check if all items are either accepted or rejected
+            const allAcceptedOrRejected = updatedItems.every(item => 
+                item.item_requestStatus === 'Accepted' || item.item_requestStatus === 'Rejected'
+            );
+
+            // Update request status based on the condition
+            setSelectedRequest(prev => ({
+                ...prev!,
+                status: allAcceptedOrRejected ? 'Completed' : 'Incomplete' // Set status to Completed or Incomplete
+            }));
+        }
+    };
+
+    const handleReject = (itemIndex: number) => {
+        if (selectedRequest) {
+            const updatedItems = [...selectedRequest.request_items];
+            updatedItems[itemIndex].item_requestStatus = 'Rejected'; // Update status to Rejected
+            setSelectedRequest({ ...selectedRequest, request_items: updatedItems }); // Update the selected request
+
+            // Check if all items are either accepted or rejected
+            const allAcceptedOrRejected = updatedItems.every(item => 
+                item.item_requestStatus === 'Accepted' || item.item_requestStatus === 'Rejected'
+            );
+
+            // Update request status based on the condition
+            setSelectedRequest(prev => ({
+                ...prev!,
+                status: allAcceptedOrRejected ? 'Completed' : 'Incomplete' // Set status to Completed or Incomplete
+            }));
+        }
+    };
+    
+    const handleConfirm = async () => {
+        if (selectedRequest) {
+            try {
+                // Call your API to update the request in the database
+                console.log("Selected Request ID: ", selectedRequest.request_id);
+                console.log("To be updated data: ", selectedRequest);
+                const { request_items, status } = selectedRequest;
+                console.log("Updated Request: ", request_items);
+                console.log("Updated Request Status: ", status);
+
+                const { data, error } = await updateRecordAnyType('request', selectedRequest.request_id, { request_items });
+                const { data:updateRequestStatus, error:updateRequestError } = await updateRecordAnyType('request', selectedRequest.request_id, { status });
+                toast.success("Request updated successfully!", {
+                    autoClose: 1500,
+                });
+
+                console.log("Request response:", data);
+                console.log("Request Status updated response:", updateRequestStatus);
+                location.reload();
+                setIsDialogOpen(false);
+            } catch (error) {
+                console.error("Error updating request:", error);
+            }
+        }
+    };
 
     return (
         <div className="h-screen flex">
@@ -477,7 +565,7 @@ const RequestPage = () => {
                           <Input
                             autoComplete="off"
                             placeholder="Search"
-                            className="rounded-none text-[#7D7D7D] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] text-sm mr-[0px] ml-[0px] bg-[#F5F9FE] border-2 border-custom-border-blue  transition-all duration-150 ease-in-out px-4 bg-[#F5F9FE] focus:text-black hover:border-[#0C8CE9]"
+                            className="rounded-none text-[#7D7D7D] placeholder:hover:text-[#0C8CE9] placeholder:focus:text-[#F5F9FE] text-sm mr-[0px] ml-[0px] border-2 border-custom-border-blue  transition-all duration-150 ease-in-out px-4 bg-[#F5F9FE] focus:text-black hover:border-[#0C8CE9]"
                             value={searchQuery}
                             onChange={handleSearchChange} // Update state on input change
                           />
@@ -518,14 +606,14 @@ const RequestPage = () => {
                                 <table className="min-w-full bg-white border-2 border-custom-border-blue border-t-0 border-r-0 mt-[0px]">
                                     <thead className="sticky top-0">
                                         <tr className="text-sm text-[#5D7EAE] bg-[#E9F4FF] border-b border-slate-200">
-                                            <th className="py-3 w-[125px] border-r">Date</th>
-                                            <th className="py-3 w-[124px] border-r">Beneficiary</th>
-                                            <th className="py-3 w-[200px] border-r">Item Name</th>
-                                            {/* <th className="py-3 w-[200px] border-r">Item Category</th> */}
+                                            <th className="py-3 w-[100px] border-r">Date</th>
+                                            <th className="py-3 w-[120px] border-r">Beneficiary</th>
+                                            <th className="py-3 w-[200px] border-r">Request Items</th>
+                                            <th className="py-3 w-[90px] border-r">Delivery Method</th>
                                             {/* <th className="py-3 w-[200px] border-r">Item No</th> */}
-                                            <th className="py-3 w-[100px] border-r">Status</th>
+                                            <th className="py-3 w-[80px] border-r">Status</th>
                                             {/* This is the edit column */}
-                                            <th className="py-3 w-[40px] border-r"></th>
+                                            <th className="py-3 w-[40px] border-r">View</th>
                                             {/* <th className="py-3 border-r"> </th> */}
                                         </tr>
                                     </thead>
@@ -538,26 +626,26 @@ const RequestPage = () => {
                                             className="animate-pulse text-sm text-center border-b border-slate-200g"
                                           >
                                             <td className="py-3 border-r">
-                                              <div className="h-4 bg-slate-200 rounded w-[96px] mx-auto"></div>
+                                              <div className="h-4 bg-slate-200 rounded w-[120px] mx-auto"></div>
                                             </td>
                                             <td className="py-3 border-r">
-                                              <div className="h-4 bg-slate-200 rounded w-[107px] mx-auto"></div>
+                                              <div className="h-4 bg-slate-200 rounded w-[110px] mx-auto"></div>
                                             </td>
                                             <td className="py-3 px-3 border-r">
+                                              <div className="h-4 bg-slate-200 rounded w-[210px] mx-auto"></div>
+                                            </td>
+                                            <td className="py-3 px-4 border-r">
                                               <div className="h-4 bg-slate-200 rounded w-[80px] mx-auto"></div>
                                             </td>
-                                            <td className="py-3 px-4 border-r">
-                                              <div className="h-4 bg-slate-200 rounded w-[98px] mx-auto"></div>
-                                            </td>
                                             <td className="py-3 px-3 border-r">
-                                              <div className="h-4 bg-slate-200 rounded w-[62px] mx-auto"></div>
+                                              <div className="h-4 bg-slate-200 rounded w-[130px] mx-auto"></div>
                                             </td>
-                                            <td className="py-3 px-4 border-r">
+                                            {/* <td className="py-3 px-4 border-r">
                                               <div className="h-6 bg-slate-200 rounded w-[92px] mx-auto"></div>
                                             </td>
                                             <th className="py-3">
                                               <div className="h-6 bg-slate-200 rounded w-8 mx-auto"></div>
-                                            </th>
+                                            </th> */}
                                           </tr>
                                         ))
                                       ) : filteredRequestData && filteredRequestData.length > 0 ? (
@@ -578,12 +666,12 @@ const RequestPage = () => {
                                                 </span>
                                               ))}
                                             </td>
-                                            {/* <td className="py-3 px-4 border-r">{request.item_category}</td> */}
+                                            <td className="py-3 px-4 border-r">{request.delivery_method === 'pickUp' ? 'Pick-Up' : request.delivery_method === 'dropOff' ? 'Drop-Off' : 'Loading...' }</td>
                                             {/* <td className="py-3 px-4 border-r">{request.item_no}</td> */}
                                             <td className="py-3 px-4 border-r">
                                               <Button
                                                 className={`px-5 ${
-                                                  request.status === "Pending"
+                                                  request.status === "Incomplete"
                                                     ? "bg-[#E4C463] hover:bg-[#f4cf62]"
                                                     : "bg-[#4EA79C] hover:bg-[#5bbbb0]"
                                                 }`}
@@ -596,6 +684,10 @@ const RequestPage = () => {
                                               <Button 
                                                 className="w-1 p-4 bg-[#0077B6] hover:bg-[#038BD4]"
                                                 title="View Request"
+                                                onClick={() => {
+                                                    setSelectedRequest(request);
+                                                    setIsDialogOpen(true);
+                                                }}
                                               >
                                                 <Eye />
                                               </Button>
@@ -634,23 +726,57 @@ const RequestPage = () => {
                                         <tbody className="text-sm font-roboto">
                                             <tr className="hover:bg-gray-50 border-b">
                                                 <td className="py-3 px-4 border-r ">Most Preferred Item</td>
-                                                <td className="py-3 px-4 border-r">{statistics.mostPreferredItem || "None"} (Requests: {statistics.mostPreferredItemCount || 0})</td>
+                                                <td className="py-3 px-4 border-r">{statistics.mostPreferredItem || "None"} [Requests: {statistics.mostPreferredItemCount || 0}]</td>
                                             </tr>
                                             <tr className="hover:bg-gray-50  border-b">
                                                 <td className="py-3 px-4 border-r">Least Preferred Item</td>
-                                                <td className="py-3 px-4 border-r">{statistics.leastPreferredItem || "None"} (Requests: {statistics.leastPreferredItemCount || 0})</td>
+                                                <td className="py-3 px-4 border-r">{statistics.leastPreferredItem || "None"} [Requests: {statistics.leastPreferredItemCount || 0}]</td>
                                             </tr>
                                             <tr className="hover:bg-gray-50 border-b">
                                                 <td className="py-3 px-4 border-r">Lacking Items</td>
-                                                <td className="py-3 px-4 border-r">{statistics.lackingItems.length > 0 ? statistics.lackingItems.map(item => `${item.name} (Available: ${item.available})`).join(", ") : "None"}</td>
+                                                <td className="py-3 px-4 border-r">
+                                                  {/* {
+                                                   statistics.lackingItems.length > 0 ?
+                                                   statistics.lackingItems.map(item => `${item.name} [Available: ${item.available}]`).join(" , ") : "None"
+                                                   
+                                                   } */}
+                                                  {statistics.lackingItems.length > 0 ? (
+                                                    (() => {
+                                                        // Group items by category
+                                                        const groupedItems: { [key: string]: string[] } = {};
+                                                    
+                                                        statistics.lackingItems.forEach(item => {
+                                                            if (item.category) { // Check if category is not null or undefined
+                                                                if (!groupedItems[item.category]) {
+                                                                    groupedItems[item.category] = []; // Initialize array if category doesn't exist
+                                                                }
+                                                                groupedItems[item.category].push(`${item.name} [Available: ${item.available}]`); // Add item name to the category
+                                                            }
+                                                        });
+                                                      
+                                                        // Format the output
+                                                        return Object.entries(groupedItems).map(([category, items], index, arr) => (
+                                                          <div className="mt-1" key={category}>
+                                                            <strong>{category}:</strong>
+                                                            <div>{items.join(", ")}</div>
+                                                            {/* Conditionally render <hr> if it's not the last item */}
+                                                            {index < arr.length - 1 && <hr className="border-blue-300 my-2" />}
+                                                          </div>
+                                                        ));                                                        
+                                                    })()
+                                                ) : (
+                                                    "None"
+                                                )}
+
+                                                </td>
                                             </tr>
                                             <tr className="hover:bg-gray-50 border-b">
                                                 <td className="py-3 px-4 border-r">Most Frequently Requested User</td>
-                                                <td className="py-3 px-4 border-r">{statistics.mostFrequentUser || "None"} (Requests: {statistics.mostFrequentUserCount || 0})</td>
+                                                <td className="py-3 px-4 border-r">{statistics.mostFrequentUser || "None"} [Requests: {statistics.mostFrequentUserCount || 0}]</td>
                                             </tr>
                                             <tr className="hover:bg-gray-50 border-b">
                                                 <td className="py-3 px-4 border-r">Least Frequently Requested User</td>
-                                                <td className="py-3 px-4 border-r">{statistics.leastFrequentUser || "None"} (Requests: {statistics.leastFrequentUserCount || 0})</td>
+                                                <td className="py-3 px-4 border-r">{statistics.leastFrequentUser || "None"} [Requests: {statistics.leastFrequentUserCount || 0}]</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -661,6 +787,72 @@ const RequestPage = () => {
                     </Tabs>
                 </div>
             </main>
+            {/* Dialog for Request Details */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Request Details</DialogTitle>
+                        <div className="text-sm text-muted-foreground">
+                            {selectedRequest ? (
+                                <div>
+                                  <div className="gap-y-2 w-full flex justify-between mt-2 px-3">
+                                    <div className="flex flex-col"><strong>Beneficiary:</strong><span className="text-sm">{selectedRequest.beneficiary_name}</span></div>
+                                    <div className="flex flex-col"><strong>Request Date:</strong><span className="text-sm ">{new Date(selectedRequest.request_date).toLocaleDateString()}</span></div>
+                                    <div className="flex flex-col"><strong>Status:</strong><span className="text-sm">{selectedRequest.status}</span></div>
+                                  </div>
+                                  <div className="px-3 mt-2 w-full">
+                                    {/* Show delivery method if it's dropOff, else dont show it */}
+                                    {selectedRequest.delivery_method === 'dropOff' && (
+                                      <div className="flex flex-col"><strong>Delivery Method:</strong><span className="text-sm px-1">{selectedRequest.delivery_method === 'dropOff' && "Drop-Off" }</span></div>
+                                    )}
+                                    {/* Don't show pickup location if it's not*/}
+                                    {selectedRequest.pickup_location && 
+                                      <div className="flex flex-col w-full "><strong>Pick-Up Location:</strong><span className="text-sm">{selectedRequest.pickup_location}</span></div>
+                                    }
+                                  </div>
+                                  <div className="mt-5 px-3"><strong>Request Items:</strong></div>
+                                    <div className="mt-2 px-3 space-y-2">
+                                        {selectedRequest.request_items
+                                          .filter(item => item.request_amount > 0)
+                                          .map((item, index) => (
+                                            <div key={index} className="flex justify-between items-center p-4 border border-gray-300  hover:bg-gray-200 rounded-lg shadow-sm bg-white">
+                                                <div className="flex-1">
+                                                    <strong>Resource Name:</strong> {item.resource_name} <br />
+                                                    <strong>Category:</strong> {item.resource_category} <br />
+                                                    <strong>Request Amount:</strong> {item.request_amount} <br />
+                                                    <strong>Status:</strong> {item.item_requestStatus?.charAt(0).toUpperCase() + item.item_requestStatus?.slice(1)}
+                                                </div>
+                                                <div className="ml-4">
+                                                    <Button 
+                                                        className="bg-[#4EA79C] hover:bg-[#5bbbb0] text-white"
+                                                        onClick={() => handleAccept(index)}
+                                                    >
+                                                        Accept
+                                                    </Button>
+                                                    <Button 
+                                                        className="bg-red-500 hover:bg-red-600 text-white ml-2"
+                                                        onClick={() => handleReject(index)}
+                                                    >
+                                                        Reject
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>No request selected.</div>
+                            )}
+                        </div>
+                    </DialogHeader>
+                    <div className="flex flex-col mt-1 gap-y-2 mx-3">
+                        <Button onClick={handleConfirm} className="bg-[#038BD4] hover:bg-[#0077B6] text-white">
+                            Confirm
+                        </Button>
+                        <Button onClick={() => setIsDialogOpen(false)}>Close</Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
