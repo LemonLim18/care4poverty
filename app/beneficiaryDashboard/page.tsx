@@ -8,7 +8,7 @@ import { UserType } from  "@/datatypes/types";
 import SideBarComponent from "@/components/dashboard/sideBar"; // Adjust the import path
 import { Breadcrumb, BreadcrumbList, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbItem } from '@/components/ui/breadcrumb';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { CupSoda, HeartPulse, Pizza, Shirt, User, TrendingUp, IdCard, Phone, Mail, PanelsTopLeft } from 'lucide-react';
+import { CupSoda, HeartPulse, Pizza, Shirt, User, TrendingUp, IdCard, Phone, Mail, PanelsTopLeft, MessageCircle } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis, PieChart, Pie } from "recharts";
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/components/ui/pagination';
-import { getItems, getEvents } from '@/lib/supabaseAPI';
+import { getItems, getEvents, getNotifications } from '@/lib/supabaseAPI';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import Head from 'next/head';
@@ -28,9 +28,9 @@ import dynamic from "next/dynamic";
 const Map = dynamic(() => import('@/components/map/map'), { ssr: false });
 
 // Define a User type based on your application structure
-type User = {
-    email?: string;
-};  
+// type User = {
+//     email?: string;
+// };  
 
 interface RequestItem {
     request_amount: number;
@@ -39,7 +39,8 @@ interface RequestItem {
 
 const YourRequest = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
-    const [user, setUser] = useState<User | null>(null);
+    // const [user, setUser] = useState<User | null>(null);
+    const [userId, setUserId] = useState<string | null>(null);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState<any[]>([]);
@@ -48,6 +49,7 @@ const YourRequest = () => {
     const [foodCount, setFoodCount] = useState(0);
     const [drinksCount, setDrinksCount] = useState(0);
     const [healthSuppliesCount, setHealthSuppliesCount] = useState(0);
+    const [newNotifications, setNewNotifications] = useState(0);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
@@ -69,14 +71,15 @@ const YourRequest = () => {
         }
 
         const fetchUser = async () => {
-            const currentUser: User | null = await getUser();
+            const currentUser: any | null = await getUser();
             if (!currentUser) {
                 toast.error('User not found! Redirecting to login...', {
                     autoClose: 1350,
                 });
                 router.push('/auth/login');
             } else {
-                setUser(currentUser);
+                // setUser(currentUser);
+                setUserId(currentUser.id);
             }
         };
 
@@ -84,6 +87,9 @@ const YourRequest = () => {
     }, []);
 
     useEffect(() => {
+        if (!userData) {
+            return;
+        }
         const fetchEvents = async () => {
             setLoading(true);
             try {
@@ -122,7 +128,50 @@ const YourRequest = () => {
             router.push(`/beneficiaryRequest?organizationId=${organizationId}`);
         }
     };
-       
+    
+    useEffect(() => {
+        if (!userData) {
+            return;
+        }
+        const fetchNotifications = async () => {
+            const { data, error } = await getNotifications('notifications', userData?.id, {}, undefined, "unread");
+            if (error) {
+                console.error('Error fetching notifications:', error.message);
+                return;
+            }
+            if (data) {
+                console.log("Notifications: ", data);
+                setNewNotifications(data.length);
+            } else {
+                console.log("No notifications found.");
+            }
+        };
+        fetchNotifications();
+    }, [userData]);
+
+    useEffect(() => {
+        if (!userData){
+            return;
+        }
+        console.log("Updated New Notifications Count:", newNotifications);
+        if (newNotifications > 0) {
+            toast(
+            <div className="flex flex-col">
+                <strong className="text-lg">Welcome back!</strong>
+                <div className="flex items-center mt-2">
+                    <MessageCircle className="mr-2" />
+                    {`You have ${newNotifications} new notifications`}
+                </div>
+            </div>, {
+                position: "top-right",
+                autoClose: false,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        }
+    }, [newNotifications]);
+
     const chartConfigOverview = {
         fund: {
           label: "Fund",
@@ -195,10 +244,12 @@ const YourRequest = () => {
 
     useEffect(() => {
         const fetchItems = async () => {
+            if(!userId) return;
+
             setLoading(true);
             try {
-                const { data, error } = await getItems('request', userData?.id, null, 'completed');
-                console.log("Beneficiary ID: ", userData?.id);
+                const { data, error } = await getItems('request', userId, null, 'Accepted');
+                console.log("Beneficiary ID: ", userId);
                 if (error) {
                     throw new Error(error.message);
                 }
@@ -216,9 +267,12 @@ const YourRequest = () => {
         };
 
         fetchItems();
-    }, []);
+    }, [userId]);
 
     useEffect(() => {
+        if (!userData) {
+            return;
+        }
         // Calculate category counts
         const categoryCounts = items.reduce((acc, item) => {
             item.request_items.forEach((requestItem: RequestItem) => {
@@ -232,7 +286,7 @@ const YourRequest = () => {
             });
             return acc;
         }, {});
-    
+
         // Function to animate count
         const animateCount = (target: number, setState: React.Dispatch<React.SetStateAction<number>>) => {
             let currentCount = 0;

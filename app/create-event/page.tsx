@@ -9,7 +9,7 @@ import { getUser, signOut, uploadEventPhoto } from '@/lib/authFactory';
 import { toast } from 'react-toastify';
 import { Breadcrumb, BreadcrumbSeparator, BreadcrumbLink, BreadcrumbItem, BreadcrumbList } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import { createRecord } from '@/lib/supabaseAPI';
+import { createRecord, getAllRecords } from '@/lib/supabaseAPI';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
@@ -23,6 +23,7 @@ const CreateEventPage = () => {
     const [userData, setUserData] = useState<UserType | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
+    const [userId, setUserId] = useState('');
 
     const [sharedInfo, setSharedInfo] = useState({
         event_title: '',
@@ -70,6 +71,12 @@ const CreateEventPage = () => {
 
         fetchUser();
     }, []); // Only run once on mount
+
+    useEffect(() => {
+        if (userData) {
+            setUserId(userData.id);
+        }
+    }, [userData]);
 
     const handleSharedInfoChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type, files } = e.target as HTMLInputElement; // Type assertion for file handling
@@ -141,7 +148,58 @@ const CreateEventPage = () => {
                 ...sharedInfo
             };
             
-            console.log(eventData);
+            console.log("User ID: ", userId);
+
+            if (sharedInfo.event_type === 'donation' || sharedInfo.event_type === 'galaeevent') {
+                const users = await getAllRecords('users');
+                const donors = users.data?.filter(user => user.role === 'donor');
+                const donorIds = donors?.map(donor => donor.id);
+                console.log("Donor ids:", donorIds);
+
+                if (donorIds && donorIds.length > 0) {
+                    for (const donor_id of donorIds) {
+                        const notification = {
+                            notis_title: `Surprise, my organization will be holding a new event!`,
+                            notis_description: `'${sharedInfo.event_title}' will be held on ${sharedInfo.event_date} at ${sharedInfo.event_location}. Do come and join us!`,
+                            other_id: userId,
+                            user_id: donor_id,
+                            notis_timestamp: new Date().toISOString().split('T')[0],
+                            notis_status: 'unread',
+                        };
+            
+                        const notificationResponse = await createRecord('notifications', notification);
+                        if (notificationResponse.error) {
+                            toast.error(notificationResponse.error.message || "Notification creation failed. Please try again.");
+                        }
+                    }
+                }
+            }
+
+            if (sharedInfo.event_type === 'funrun' || sharedInfo.event_type === 'concert') {
+                const users = await getAllRecords('users');
+                const beneficiaries = users.data?.filter(user => user.role === 'beneficiary');
+                const beneficiaryIds = beneficiaries?.map(beneficiary => beneficiary.id);
+                console.log("Beneficiary ids:", beneficiaryIds);
+
+                if (beneficiaryIds && beneficiaryIds.length > 0) {
+                    for (const beneficiary_id of beneficiaryIds) {
+                        const notification = {
+                            notis_title: `Surprise, my organization will be holding a new event!`,
+                            notis_description: `'${sharedInfo.event_title}' will be held on ${sharedInfo.event_date} at ${sharedInfo.event_location}. Do come and join us!`,
+                            other_id: userId,
+                            user_id: beneficiary_id,
+                            notis_timestamp: new Date().toISOString().split('T')[0],
+                            notis_status: 'unread',
+                        };
+            
+                        const notificationResponse = await createRecord('notifications', notification);
+                        if (notificationResponse.error) {
+                            toast.error(notificationResponse.error.message || "Notification creation failed. Please try again.");
+                        }
+                    }
+                }
+            }
+
             const response = await createRecord('events', eventData);
 
             if (response.error) {
@@ -150,9 +208,12 @@ const CreateEventPage = () => {
                 toast.success("Event created successfully!");
                 router.push('/event');
             }
+            
         } catch (error) {
             toast.error("Event creation failed. Please try again.");
         }
+
+        
     };
 
     return (
@@ -260,13 +321,15 @@ const CreateEventPage = () => {
                                             <span className="ml-[2px] text-[#FF0000] font-bold"> *</span>
                                         </Label>
                                         <select 
-                                            value={sharedInfo.event_type}
                                             onChange={(e) => {
-                                                setSharedInfo({...sharedInfo, event_type: e.target.value});
+                                                const newValue = e.target.value;
+                                                setSharedInfo({...sharedInfo, event_type: newValue});
+                                                console.log("Updated sharedInfo:", { ...sharedInfo, event_type: newValue });
                                             }}
                                             required
                                             className="text-sm px-2 py-2 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                                         >
+                                            <option value="">Select an event type</option>
                                             <option value="funrun">Fun Run</option>
                                             <option value="galaevent">Gala Event</option>
                                             <option value="concert">Concert</option>
@@ -301,7 +364,7 @@ const CreateEventPage = () => {
                                             type="file"
                                             accept=".jpg,.jpeg,.png"
                                             onChange={handleSharedInfoChange}
-                                            required
+                                            // required
                                             multiple
                                             className="text-sm px-2 border-2 border-custom-border-blue focus:border-[#0C8CE9] bg-[#F5F9FE] rounded-lg text-[#7D7D7D] focus:text-black hover:border-[#0C8CE9] transition-all duration-150 ease-in-out"
                                         />

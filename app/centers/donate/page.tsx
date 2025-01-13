@@ -15,7 +15,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Minus, CirclePlus, Trash, Trash2 } from "lucide-react";
+import { Plus, Minus, CirclePlus, Trash, Trash2, Cross, Coffee } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -228,6 +228,24 @@ const DonationPage = () => {
                 window.location.reload();
             }, 1500);
         }
+
+        const notification = {
+            notis_title: `Good news, I have made a donation to the organization.`,
+            notis_description: `You have a new donation for ${resources.map(item => item.name).join(', ')}. Check it out! The delivery method is ${selectedDeliveryMethod === 'pickUp' ? 'pick-up' : 'drop-off'}.`,
+            other_id: userData?.id,
+            user_id: charityId,
+            notis_timestamp: new Date().toISOString().split('T')[0],
+            notis_status: 'unread',
+        }
+
+        console.log("Notification: ", notification);
+
+        const { data: NotificationResponse, error: notificationError } = await createRecord('notifications', notification);
+        if(notificationError) {
+            console.error('Error inserting notification:', notificationError);
+        } else {
+            console.log('Notification sent:', NotificationResponse);
+        }
     }
 
 
@@ -273,13 +291,22 @@ const DonationPage = () => {
                                 {resources.map((resource, index) => (
                                     <div key={index} className={`mt-2 flex items-center justify-between p-4 bg-white border shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl`}>
                                         <div className="flex items-center space-x-4">
-                                            <div className={`flex items-center justify-center w-12 h-12 rounded-full ${resource.category === "Foods"? 'bg-green-500' : resource.category === "Wearable Items"? 'bg-orange-500' : 'bg-blue-100'}`}>
+                                            <div className={`flex items-center justify-center w-12 h-12 rounded-full 
+                                                ${resource.category === "Foods"? 'bg-green-500' : 
+                                                resource.category === "Wearable Items"? 'bg-orange-500' :
+                                                resource.category === "Drinks"? 'bg-pink-500' :
+                                                resource.category === "Health Supplies"? 'bg-blue-500' : 
+                                                'bg-blue-100'}`}>
                                                 {resource.category === 'Foods' ? (
                                                     <FaAppleAlt className="text-green-800 w-12 h-6" />
                                                 ) : resource.category === 'Wearable Items' ? (
                                                     <FaTshirt className="text-orange-800 w-12 h-6" />
+                                                ) : resource.category === 'Drinks' ? (
+                                                    <Coffee className="text-pink-800 w-12 h-6" />
+                                                ) : resource.category === 'Health Supplies' ? (
+                                                    <Cross className="text-blue-800 w-12 h-6" />
                                                 ) : (
-                                                    <FaPlus className="text-blue-500 w-12 h-6" />
+                                                    <FaPlus className="text-gray-500 w-12 h-6" />
                                                 )}
                                             </div>
                                             {/* Name and Category */}
@@ -301,6 +328,8 @@ const DonationPage = () => {
                                                     <option value="" className="text-gray-500">Select a category</option>
                                                     <option value="Foods">Foods</option>
                                                     <option value="Wearable Items">Wearable Items</option>
+                                                    <option value="Drinks">Drinks</option>
+                                                    <option value="Health Supplies">Health Supplies</option>
                                                 </select>
                                             </div>
                                         </div>

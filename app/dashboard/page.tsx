@@ -19,14 +19,14 @@ import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PieSectorDataItem } from 'recharts/types/polar/Pie';
-import { TrendingUp, IdCard, Phone, Mail, PanelsTopLeft } from "lucide-react";
+import { TrendingUp, IdCard, Phone, Mail, PanelsTopLeft, MessageCircle } from "lucide-react";
 import image from "../../public/images/donation.jpeg"
 import Image from 'next/image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { typeData, barData, chartData, chartConfigType, chartConfigBar, chartConfig } from "./data/data";
-import { getDonor, getEvents } from '@/lib/supabaseAPI';
+import { getDonor, getEvents, getNotifications } from '@/lib/supabaseAPI';
 
 interface DonationType {
   donor_id: string;
@@ -44,6 +44,7 @@ const DashboardPage = () => {
     const [loading, setLoading] = useState(true);
     const [donation, setDonation] = useState<any[]>([]);
     const [donationCount, setDonationCount] = useState(0);
+    const [newNotifications, setNewNotifications] = useState(0);
     const [uniqueDonor, setUniqueDonor] = useState<Record<string, number>>({});
     const [events, setEvents] = useState<any[]>([]);
     const [loadingEvents, setLoadingEvents] = useState(true);
@@ -117,6 +118,50 @@ const DashboardPage = () => {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        if (!userData) {
+            return;
+        }
+        const fetchNotifications = async () => {
+            const { data, error } = await getNotifications('notifications', userData?.id, {}, undefined, "unread");
+            if (error) {
+                console.error('Error fetching notifications:', error.message);
+                return;
+            }
+            if (data) {
+                console.log("Notifications: ", data);
+                setNewNotifications(data.length);
+                console.log("Number of notifications: ", data.length);
+            } else {
+                console.log("No notifications found.");
+            }
+        };
+        fetchNotifications();
+    }, [userData]);
+
+    useEffect(() => {
+        if (!userData){
+            return;
+        }
+        console.log("Updated New Notifications Count:", newNotifications);
+        if (newNotifications > 0) {
+            toast(
+            <div className="flex flex-col">
+                <strong className="text-lg">Welcome back!</strong>
+                <div className="flex items-center mt-2">
+                    <MessageCircle className="mr-2" />
+                    {`You have ${newNotifications} new notifications`}
+                </div>
+            </div>, {
+                position: "top-right",
+                autoClose: false,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        }
+    }, [newNotifications]);
+
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date)
         const referenceDate = new Date("2024-06-30")
@@ -143,8 +188,11 @@ const DashboardPage = () => {
     };
 
     useEffect(() => {
+        if (!userData) {
+            return;
+        }
         fetch();
-    }, []);
+    }, [userData]);
 
     const fetch = async () => {
         const fetchData = async () => {
@@ -173,6 +221,9 @@ const DashboardPage = () => {
     };
 
     useEffect(() => {
+        if (!userData) {
+            return;
+        }
         const fetchEvents = async () => {
             setLoading(true);
             try {
@@ -194,7 +245,7 @@ const DashboardPage = () => {
         };
 
         fetchEvents();
-    }, []);
+    }, [userData]);
 
     const countDonation = (donations: any[]) => {
         const donorCounts: Record<string, number> = {};

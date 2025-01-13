@@ -8,7 +8,7 @@ import { UserType } from  "@/datatypes/types";
 import SideBarComponent from "@/components/dashboard/sideBar"; // Adjust the import path
 import { Breadcrumb, BreadcrumbList, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbItem } from '@/components/ui/breadcrumb';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { CupSoda, HeartPulse, Pizza, Shirt, User, TrendingUp, IdCard, Phone, Mail, PanelsTopLeft } from 'lucide-react';
+import { CupSoda, HeartPulse, Pizza, Shirt, User, TrendingUp, IdCard, Phone, Mail, PanelsTopLeft, MessageCircle } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis, PieChart, Pie } from "recharts";
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/components/ui/pagination';
-import { getDonation, getEvents } from '@/lib/supabaseAPI';
+import { getDonation, getEvents, getNotifications } from '@/lib/supabaseAPI';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import Head from 'next/head';
@@ -48,6 +48,7 @@ const YourDonation = () => {
     const [foodCount, setFoodCount] = useState(0);
     const [drinksCount, setDrinksCount] = useState(0);
     const [healthSuppliesCount, setHealthSuppliesCount] = useState(0);
+    const [newNotifications, setNewNotifications] = useState(0);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
@@ -219,6 +220,49 @@ const YourDonation = () => {
 
         fetchDonation(userData?.id || null);
     }, [userData]);
+
+    useEffect(() => {
+        if (!userData) {
+            return;
+        }
+        const fetchNotifications = async () => {
+            const { data, error } = await getNotifications('notifications', userData?.id, {}, undefined, "unread");
+            if (error) {
+                console.error('Error fetching notifications:', error.message);
+                return;
+            }
+            if (data) {
+                console.log("Notifications: ", data);
+                setNewNotifications(data.length);
+            } else {
+                console.log("No notifications found.");
+            }
+        };
+        fetchNotifications();
+    }, [userData]);
+
+    useEffect(() => {
+        if (!userData){
+            return;
+        }
+        console.log("Updated New Notifications Count:", newNotifications);
+        if (newNotifications > 0) {
+            toast(
+            <div className="flex flex-col">
+                <strong className="text-lg">Welcome back!</strong>
+                <div className="flex items-center mt-2">
+                    <MessageCircle className="mr-2" />
+                    {`You have ${newNotifications} new notifications`}
+                </div>
+            </div>, {
+                position: "top-right",
+                autoClose: false,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        }
+    }, [newNotifications]);
 
     useEffect(() => {
         // Calculate category counts

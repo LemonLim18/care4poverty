@@ -5,14 +5,24 @@ import { checkUserAndRedirect } from '@/lib/authFactory'; // Adjust the import p
 
 const CheckUserPage = () => {
     useEffect(() => {
-        checkUserAndRedirect(); // Call the function to check user existence and redirect
+        const timer = setTimeout(() => {
+            checkUserAndRedirect();
+        }, 3000);
+    
+        return () => clearTimeout(timer);
     }, []);
 
     return (
         <div className="h-[100vh] w-full flex justify-center items-center">
-            Loading...
+            <img 
+            src="/images/loading.gif" 
+            alt="Loading..." 
+            draggable={false} 
+            onClick={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
+            />
         </div>
-    ); // Show a loading state while checking
+    );
 };
 
-export default CheckUserPage; 
+export default CheckUserPage;
