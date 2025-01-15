@@ -164,7 +164,7 @@ const YourRequest = () => {
                 </div>
             </div>, {
                 position: "top-right",
-                autoClose: false,
+                autoClose: 3000,
                 hideProgressBar: false,
                 pauseOnHover: true,
                 draggable: true,
@@ -248,7 +248,7 @@ const YourRequest = () => {
 
             setLoading(true);
             try {
-                const { data, error } = await getItems('request', userId, null, 'Accepted');
+                const { data, error } = await getItems('request', userId, null, 'Completed');
                 console.log("Beneficiary ID: ", userId);
                 if (error) {
                     throw new Error(error.message);

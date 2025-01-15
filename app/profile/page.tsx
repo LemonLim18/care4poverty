@@ -143,7 +143,7 @@ const ProfilePage = () => {
                   <img
                     src={userData.profile_picture}
                     alt="Profile"
-                    className="w-20 h-20 rounded-full border-2 border-gray-300"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
                   />
                   <div className="ml-4">
                     <h2 className="text-lg font-semibold">{userData.full_name}</h2>

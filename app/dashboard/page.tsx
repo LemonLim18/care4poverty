@@ -154,7 +154,7 @@ const DashboardPage = () => {
                 </div>
             </div>, {
                 position: "top-right",
-                autoClose: false,
+                autoClose: 3000,
                 hideProgressBar: false,
                 pauseOnHover: true,
                 draggable: true,

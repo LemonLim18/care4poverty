@@ -256,7 +256,7 @@ const YourDonation = () => {
                 </div>
             </div>, {
                 position: "top-right",
-                autoClose: false,
+                autoClose: 3000,
                 hideProgressBar: false,
                 pauseOnHover: true,
                 draggable: true,
@@ -341,8 +341,8 @@ const YourDonation = () => {
                 <div className="mt-1 mb-2 md:flex">
                     <div className='md:w-2/3 md:mr-4 mb-5 flex flex-col'>
                         <Card className='p-5 flex-1'>
-                            <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Recently Requested Items</h2>
-                            <p className="font-roboto text-sm sm:text-sm md:text-sm text-gray-500">Request summary</p>
+                            <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Recently Donated Items</h2>
+                            <p className="font-roboto text-sm sm:text-sm md:text-sm text-gray-500">Donation summary</p>
                             <div className="grid grid-cols-2 md:grid-cols-4 mt-1">
                                 <Card className="m-2 bg-red-300 flex flex-col items-center transform transition-transform hover:scale-105">
                                     <CardHeader>
@@ -402,7 +402,7 @@ const YourDonation = () => {
                     {/* financial overview */}
                     <div className='md:w-1/3 flex flex-col'>
                         <Card className='p-5'>
-                            <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Request Overview</h2>
+                            <h2 className="font-roboto text-lg sm:text-xl md:text-xl">Donation Overview</h2>
                             <div className="mt-10">
                                 <ChartContainer config={chartConfigOverview} className="min-h-[200px] w-full">
                                     <BarChart accessibilityLayer data={chartDataOverview}>
@@ -428,7 +428,7 @@ const YourDonation = () => {
                 {/* second colume */}
                 <div className="mt-1 mb-2 md:flex md:flex-col">
                     <div className="mt-7 flex">
-                        <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl">Organizations Requested</h2>
+                        <h2 className="font-giorgio font-bold text-3xl sm:text-3xl md:text-4xl">Organizations Donated</h2>
                     </div>
                     {loading ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -529,7 +529,7 @@ const YourDonation = () => {
                     <div className='md:w-1/3 flex flex-col p-1'>
                         <Card className="flex flex-col">
                             <CardHeader className="items-center pb-0 p-6">
-                                <div className="font-bold text-lg">Request Overview by Category</div>
+                                <div className="font-bold text-lg">Donation Overview by Category</div>
                                 <div className="font-roboto text-sm">January - June 2024</div>
                             </CardHeader>
                             <CardContent className="flex-1 pb-0">
@@ -579,9 +579,9 @@ const YourDonation = () => {
                         <Card>
                             <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
                                 <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-                                    <div className="font-bold text-lg">Request trend over time</div>
+                                    <div className="font-bold text-lg">Donation trend over time</div>
                                     <div className="font-roboto text-sm">
-                                        Showing total requests and funds for the last 3 months
+                                        Showing total donations for the last 3 months
                                     </div>
                                 </div>
                                 <div className="flex">

@@ -56,6 +56,9 @@ const donorDonation = () => {
     }, []);
 
     useEffect(() => {
+        if (!userData) {
+            return;
+        }
         const fetchDonation = async (userId: string | null) => {
             if (userId){
                 setLoading(true);
@@ -162,9 +165,9 @@ const donorDonation = () => {
                             <Card className='p-2 md:p-4'>
                                 <div className="p-2 flex">
                                     <Calendar className='mr-2'/>
-                                    <p className="font-bold text-sm sm:text-sm md:text-lg mr-2"> Request Date:</p>
+                                    <p className="font-bold text-sm sm:text-sm md:text-lg mr-2"> Donated Date:</p>
                                     <p className="text-sm sm:text-sm md:text-lg">
-                                        {new Date(donation[0]?.donation_created).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric' }) || 'Request Date'}
+                                        {new Date(donation[0]?.donation_created).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric' }) || 'Donated Date'}
                                     </p>
                                 </div>
                                 <div className="p-2 flex">
@@ -200,7 +203,7 @@ const donorDonation = () => {
                     </div>
 
                     <div className="flex flex-col mt-5 mb-5">
-                        <p className="font-bold text-xl sm:text-xl md:text-2xl mr-2 mb-1">Requested Items: </p>
+                        <p className="font-bold text-xl sm:text-xl md:text-2xl mr-2 mb-1">Donated Items: </p>
                         <div className="rounded-md border">
                             <Table>
                                 <TableHeader style={{ backgroundColor: '#3597ff'}}>

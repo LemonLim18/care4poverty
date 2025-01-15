@@ -25,6 +25,7 @@ interface RequestItem {
     request_amount: number;
     resource_amount: number;
     resource_category: string;
+    item_requestStatus: string;
 }
 
 const beneficiaryRequest = () => {
@@ -64,10 +65,13 @@ const beneficiaryRequest = () => {
     }, []);
 
     useEffect(() => {
-        const fetchItems = async () => {
+        if (!userData) {
+            return;
+        }
+        const fetchItems = async (userId: string | null) => {
             setLoading(true);
             try {
-                const { data, error } = await getItems('request', userData?.id, organizationId, 'accepted');
+                const { data, error } = await getItems('request', userId, organizationId, 'Completed');
                 if (error) {
                     throw new Error(error.message);
                 }
@@ -84,8 +88,8 @@ const beneficiaryRequest = () => {
             }
         };
 
-        fetchItems();
-    }, []);
+        fetchItems(userData?.id || null);
+    }, [userData]);
 
     const handleLogout = async () => {
         await signOut();
@@ -203,12 +207,11 @@ const beneficiaryRequest = () => {
                                 <div className="p-2 flex items-center">
                                     <BadgeInfo className='mr-2'/>
                                     <p className="font-bold text-sm sm:text-sm md:text-lg mr-2"> Request status:</p>
-                                    <div className={`p-2 rounded-md items-center flex ${items[0]?.status === 'accepted' ? 'bg-green-500' : items[0]?.status === 'pending' ? 'bg-gray-500' : items[0]?.status === 'rejected' ? 'bg-red-500' : ''}`}>
-                                        {items[0]?.status === 'accepted' && <Check className='mr-2' />}
-                                        {items[0]?.status === 'pending' && <Clock className='mr-2' />}
-                                        {items[0]?.status === 'rejected' && <X className='mr-2' />}
+                                    <div className={`p-2 rounded-md items-center flex ${items[0]?.status === 'Completed' ? 'bg-green-500' : items[0]?.status === 'Incomplete' ? 'bg-gray-500' : ''}`}>
+                                        {items[0]?.status === 'Completed' && <Check className='mr-2' />}
+                                        {items[0]?.status === 'Incomplete' && <Clock className='mr-2' />}
                                         <p className="text-sm item-center">
-                                            {items[0]?.status === 'accepted' ? 'Accepted' : items[0]?.status === 'pending' ? 'Pending' : items[0]?.status === 'rejected' ? 'Rejected' : ''}
+                                            {items[0]?.status === 'Completed' ? 'Completed' : items[0]?.status === 'Incomplete' ? 'Incomplete' : ''}
                                         </p>
                                     </div>
                                 </div>
@@ -226,6 +229,7 @@ const beneficiaryRequest = () => {
                                         <TableHead className='text-white'>Requested Amount</TableHead>
                                         <TableHead className='text-white'>Available Amount</TableHead>
                                         <TableHead className='text-white'>Category</TableHead>
+                                        <TableHead className='text-white'>Status</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -236,6 +240,7 @@ const beneficiaryRequest = () => {
                                                 <TableCell>{item.request_amount}</TableCell>
                                                 <TableCell>{item.resource_amount}</TableCell>
                                                 <TableCell>{item.resource_category}</TableCell>
+                                                <TableCell>{item.item_requestStatus}</TableCell>
                                             </TableRow>
                                         ))
                                     ) : (
