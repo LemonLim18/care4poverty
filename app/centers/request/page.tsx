@@ -400,7 +400,7 @@ const RequestPage = () => {
                                             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 accent-gray-900"
                                         />
                                         <span className="w-full ml-3 text-sm font-roboto font-light">
-                                            Drop-off at the organization
+                                            Pick up at the organization
                                         </span>
                                     </label>
                                     <label className="mt-1 flex items-center">
@@ -411,7 +411,7 @@ const RequestPage = () => {
                                             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 accent-gray-900"
                                         />
                                         <span className="w-full ml-3 text-sm font-roboto font-light">
-                                            Pick up by the organization
+                                            Delivered by the organization
                                         </span>
                                     </label>
                                 </div>
